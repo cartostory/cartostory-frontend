@@ -1,7 +1,5 @@
 <template>
   <div class="cs-story" v-on:scroll="scrollHandler">
-    <v-btn v-if="!story.header" @click="get()">Get Story</v-btn>
-
     <section v-if="story.header">
       <header>
         <h1>{{ story.header }}</h1>
@@ -52,6 +50,9 @@
         Vue.$log.debug(event);
         Vue.$log.debug('H', scrollHeight, 'FT', fromTop, 'FTP', `${fromTopPercentage}%`);
       },
+    },
+    mounted() {
+      this.get();
     },
   };
 </script>
