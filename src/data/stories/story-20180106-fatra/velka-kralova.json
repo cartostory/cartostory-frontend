@@ -1,0 +1,11 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [18.99081, 49.15921]
+  },
+  "properties": {
+    "name": "Velká Král'ová"
+  }
+}
+

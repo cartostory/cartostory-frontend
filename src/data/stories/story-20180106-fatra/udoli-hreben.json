@@ -1,0 +1,11 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [18.98892, 49.13090]
+  },
+  "properties": {
+    "name": "Cesta se zde dostává z údolí na hřeben"
+  }
+}
+

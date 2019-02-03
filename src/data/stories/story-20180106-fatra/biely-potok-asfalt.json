@@ -1,0 +1,11 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [18.98484, 49.12904]
+  },
+  "properties": {
+    "name": "Odbočka přes Biely potok"
+  }
+}
+

@@ -1,0 +1,11 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [19.03836, 49.19158]
+  },
+  "properties": {
+    "name": "Snilovské sedlo"
+  }
+}
+
