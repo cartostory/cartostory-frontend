@@ -1,0 +1,11 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [19.02901, 49.19012]
+  },
+  "properties": {
+    "name": "Hrana Velkého Kriváně"
+  }
+}
+

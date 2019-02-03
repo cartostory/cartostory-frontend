@@ -1,0 +1,11 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [19.01386, 49.19289]
+  },
+  "properties": {
+    "name": "Sedlo Bublen"
+  }
+}
+

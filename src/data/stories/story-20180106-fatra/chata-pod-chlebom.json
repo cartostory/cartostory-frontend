@@ -1,0 +1,11 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [19.04952, 49.18081]
+  },
+  "properties": {
+    "name": "Chata pod Chlebom"
+  }
+}
+
