@@ -14,7 +14,7 @@ Vue.use(Vuetify);
 Vue.use(VueSanitize, {
   allowedTags: ['a'],
   allowedAttributes: {
-    // eslint-disable-next-line
+    // eslint-disable-next-line quote-props
     'a': ['data-url'],
   },
 });
