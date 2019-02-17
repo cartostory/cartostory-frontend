@@ -4,14 +4,14 @@
       <header>
         <h1>{{ story.header }}</h1>
         <div class="perex">
-          <p v-for="p in story.perex">{{ p }}</p>
+          <p class="sanitized" v-for="p in story.perex" v-html="sanitize(p)">{{ p }}</p>
         </div>
       </header>
       <section>
         <section v-for="s in story.sections">
           <h2>{{ s.header }}</h2>
           <div>
-            <p v-for="p in s.text">{{ p }}</p>
+            <p class="sanitized" v-for="p in s.text" v-html="sanitize(p)">{{ p }}</p>
           </div>
         </section>
       </section>
@@ -34,6 +34,9 @@
       };
     },
     methods: {
+      sanitize(txt) {
+        return this.$sanitize(txt);
+      },
       get() {
         getStory('20180106-fatra').then((response) => {
           this.story = response.data;
@@ -87,5 +90,10 @@
     font-size: 20px;
     line-height: 32px;
     margin-bottom: 20px;
+  }
+
+  /* v-html needs this syntax to work - see https://medium.com/@brockreece/scoped-styles-with-v-html-c0f6d2dc5d8e */
+  .sanitized >>> a {
+    color: #42b983;
   }
 </style>
