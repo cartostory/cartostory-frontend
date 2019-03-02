@@ -1,0 +1,12 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [19.01111, 49.22332]
+  },
+  "properties": {
+    "id": 1,
+    "name": "Baraniarky"
+  }
+}
+

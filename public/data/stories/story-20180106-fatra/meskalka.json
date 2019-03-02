@@ -1,0 +1,12 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [18.98686, 49.17615]
+  },
+  "properties": {
+    "id": 8,
+    "name": "Meškalka"
+  }
+}
+

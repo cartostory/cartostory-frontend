@@ -1,0 +1,12 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [19.1272, 49.1514]
+  },
+  "properties": {
+    "id": 5,
+    "name": "Kral'ovany"
+  }
+}
+

@@ -1,0 +1,12 @@
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [18.98759, 49.16876]
+  },
+  "properties": {
+    "id": 14,
+    "name": "Vendovka"
+  }
+}
+
