@@ -103,32 +103,5 @@ export default {
     -webkit-filter: hue-rotate(160deg);
     filter: hue-rotate(160deg);
   }
-
-  .bounce {
-    margin-top: 50px;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    background-color: cornflowerblue;
-    border: 2px solid #999;
-    animation: bounce 1s infinite alternate;
-    -webkit-animation: bounce 1s infinite alternate;
-  }
-  @keyframes bounce {
-    from {
-      transform: translateY(0px);
-    }
-    to {
-      transform: translateY(-15px);
-    }
-  }
-  @-webkit-keyframes bounce {
-    from {
-      transform: translateY(0px);
-    }
-    to {
-      transform: translateY(-15px);
-    }
-  }
 </style>
 
