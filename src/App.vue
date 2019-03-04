@@ -1,4 +1,5 @@
 <script>
+import axios from 'axios';
 import CsStory from './components/CsStory.vue';
 import CsMap from './components/CsMap.vue';
 
@@ -8,13 +9,24 @@ export default {
     CsStory,
     CsMap,
   },
+  async mounted() {
+    this.$store.dispatch('loadStory');
+  },
+  computed: {
+    track() {
+      return this.$store.state.track;
+    },
+    story() {
+      return this.$store.state.story;
+    },
+  },
 };
 </script>
 
 <template>
   <div id="app">
-    <cs-map/>
-    <cs-story/>
+    <cs-map v-if="track"/>
+    <cs-story v-if="story"/>
   </div>
 </template>
 
