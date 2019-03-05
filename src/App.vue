@@ -25,7 +25,7 @@ export default {
 <template>
   <div id="app">
     <cs-map v-if="track"/>
-    <cs-story v-if="story"/>
+    <cs-story id="story-container" v-if="story"/>
   </div>
 </template>
 

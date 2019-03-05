@@ -31,8 +31,9 @@ export default {
       const scrollEl = links.find(l => highlightedUrl.indexOf(l.attributes.getNamedItem('data-url').value) > -1);
 
       if (scrollEl) {
-        console.log('scrollTo');
-        this.$scrollTo(document.querySelector('#test'));
+        this.$scrollTo(`#${scrollEl.id}`, undefined, {
+          container: '#story-container',
+        });
       }
     },
   },

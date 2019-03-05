@@ -23,6 +23,10 @@
 import Vue from 'vue';
 
 export default {
+  mounted() {
+    const links = document.querySelectorAll('a[data-url]');
+    links.forEach(l => l.id = `f-${l.attributes.getNamedItem('data-url').value.hashCode()}`);
+  },
   computed: {
     story() {
       return this.$store.state.story;
@@ -63,6 +67,7 @@ export default {
     },
   },
 };
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
