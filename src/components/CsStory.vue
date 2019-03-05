@@ -1,5 +1,5 @@
 <template>
-  <div class="cs-story" v-on:scroll="scrollHandler">
+  <div class="cs-story">
     <section v-if="story.header">
       <header>
         <h1>{{ story.header }}</h1>
@@ -28,42 +28,45 @@ export default {
     links.forEach(l => l.id = `f-${l.attributes.getNamedItem('data-url').value.hashCode()}`);
   },
   computed: {
+    highlightedFeature() {
+      return this.$store.getters.highlightedFeature;
+    },
+    links() {
+      return document.querySelectorAll('a[data-url]');
+    },
     story() {
       return this.$store.state.story;
+    },
+  },
+  watch: {
+    highlightedFeature() {
+      console.log('changed ', this.highlightedFeature);
+      this.removeHighlightedClass();
+      this.onTextClicked(this.highlightedFeature);
     },
   },
   methods: {
     sanitize(txt) {
       return this.$sanitize(txt);
     },
+    removeHighlightedClass() {
+      this.links.forEach(l => l.classList.remove('highlighted'));
+    },
     onTextClicked(e) {
       const t = e.originalTarget;
-      if (t.localName === 'a' && t.attributes.getNamedItem('data-url')) {
-        if (this.highlightedLink) {
-          this.highlightedLink.classList.toggle('highlighted');
-        }
+      const dataUrl = t.attributes.getNamedItem('data-url') && t.attributes.getNamedItem('data-url').value;
 
-        this.highlightedLink = t;
-        this.highlightedLink.classList.toggle('highlighted');
-
-        const dataUrl = t.attributes.getNamedItem('data-url').value;
-        const highlightedFeature = this.$store.state.features.find(f => f.properties.url.indexOf(dataUrl) > -1);
-
-        if (highlightedFeature) {
-          this.$store.dispatch('setHighlightedId', highlightedFeature.properties.id);
-        }
+      if (!(t.localName === 'a' && dataUrl)) {
+        return;
       }
-    },
-    scrollHandler(event) {
-      const scrollEl = event.target;
-      const { scrollHeight } = scrollEl;
-      const { offsetHeight } = scrollEl;
 
-      const fromTop = scrollEl.scrollTop;
-      const fromTopPercentage = (100 * fromTop) / (scrollHeight - offsetHeight);
+      this.removeHighlightedClass();
+      const highlightedFeature = this.$store.state.features.find(f => f.properties.url.indexOf(dataUrl) > -1);
 
-      Vue.$log.debug(event);
-      Vue.$log.debug('H', scrollHeight, 'FT', fromTop, 'FTP', `${fromTopPercentage}%`);
+      if (highlightedFeature) {
+        t.classList.toggle('highlighted');
+        this.$store.dispatch('setHighlightedId', highlightedFeature.properties.id);
+      }
     },
   },
 };
