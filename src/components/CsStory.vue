@@ -23,6 +23,11 @@
 import Vue from 'vue';
 
 export default {
+  /**
+   * Mimic the link between map and the text by adding the unique id
+   * based on data-url attribute value.
+   * @todo: solve links leading to the same URL, thus having the same hash
+   */
   mounted() {
     const links = document.querySelectorAll('a[data-url]');
     links.forEach(l => l.id = `f-${l.attributes.getNamedItem('data-url').value.hashCode()}`);
@@ -39,8 +44,15 @@ export default {
     },
   },
   watch: {
+    /**
+     * Removes highlighted feature and highlights the one corresponding
+     * to the map marker clicked.
+     */
     highlightedFeature() {
-      console.log('changed ', this.highlightedFeature);
+      if (!this.highlightedFeature) {
+        return;
+      }
+
       this.removeHighlightedClass();
       this.onTextClicked(this.highlightedFeature);
     },
@@ -52,8 +64,26 @@ export default {
     removeHighlightedClass() {
       this.links.forEach(l => l.classList.remove('highlighted'));
     },
+    /**
+     * Find story <a> element corresponding to the given JSON feature.
+     *
+     * @param {object} f
+     * @returns {DOMElement}
+     */
+    $_getElementFromFeature(f) {
+      const url = f.properties.url;
+      const elm = Array.from(this.links).find(l => url.includes(l.attributes.getNamedItem('data-url').value));
+
+      return elm;
+    },
+    /**
+     * Toggle highlight class on click and set the new highlighted link.
+     * Note the link click shifts the map center to the newly highlighted feature.
+     * @todo solve duplicate links
+     * @param {object} e
+     */
     onTextClicked(e) {
-      const t = e.originalTarget;
+      const t = e.originalTarget || this.$_getElementFromFeature(e);
       const dataUrl = t.attributes.getNamedItem('data-url') && t.attributes.getNamedItem('data-url').value;
 
       if (!(t.localName === 'a' && dataUrl)) {
