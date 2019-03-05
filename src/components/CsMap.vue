@@ -23,6 +23,18 @@ export default {
     };
   },
   methods: {
+    scrollTo(id) {
+      this.$store.dispatch('setHighlightedId', id);
+      const highlightedUrl = this.$store.getters.highlightedFeature.properties.url;
+      const links = Array.from(document.querySelectorAll('a[data-url]'));
+
+      const scrollEl = links.find(l => highlightedUrl.indexOf(l.attributes.getNamedItem('data-url').value) > -1);
+
+      if (scrollEl) {
+        console.log('scrollTo');
+        this.$scrollTo(document.querySelector('#test'));
+      }
+    },
   },
   async mounted() {
     this.$nextTick(() => {
@@ -55,6 +67,7 @@ export default {
         <l-tile-layer :url="map.tileLayer" :center="map.center" :zoom="map.zoom" />
         <l-geo-json v-if="track" :geojson="track" ref="cstrack" />
         <l-marker
+          @click="scrollTo(f.properties.id)"
           :key="f.properties.id"
           :latLng="[f.geometry.coordinates[1], f.geometry.coordinates[0]]"
           v-for="f in features">
