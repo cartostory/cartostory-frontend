@@ -23,21 +23,9 @@
 import Vue from 'vue';
 
 export default {
-  /**
-   * Mimic the link between map and the text by adding the unique id
-   * based on data-url attribute value.
-   * @todo: solve links leading to the same URL, thus having the same hash
-   */
-  mounted() {
-    const links = document.querySelectorAll('a[data-url]');
-    links.forEach(l => l.id = `f-${l.attributes.getNamedItem('data-url').value.hashCode()}`);
-  },
   computed: {
     highlightedFeature() {
       return this.$store.getters.highlightedFeature;
-    },
-    links() {
-      return document.querySelectorAll('a[data-url]');
     },
     story() {
       return this.$store.state.story;
@@ -62,7 +50,7 @@ export default {
       return this.$sanitize(txt);
     },
     removeHighlightedClass() {
-      this.links.forEach(l => l.classList.remove('highlighted'));
+        this.$store.dispatch('resetHighlighted');
     },
     /**
      * Find story <a> element corresponding to the given JSON feature.
@@ -71,10 +59,7 @@ export default {
      * @returns {DOMElement}
      */
     $_getElementFromFeature(f) {
-      const url = f.properties.url;
-      const elm = Array.from(this.links).find(l => url.includes(l.attributes.getNamedItem('data-url').value));
-
-      return elm;
+      return f.link;
     },
     /**
      * Toggle highlight class on click and set the new highlighted link.
@@ -84,18 +69,17 @@ export default {
      */
     onTextClicked(e) {
       const t = e.originalTarget || this.$_getElementFromFeature(e);
-      const dataUrl = t.attributes.getNamedItem('data-url') && t.attributes.getNamedItem('data-url').value;
+      const highlightedFeature = this.$store.state.features.find(f => f.link.id === t.id);
 
-      if (!(t.localName === 'a' && dataUrl)) {
+      if (t.localName !== 'a') {
         return;
       }
 
       this.removeHighlightedClass();
-      const highlightedFeature = this.$store.state.features.find(f => f.properties.url.indexOf(dataUrl) > -1);
 
       if (highlightedFeature) {
-        t.classList.toggle('highlighted');
-        this.$store.dispatch('setHighlightedId', highlightedFeature.properties.id);
+        this.$store.dispatch('setHighlightedId', highlightedFeature.id);
+        this.$store.dispatch('highlightLink', highlightedFeature.id);
       }
     },
   },

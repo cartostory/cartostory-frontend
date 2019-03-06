@@ -38,8 +38,21 @@ export default new Vuex.Store({
     resetFeatures(state) {
       state.features = null;
     },
+    resetHighlighted(state) {
+      state.features.forEach(f => f.link.classList && f.link.classList.remove('highlighted'));
+    },
+    highlightLink(state, id) {
+      const feature = state.features.find(f => f.id === id);
+      feature.link.classList.add('highlighted');
+    },
   },
   actions: {
+    highlightLink({ commit }, payload) {
+      commit('highlightLink', payload);
+    },
+    resetHighlighted({ commit }) {
+      commit('resetHighlighted');
+    },
     setHighlightedId({ commit }, payload) {
       commit('setHighlightedId', payload);
     },
@@ -66,48 +79,29 @@ export default new Vuex.Store({
         console.log(e);
       }
     },
-    async loadFeatures({ commit, getters }) {
-      const featureUrls = new Set(getters.featureUrls);
-      const temp = [...Array.from(featureUrls)]
-        .map(t => axios.get(t.replace('data-url=', '').replace("'", '').replace("'", '')));
-      axios.all(temp)
-        .then((results) => {
-          const features = results.map((r) => {
-            const result = r.data;
-            result.properties.url = r.request.responseURL;
-            return result;
+    loadFeatures({ commit, getters }) {
+      const features = [];
+      getters.links.forEach((l, i) => {
+        const url = l.attributes.getNamedItem('data-url').value;
+        axios.get(url)
+          .then(geojson => {
+            const f = {
+              id: i,
+              link: l,
+              feature: geojson.data,
+            };
+            l.id = `cs-link-${f.id}`;
+            features.push(f);
+            if (i === getters.links.length - 1) {
+              commit('setFeatures', features);
+            }
           });
-          commit('setFeatures', features);
-        });
+      });
     },
   },
   getters: {
-    highlightedFeature: state => state.features && state.features.find(f => f.properties.id === state.highlightedId),
-    featureUrls: (state, getters) => getters.featureUrlsFromPerex.concat(getters.featureUrlsFromText),
-    featureUrlsFromPerex: (state) => {
-      if (state.story && (!state.story.perex || state.story.perex.length === 0)) {
-        return [];
-      }
-      const urls = state.story && state.story.perex.map(p => p.match(state.regex));
-
-      if (urls) {
-        return [].concat(...urls);
-      }
-      return [];
-    },
-    featureUrlsFromText: (state) => {
-      if (state.story && (!state.story.sections || state.story.sections.length === 0)) {
-        return [];
-      }
-
-      const urls = state.story && state.story.sections.map(s => s.text)
-        .map(s => s.join(','))
-        .map(s => s.match(state.regex));
-
-      if (urls) {
-        return [].concat(...urls);
-      }
-      return [];
-    },
+    links: state => [...document.querySelectorAll('a[data-url]')],
+    highlightedFeature: state => state.features && state.features.find(f => f.id === state.highlightedId),
   },
 });
+

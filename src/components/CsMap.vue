@@ -25,13 +25,13 @@ export default {
   methods: {
     scrollTo(id) {
       this.$store.dispatch('setHighlightedId', id);
-      const highlightedUrl = this.$store.getters.highlightedFeature.properties.url;
-      const links = Array.from(document.querySelectorAll('a[data-url]'));
+      const highlightedUrl = this.$store.getters.highlightedFeature.feature.properties.url;
+      const highlightedLink = this.$store.getters.highlightedFeature.link.id;
+      console.log(highlightedLink);
 
-      const scrollEl = links.find(l => highlightedUrl.indexOf(l.attributes.getNamedItem('data-url').value) > -1);
 
-      if (scrollEl) {
-        this.$scrollTo(`#${scrollEl.id}`, undefined, {
+      if (highlightedLink) {
+        this.$scrollTo(`#${highlightedLink}`, undefined, {
           container: '#story-container',
         });
       }
@@ -54,7 +54,7 @@ export default {
       return this.$store.state.track;
     },
     center() {
-      const hf = this.$store.getters.highlightedFeature;
+      const hf = this.$store.getters.highlightedFeature && this.$store.getters.highlightedFeature.feature;
       return (hf && [hf.geometry.coordinates[1], hf.geometry.coordinates[0]]) || this.map.center;
     },
   },
@@ -68,13 +68,13 @@ export default {
         <l-tile-layer :url="map.tileLayer" :center="map.center" :zoom="map.zoom" />
         <l-geo-json v-if="track" :geojson="track" ref="cstrack" />
         <l-marker
-          @click="scrollTo(f.properties.id)"
-          :key="f.properties.id"
-          :latLng="[f.geometry.coordinates[1], f.geometry.coordinates[0]]"
+          @click="scrollTo(f.id)"
+          :key="f.id"
+          :latLng="[f.feature.geometry.coordinates[1], f.feature.geometry.coordinates[0]]"
           v-for="f in features">
           <l-icon
             icon-url="/images/marker-icon.png"
-            :class-name="f.properties.id === highlightedId ? 'highlighted' : ''"></l-icon>
+            :class-name="f.id === highlightedId ? 'highlighted' : ''"></l-icon>
         </l-marker>
       </l-map>
     </div>
