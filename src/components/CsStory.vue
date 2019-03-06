@@ -36,6 +36,7 @@ export default {
      * Removes highlighted feature and highlights the one corresponding
      * to the map marker clicked.
      */
+    /*
     highlightedFeature() {
       if (!this.highlightedFeature) {
         return;
@@ -44,6 +45,7 @@ export default {
       this.removeHighlightedClass();
       this.onTextClicked(this.highlightedFeature);
     },
+    */
   },
   methods: {
     sanitize(txt) {
@@ -78,8 +80,7 @@ export default {
       this.removeHighlightedClass();
 
       if (highlightedFeature) {
-        this.$store.dispatch('setHighlightedId', highlightedFeature.id);
-        this.$store.dispatch('highlightLink', highlightedFeature.id);
+        this.$store.dispatch('changeHighlighted', highlightedFeature.id);
       }
     },
   },

@@ -24,11 +24,9 @@ export default {
   },
   methods: {
     scrollTo(id) {
-      this.$store.dispatch('setHighlightedId', id);
+      this.$store.dispatch('changeHighlighted', id);
       const highlightedUrl = this.$store.getters.highlightedFeature.feature.properties.url;
       const highlightedLink = this.$store.getters.highlightedFeature.link.id;
-      console.log(highlightedLink);
-
 
       if (highlightedLink) {
         this.$scrollTo(`#${highlightedLink}`, undefined, {

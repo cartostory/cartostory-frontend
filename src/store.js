@@ -41,14 +41,16 @@ export default new Vuex.Store({
     resetHighlighted(state) {
       state.features.forEach(f => f.link.classList && f.link.classList.remove('highlighted'));
     },
-    highlightLink(state, id) {
-      const feature = state.features.find(f => f.id === id);
-      feature.link.classList.add('highlighted');
+    setHighlightedLink(state, payload) {
+      const f = state.features.find(f => f.id === payload);
+      f.link.classList.add('highlighted');
     },
   },
   actions: {
-    highlightLink({ commit }, payload) {
-      commit('highlightLink', payload);
+    changeHighlighted({ commit }, payload) {
+      commit('resetHighlighted');
+      commit('setHighlightedId', payload);
+      commit('setHighlightedLink', payload);
     },
     resetHighlighted({ commit }) {
       commit('resetHighlighted');
