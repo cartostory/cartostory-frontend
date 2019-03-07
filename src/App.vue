@@ -8,7 +8,7 @@ export default {
     CsStory,
     CsMap,
   },
-  async mounted() {
+  mounted() {
     this.$store.dispatch('loadStory');
   },
   computed: {

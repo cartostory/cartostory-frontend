@@ -8,10 +8,11 @@ export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
     track: null,
-    features: null,
+    features: [],
     story: null,
     highlightedId: null,
     regex: /data-url='([^']+)'/g,
+    recenterMap: false,
   },
   mutations: {
     setHighlightedId(state, payload) {
@@ -23,8 +24,10 @@ export default new Vuex.Store({
     setTrack(state, payload) {
       state.track = payload
     },
-    setFeatures(state, payload) {
-      state.features = payload;
+    addFeature(state, payload) {
+      if (!state.features.includes(payload)) {
+        state.features.push(payload);
+      }
     },
     resetHighlightedId(state) {
       state.highlightedId = null;
@@ -45,8 +48,14 @@ export default new Vuex.Store({
       const f = state.features.find(f => f.id === payload);
       f.link.classList.add('highlighted');
     },
+    recenterMap(state, payload) {
+      state.recenterMap = payload;
+    },
   },
   actions: {
+    recenterMap({ commit }, payload) {
+      commit('recenterMap', payload);
+    },
     changeHighlighted({ commit }, payload) {
       commit('resetHighlighted');
       commit('setHighlightedId', payload);
@@ -82,7 +91,6 @@ export default new Vuex.Store({
       }
     },
     loadFeatures({ commit, getters }) {
-      const features = [];
       getters.links.forEach((l, i) => {
         const url = l.attributes.getNamedItem('data-url').value;
         axios.get(url)
@@ -93,10 +101,7 @@ export default new Vuex.Store({
               feature: geojson.data,
             };
             l.id = `cs-link-${f.id}`;
-            features.push(f);
-            if (i === getters.links.length - 1) {
-              commit('setFeatures', features);
-            }
+            commit('addFeature', f);
           });
       });
     },

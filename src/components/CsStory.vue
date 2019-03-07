@@ -20,8 +20,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
 export default {
   computed: {
     highlightedFeature() {
@@ -30,22 +28,6 @@ export default {
     story() {
       return this.$store.state.story;
     },
-  },
-  watch: {
-    /**
-     * Removes highlighted feature and highlights the one corresponding
-     * to the map marker clicked.
-     */
-    /*
-    highlightedFeature() {
-      if (!this.highlightedFeature) {
-        return;
-      }
-
-      this.removeHighlightedClass();
-      this.onTextClicked(this.highlightedFeature);
-    },
-    */
   },
   methods: {
     sanitize(txt) {
@@ -81,6 +63,11 @@ export default {
 
       if (highlightedFeature) {
         this.$store.dispatch('changeHighlighted', highlightedFeature.id);
+      }
+
+      if (e.originalTarget) { // click not coming from a map
+        console.log('recenterMap true');
+        this.$store.dispatch('recenterMap', true);
       }
     },
   },
