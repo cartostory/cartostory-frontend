@@ -109,9 +109,16 @@ export default {
   .sanitized >>> a {
     color: #42b983;
     cursor: pointer;
+    text-decoration: underline;
   }
 
   .sanitized >>> .highlighted {
-    color: blue !important;
+    background-color: #42b983;
+    color: white;
+    /*color: #d55635 !important;*/
+    -webkit-transition: background-color 500ms ease-out 200ms;
+    -moz-transition: background-color 500ms ease-out 200ms;
+    -o-transition: background-color 500ms ease-out 200ms;
+    transition: background-color 500ms ease-out 200ms;
   }
 </style>
