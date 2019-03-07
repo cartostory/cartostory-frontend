@@ -32,6 +32,7 @@ export default {
       if (highlightedLink) {
         this.$scrollTo(`#${highlightedLink}`, undefined, {
           container: '#story-container',
+          offset: -50,
         });
       }
     },
@@ -106,7 +107,7 @@ export default {
     position: relative;
   }
 
-  .highlighted {
+  img.highlighted {
     -webkit-filter: hue-rotate(160deg);
     filter: hue-rotate(160deg);
   }
