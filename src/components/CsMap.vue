@@ -27,6 +27,7 @@ export default {
       this.$store.dispatch('recenterMap', false);
       this.$store.dispatch('changeHighlighted', id);
       const highlightedLink = this.$store.getters.highlightedFeature.link.id;
+      this.map.center = this.$refs.csmap.mapObject.getBounds().getCenter();
 
       if (highlightedLink) {
         this.$scrollTo(`#${highlightedLink}`, undefined, {

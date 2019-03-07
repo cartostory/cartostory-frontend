@@ -34,7 +34,7 @@ export default {
       return this.$sanitize(txt);
     },
     removeHighlightedClass() {
-        this.$store.dispatch('resetHighlighted');
+      this.$store.dispatch('resetHighlighted');
     },
     /**
      * Find story <a> element corresponding to the given JSON feature.
@@ -66,7 +66,6 @@ export default {
       }
 
       if (e.originalTarget) { // click not coming from a map
-        console.log('recenterMap true');
         this.$store.dispatch('recenterMap', true);
       }
     },
