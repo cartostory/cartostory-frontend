@@ -52,7 +52,7 @@ export default {
      * @param {object} e
      */
     onTextClicked(e) {
-      const t = e.originalTarget || this.$_getElementFromFeature(e);
+      const t = e.target || this.$_getElementFromFeature(e);
       const highlightedFeature = this.$store.state.features.find(f => f.link.id === t.id);
 
       if (t.localName !== 'a') {
