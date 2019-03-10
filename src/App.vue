@@ -1,4 +1,5 @@
 <script>
+import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 import CsStory from './components/CsStory.vue';
 import CsMap from './components/CsMap.vue';
 
@@ -7,6 +8,7 @@ export default {
   components: {
     CsStory,
     CsMap,
+    PulseLoader,
   },
   mounted() {
     this.$store.dispatch('loadStory');
@@ -23,7 +25,10 @@ export default {
 </script>
 
 <template>
-  <div id="app">
+  <div v-if="!(track || story)" class="spinner">
+    <pulse-loader></pulse-loader>
+  </div>
+  <div v-else id="app">
     <cs-map v-if="track"/>
     <cs-story id="story-container" v-if="story"/>
   </div>
@@ -62,5 +67,13 @@ export default {
 
   .cs-map {
     height: 100%;
+  }
+
+  .spinner {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
   }
 </style>
