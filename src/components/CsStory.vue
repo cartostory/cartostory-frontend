@@ -90,13 +90,10 @@ export default {
 
   h1 {
     font-size: 36px;
-    margin-bottom: 36px;
   }
 
   h2 {
     font-size: 28px;
-    margin-bottom: 28px;
-    padding-top: 56px;
   }
 
   p {

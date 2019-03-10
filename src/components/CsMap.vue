@@ -1,24 +1,41 @@
 <script>
-import { LGeoJson, LIcon, LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import { LCircleMarker, LGeoJson, LMap, LTileLayer } from 'vue2-leaflet';
 
 require('../../node_modules/leaflet/dist/leaflet.css');
 
 export default {
   name: 'CsMap',
   components: {
+    LCircleMarker,
     LGeoJson,
-    LIcon,
     LMap,
     LTileLayer,
-    LMarker,
   },
   data() {
     return {
       map: {
         bounds: null,
         center: [50, 19],
-        tileLayer: 'http://tile.mtbmap.cz/mtbmap_tiles/{z}/{x}/{y}.png',
+        tileLayer: 'https://a.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
         zoom: 8,
+      },
+      marker: {
+        color: '#3185fc',
+        fillOpacity: 0.5,
+        radius: 8,
+        weight: 1,
+      },
+      highlightedMarker: {
+        color: '#fffc31',
+        fillOpacity: 0.8,
+      },
+      trackOptions: {
+        style() {
+          return {
+            color: '#5a5a66',
+            dashArray: '6',
+          };
+        },
       },
     };
   },
@@ -79,22 +96,30 @@ export default {
     <div id="cs-map-container">
       <l-map :center="center" :zoom="map.zoom" ref="csmap">
         <l-tile-layer :url="map.tileLayer" :center="map.center" :zoom="map.zoom" />
-        <l-geo-json v-if="track" :geojson="track" ref="cstrack" />
+        <l-geo-json v-if="track" :geojson="track" :options="trackOptions" ref="cstrack" />
 
-        <l-marker
+        <l-circle-marker
           v-if="highlightedFeature"
           @click="scrollTo(highlightedId)"
-          :latLng="[highlightedFeature.feature.geometry.coordinates[1], highlightedFeature.feature.geometry.coordinates[0]]">
-          <l-icon icon-url="/images/marker-icon.png" class-name="highlighted"></l-icon>
-        </l-marker>
+          :color="highlightedMarker.color"
+          :fill-color="highlightedMarker.color"
+          :fill-opacity="highlightedMarker.fillOpacity"
+          :latLng="[highlightedFeature.feature.geometry.coordinates[1], highlightedFeature.feature.geometry.coordinates[0]]"
+          :radius="marker.radius"
+          :weight="marker.weight">
+        </l-circle-marker>
 
-        <l-marker
+        <l-circle-marker
           @click="scrollTo(f.id)"
+          :color="marker.color"
+          :fill-color="marker.color"
+          :fill-opacity="marker.fillOpacity"
           :key="f.id"
           :latLng="[f.feature.geometry.coordinates[1], f.feature.geometry.coordinates[0]]"
+          :radius="marker.radius"
+          :weight="marker.weight"
           v-for="f in features">
-          <l-icon icon-url="/images/marker-icon.png"></l-icon>
-        </l-marker>
+        </l-circle-marker>
       </l-map>
     </div>
   </div>
@@ -105,11 +130,6 @@ export default {
     width: auto;
     height: 100%;
     position: relative;
-  }
-
-  img.highlighted {
-    -webkit-filter: hue-rotate(160deg);
-    filter: hue-rotate(160deg);
   }
 </style>
 
