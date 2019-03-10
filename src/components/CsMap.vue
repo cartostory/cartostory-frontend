@@ -40,10 +40,10 @@ export default {
     };
   },
   methods: {
-    scrollTo(id) {
+    scrollTo(feature) {
       this.$store.dispatch('recenterMap', false);
-      this.$store.dispatch('changeHighlighted', id);
-      const highlightedLink = this.$store.getters.highlightedFeature.link.id;
+      this.$store.dispatch('changeHighlighted', feature);
+      const highlightedLink = this.$store.state.highlightedFeature.link.id;
       this.map.center = this.$refs.csmap.mapObject.getBounds().getCenter();
 
       if (highlightedLink) {
@@ -62,23 +62,20 @@ export default {
   },
   computed: {
     features() {
-      if (this.highlightedId == null) {
+      if (!this.highlightedFeature) {
         return this.$store.state.features;
       }
 
-      return this.$store.state.features.filter(f => f.id !== this.highlightedId);
+      return this.$store.state.features.filter(f => f.id !== this.highlightedFeature.id);
     },
     highlightedFeature() {
-      return this.$store.getters.highlightedFeature;
-    },
-    highlightedId() {
-      return this.$store.state.highlightedId;
+      return this.$store.state.highlightedFeature;
     },
     track() {
       return this.$store.state.track;
     },
     center() {
-      const hf = this.$store.getters.highlightedFeature && this.$store.getters.highlightedFeature.feature;
+      const hf = this.$store.state.highlightedFeature && this.$store.state.highlightedFeature.feature;
       const recenter = this.$store.state.recenterMap;
 
       if (recenter && hf) {
@@ -100,7 +97,7 @@ export default {
 
         <l-circle-marker
           v-if="highlightedFeature"
-          @click="scrollTo(highlightedId)"
+          @click="scrollTo(highlightedFeature)"
           :color="highlightedMarker.color"
           :fill-color="highlightedMarker.color"
           :fill-opacity="highlightedMarker.fillOpacity"
@@ -110,7 +107,7 @@ export default {
         </l-circle-marker>
 
         <l-circle-marker
-          @click="scrollTo(f.id)"
+          @click="scrollTo(f)"
           :color="marker.color"
           :fill-color="marker.color"
           :fill-opacity="marker.fillOpacity"

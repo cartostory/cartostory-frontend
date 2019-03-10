@@ -62,7 +62,7 @@ export default {
       this.removeHighlightedClass();
 
       if (highlightedFeature) {
-        this.$store.dispatch('changeHighlighted', highlightedFeature.id);
+        this.$store.dispatch('changeHighlighted', highlightedFeature);
       }
 
       if (e.originalTarget) { // click not coming from a map

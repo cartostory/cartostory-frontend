@@ -10,27 +10,27 @@ export default new Vuex.Store({
     track: null,
     features: [],
     story: null,
-    highlightedId: null,
+    highlightedFeature: null,
     regex: /data-url='([^']+)'/g,
     recenterMap: false,
   },
   mutations: {
-    setHighlightedId(state, payload) {
-      state.highlightedId = payload;
+    setHighlightedFeature(state, feature) {
+      state.highlightedFeature = feature;
     },
-    setStory(state, payload) {
-      state.story = payload;
+    setStory(state, story) {
+      state.story = story;
     },
-    setTrack(state, payload) {
-      state.track = payload
+    setTrack(state, track) {
+      state.track = track;
     },
-    addFeature(state, payload) {
-      if (!state.features.includes(payload)) {
-        state.features.push(payload);
+    addFeature(state, feature) {
+      if (!state.features.includes(feature)) {
+        state.features.push(feature);
       }
     },
-    resetHighlightedId(state) {
-      state.highlightedId = null;
+    resetHighlightedFeature(state) {
+      state.highlightedFeature = null;
     },
     resetStory(state) {
       state.story = null;
@@ -44,28 +44,28 @@ export default new Vuex.Store({
     resetHighlighted(state) {
       state.features.forEach(f => f.link.classList && f.link.classList.remove('highlighted'));
     },
-    setHighlightedLink(state, payload) {
-      const f = state.features.find(f => f.id === payload);
+    setHighlightedLink(state, feature) {
+      const f = state.features.find(f => f.id === feature.id);
       f.link.classList.add('highlighted');
     },
-    recenterMap(state, payload) {
-      state.recenterMap = payload;
+    recenterMap(state, shouldRecenter) {
+      state.recenterMap = shouldRecenter;
     },
   },
   actions: {
-    recenterMap({ commit }, payload) {
-      commit('recenterMap', payload);
+    recenterMap({ commit }, shouldRecenter) {
+      commit('recenterMap', shouldRecenter);
     },
-    changeHighlighted({ commit }, payload) {
+    changeHighlighted({ commit }, feature) {
       commit('resetHighlighted');
-      commit('setHighlightedId', payload);
-      commit('setHighlightedLink', payload);
+      commit('setHighlightedFeature', feature);
+      commit('setHighlightedLink', feature);
     },
     resetHighlighted({ commit }) {
       commit('resetHighlighted');
     },
-    setHighlightedId({ commit }, payload) {
-      commit('setHighlightedId', payload);
+    setHighlightedFeature({ commit }, feature) {
+      commit('setHighlightedFeature', feature);
     },
     async loadStory({ dispatch, commit }) {
       await dispatch('loadText');
@@ -108,7 +108,6 @@ export default new Vuex.Store({
   },
   getters: {
     links: state => [...document.querySelectorAll('a[data-url]')],
-    highlightedFeature: state => state.features && state.features.find(f => f.id === state.highlightedId),
   },
 });
 
