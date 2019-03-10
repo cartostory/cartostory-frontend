@@ -1,5 +1,5 @@
 <template>
-  <div class="cs-story">
+  <div ref="story" class="cs-story" @scroll="onScrollEnd">
     <section v-if="story.header">
       <header>
         <h1>{{ story.header }}</h1>
@@ -21,6 +21,12 @@
 
 <script>
 export default {
+  data() {
+    return {
+      scrollTimeout: 250,
+      scrollTimeoutID: null,
+    };
+  },
   computed: {
     highlightedFeature() {
       return this.$store.getters.highlightedFeature;
@@ -30,6 +36,48 @@ export default {
     },
   },
   methods: {
+    /**
+     * Get the first visible story element.
+     *
+     * @todo: include just elements having data-bbox attribute
+     * @returns {DOMElement|null}
+     */
+    $_getFirstVisibleBBox() {
+      const storyOffsetTop = this.$refs.story.scrollTop;
+      const bboxes = this.$refs.cstext;
+      let firstVisibleBBox = null;
+
+      for (let bbox of bboxes.values()) {
+        if (bbox.offsetTop >= storyOffsetTop) {
+          firstVisibleBBox = bbox;
+          break;
+        }
+      }
+
+      return firstVisibleBBox;
+    },
+    /**
+     * Pan map to the location of the first visible element of the story.
+     *
+     * @todo: A race condition might occur when scroll event is triggered from the map,
+     *        so the way to tell it from the registered @scroll listener. In case the
+     *        map triggers the scroll event, this method should not be called at all.
+     * @param {object} e
+     * @returns {void}
+     */
+    onScrollEnd(e) {
+      if (this.scrollTimeoutID) {
+        window.clearTimeout(this.scrollTimeoutID);
+      }
+
+      const fn = () => {
+        this.scrollTimeoutID = window.setTimeout(() => {
+          const bbox = this.$_getFirstVisibleBBox();
+          console.log('first visible element', bbox);
+        }, this.scrollTimeout);
+      };
+      fn();
+    },
     sanitize(txt) {
       return this.$sanitize(txt);
     },
