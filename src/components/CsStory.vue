@@ -113,7 +113,7 @@ export default {
         this.$store.dispatch('changeHighlighted', highlightedFeature);
       }
 
-      if (e.originalTarget) { // click not coming from a map
+      if (e.target) { // click not coming from a map
         this.$store.dispatch('recenterMap', true);
       }
     },
