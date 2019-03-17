@@ -7,12 +7,14 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
-    track: null,
+    bbox: null,
+    context: null,
+    enableSync: true,
     features: [],
-    story: null,
     highlightedFeature: null,
     regex: /data-url='([^']+)'/g,
-    recenterMap: false,
+    story: null,
+    track: null,
   },
   mutations: {
     setHighlightedFeature(state, feature) {
@@ -44,22 +46,41 @@ export default new Vuex.Store({
     resetHighlighted(state) {
       state.features.forEach(f => f.link.classList && f.link.classList.remove('highlighted'));
     },
-    setHighlightedLink(state, feature) {
-      const f = state.features.find(f => f.id === feature.id);
-      f.link.classList.add('highlighted');
+    setHighlightedLink(state) {
+      state.highlightedFeature.link.classList.add('highlighted');
     },
-    recenterMap(state, shouldRecenter) {
-      state.recenterMap = shouldRecenter;
+    setContext(state, context) {
+      state.context = context;
+    },
+    setBbox(state, bbox) {
+      state.bbox = bbox;
+    },
+    resetBbox(state, bbox) {
+      state.bbox = null;
+    },
+    toggleSync(state) {
+      state.enableSync = !state.enableSync;
     },
   },
   actions: {
-    recenterMap({ commit }, shouldRecenter) {
-      commit('recenterMap', shouldRecenter);
+    toggleSync({ commit }) {
+      commit('toggleSync');
     },
-    changeHighlighted({ commit }, feature) {
-      commit('resetHighlighted');
-      commit('setHighlightedFeature', feature);
-      commit('setHighlightedLink', feature);
+    setBbox({ commit }, payload) {
+      commit('setBbox', payload);
+    },
+    resetBbox({ commit }) {
+      commit('resetBbox');
+    },
+    setHighlightedLink({ commit }) {
+      commit('setHighlightedLink');
+    },
+    highlightedFeatureInContext({ commit }, payload) {
+      commit('setHighlightedFeature', payload.feature);
+      commit('setContext', payload.context);
+    },
+    setContext({ commit }, payload) {
+      commit('setContext', payload);
     },
     resetHighlighted({ commit }) {
       commit('resetHighlighted');
@@ -67,7 +88,7 @@ export default new Vuex.Store({
     setHighlightedFeature({ commit }, feature) {
       commit('setHighlightedFeature', feature);
     },
-    async loadStory({ dispatch, commit }) {
+    async loadStory({ dispatch }) {
       await dispatch('loadText');
       await dispatch('loadTrack');
       await dispatch('loadFeatures');
@@ -110,4 +131,3 @@ export default new Vuex.Store({
     links: state => [...document.querySelectorAll('a[data-url]')],
   },
 });
-

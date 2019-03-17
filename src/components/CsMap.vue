@@ -16,7 +16,7 @@ export default {
       map: {
         bounds: null,
         center: [50, 19],
-        tileLayer: 'https://a.tiles.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
+        tileLayer: 'https://api.mapbox.com/styles/v1/cartostory/cjta8ada00yr41fp36du3hkct/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
         zoom: 8,
       },
       marker: {
@@ -40,18 +40,21 @@ export default {
     };
   },
   methods: {
-    scrollTo(feature) {
-      this.$store.dispatch('recenterMap', false);
-      this.$store.dispatch('changeHighlighted', feature);
-      const highlightedLink = this.$store.state.highlightedFeature.link.id;
+    /**
+     * Set highlighted feature in a MAP context.
+     *
+     * @returns {void}
+     */
+    featureClicked(f) {
+      this.$store.dispatch('highlightedFeatureInContext', {
+        feature: f,
+        context: 'MAP',
+      });
       this.map.center = this.$refs.csmap.mapObject.getBounds().getCenter();
-
-      if (highlightedLink) {
-        this.$scrollTo(`#${highlightedLink}`, undefined, {
-          container: '#story-container',
-          offset: -50,
-        });
-      }
+    },
+    flyTo(f) {
+      const center = [f.feature.geometry.coordinates[1], f.feature.geometry.coordinates[0]];
+      this.$refs.csmap.mapObject.flyTo(center);
     },
   },
   mounted() {
@@ -61,6 +64,9 @@ export default {
     });
   },
   computed: {
+    bbox() {
+      return this.$store.state.bbox;
+    },
     features() {
       if (!this.highlightedFeature) {
         return this.$store.state.features;
@@ -74,15 +80,23 @@ export default {
     track() {
       return this.$store.state.track;
     },
-    center() {
-      const hf = this.$store.state.highlightedFeature && this.$store.state.highlightedFeature.feature;
-      const recenter = this.$store.state.recenterMap;
-
-      if (recenter && hf) {
-        return hf && [hf.geometry.coordinates[1], hf.geometry.coordinates[0]];
+    context() {
+      return this.$store.state.context;
+    },
+  },
+  watch: {
+    highlightedFeature() {
+      if (this.context !== 'TEXT') {
+        return;
       }
 
-      return this.map.center;
+      this.flyTo(this.highlightedFeature);
+    },
+    bbox() {
+      if (this.bbox) {
+        this.$refs.csmap.mapObject.flyToBounds(this.bbox);
+        this.$store.dispatch('resetBbox');
+      }
     },
   },
 };
@@ -91,13 +105,13 @@ export default {
 <template>
   <div class="cs-map">
     <div id="cs-map-container">
-      <l-map :center="center" :zoom="map.zoom" ref="csmap">
-        <l-tile-layer :url="map.tileLayer" :center="map.center" :zoom="map.zoom" />
+      <l-map :center="map.center" :zoom="map.zoom" ref="csmap">
+        <l-tile-layer :url="map.tileLayer" />
         <l-geo-json v-if="track" :geojson="track" :options="trackOptions" ref="cstrack" />
 
         <l-circle-marker
           v-if="highlightedFeature"
-          @click="scrollTo(highlightedFeature)"
+          @click="featureClicked(highlightedFeature)"
           :color="highlightedMarker.color"
           :fill-color="highlightedMarker.color"
           :fill-opacity="highlightedMarker.fillOpacity"
@@ -107,7 +121,7 @@ export default {
         </l-circle-marker>
 
         <l-circle-marker
-          @click="scrollTo(f)"
+          @click="featureClicked(f)"
           :color="marker.color"
           :fill-color="marker.color"
           :fill-opacity="marker.fillOpacity"

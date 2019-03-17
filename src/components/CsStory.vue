@@ -4,14 +4,15 @@
       <header>
         <h1>{{ story.header }}</h1>
         <div class="perex">
-          <p ref="cstext" v-on:click="onTextClicked" class="sanitized" v-for="p in story.perex" v-html="sanitize(p)">{{ p }}</p>
+          <p @click="onTextClicked" class="sanitized" v-for="p in story.perex" v-html="sanitize(p)">{{ p }}</p>
         </div>
       </header>
       <section>
-        <section v-for="s in story.sections">
+        <section v-for="s in story.sections" :data-bbox="s.bbox">
           <h2>{{ s.header }}</h2>
           <div>
-            <p ref="cstext" v-on:click="onTextClicked" class="sanitized" v-for="p in s.text" v-html="sanitize(p)">{{ p }}</p>
+            <p ref="cstext" @click="onTextClicked" class="sanitized" v-for="p in s.text"
+            v-html="sanitize(p)">{{ p }}</p>
           </div>
         </section>
       </section>
@@ -29,39 +30,72 @@ export default {
   },
   computed: {
     highlightedFeature() {
-      return this.$store.getters.highlightedFeature;
+      return this.$store.state.highlightedFeature;
+    },
+    context() {
+      return this.$store.state.context;
     },
     story() {
       return this.$store.state.story;
     },
   },
+  watch: {
+    highlightedFeature() {
+      if (this.context === 'TEXT') {
+        console.log('text scroll');
+      } else if (this.context === 'MAP') {
+        this.scroll();
+        this.resetHighlightedFeatures();
+        this.setHighlightedLink();
+      }
+    },
+  },
   methods: {
+    scroll() {
+      this.$scrollTo(`#${this.highlightedFeature.link.id}`, undefined, {
+        container: '#story-container',
+        offset: -50,
+      });
+    },
+    resetHighlightedFeatures() {
+      this.$store.dispatch('resetHighlighted');
+    },
+    setHighlightedLink() {
+      this.$store.dispatch('setHighlightedLink');
+    },
     /**
-     * Get the first visible story element.
+     * Get the first bounding box as [[upperLeftX, upperLeftY], [bottomRightX, bottomRightY]]
      *
-     * @todo: include just elements having data-bbox attribute
-     * @returns {DOMElement|null}
+     * @returns {array}
      */
     $_getFirstVisibleBBox() {
       const storyOffsetTop = this.$refs.story.scrollTop;
-      const bboxes = this.$refs.cstext;
+      const bboxes = document.querySelectorAll('[data-bbox]');
+
       let firstVisibleBBox = null;
 
       for (let bbox of bboxes.values()) {
         if (bbox.offsetTop >= storyOffsetTop) {
-          firstVisibleBBox = bbox;
+          firstVisibleBBox = bbox
+            .getAttribute('data-bbox')
+            .split(',')
+            .map(c => parseFloat(c));
           break;
         }
       }
 
-      return firstVisibleBBox;
+      if (!firstVisibleBBox) {
+        return;
+      }
+
+      const upperLeft = [firstVisibleBBox[1], firstVisibleBBox[0]];
+      const bottomRight = [firstVisibleBBox[3], firstVisibleBBox[2]];
+      return [upperLeft, bottomRight];
     },
     /**
-     * Pan map to the location of the first visible element of the story.
+     * Pan map to the location of the first visible element of the story
+     * when map <-> text sync is enabled.
      *
-     * @todo: A race condition might occur when scroll event is triggered from the map,
-     *        so the way to tell it from the registered @scroll listener. In case the
-     *        map triggers the scroll event, this method should not be called at all.
      * @param {object} e
      * @returns {void}
      */
@@ -71,8 +105,15 @@ export default {
       }
 
       const fn = () => {
+        if (!this.$store.state.enableSync) {
+          return;
+        }
+
         this.scrollTimeoutID = window.setTimeout(() => {
           const bbox = this.$_getFirstVisibleBBox();
+          this.$store.dispatch('setBbox', bbox);
+          // @todo: pan map if context is set to TEXT even before the dispatch below
+          this.$store.dispatch('setContext', 'TEXT');
           console.log('first visible element', bbox);
         }, this.scrollTimeout);
       };
@@ -80,9 +121,6 @@ export default {
     },
     sanitize(txt) {
       return this.$sanitize(txt);
-    },
-    removeHighlightedClass() {
-      this.$store.dispatch('resetHighlighted');
     },
     /**
      * Find story <a> element corresponding to the given JSON feature.
@@ -107,14 +145,14 @@ export default {
         return;
       }
 
-      this.removeHighlightedClass();
+      this.resetHighlightedFeatures();
 
       if (highlightedFeature) {
-        this.$store.dispatch('changeHighlighted', highlightedFeature);
-      }
-
-      if (e.target) { // click not coming from a map
-        this.$store.dispatch('recenterMap', true);
+        this.$store.dispatch('highlightedFeatureInContext', {
+          feature: highlightedFeature,
+          context: 'TEXT',
+        });
+        this.setHighlightedLink();
       }
     },
   },
