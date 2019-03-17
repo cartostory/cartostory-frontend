@@ -20,6 +20,14 @@ export default {
     story() {
       return this.$store.state.story;
     },
+    enableSync() {
+      return this.$store.state.enableSync;
+    },
+  },
+  methods: {
+    toggleSync() {
+      this.$store.dispatch('toggleSync');
+    },
   },
 };
 </script>
@@ -29,6 +37,10 @@ export default {
     <pulse-loader></pulse-loader>
   </div>
   <div v-else id="app">
+    <a class='toggle-sync' @click="toggleSync">
+      <span v-if="enableSync">on</span>
+      <span v-else>off</span>
+    </a>
     <cs-map v-if="track"/>
     <cs-story id="story-container" v-if="story"/>
   </div>
@@ -75,5 +87,24 @@ export default {
     justify-content: center;
     height: 100%;
     width: 100%;
+  }
+
+  .toggle-sync {
+    background: #42b983;
+    border-radius: 30px;
+    cursor: pointer;
+    display: block;
+    position: absolute;
+    left:-webkit-calc(50% - 15px);
+    left:-moz-calc(50% - 15px);
+    left:calc(50% - 15px);
+    top:-webkit-calc(50% - 15px);
+    top:-moz-calc(50% - 15px);
+    top:calc(50% - 15px);
+    height: 30px;
+    line-height: 25px;
+    text-align:center;
+    width: 30px;
+    z-index:1000;
   }
 </style>
