@@ -16,7 +16,9 @@ export default {
       map: {
         bounds: null,
         center: [50, 19],
-        tileLayer: 'https://api.mapbox.com/styles/v1/cartostory/cjta8ada00yr41fp36du3hkct/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
+        baseLayer: 'https://api.mapbox.com/styles/v1/cartostory/cjugqcypf27581gnry4y59lxy/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
+        hikingOverlay: 'http://tile.mtbmap.cz/overlay_hiking/{z}/{x}/{y}.png',
+        labelsOverlay: 'https://api.mapbox.com/styles/v1/cartostory/cjugqfe8r1lhh1ftgrmr7v9zj/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
         zoom: 8,
       },
       marker: {
@@ -106,7 +108,9 @@ export default {
   <div class="cs-map">
     <div id="cs-map-container">
       <l-map :center="map.center" :zoom="map.zoom" ref="csmap">
-        <l-tile-layer :url="map.tileLayer" />
+        <l-tile-layer :url="map.baseLayer" />
+        <l-tile-layer :url="map.hikingOverlay" layer-type="overlay" opacity="0.7" />
+        <l-tile-layer :url="map.labelsOverlay" layer-type="overlay" />
         <l-geo-json v-if="track" :geojson="track" :options="trackOptions" ref="cstrack" />
 
         <l-circle-marker
