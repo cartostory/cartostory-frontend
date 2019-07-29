@@ -1,14 +1,14 @@
 <template>
-  <div ref="story" class="cs-story" @scroll="onScrollEnd">
-    <section v-if="story.header">
+  <div v-if="story.data" ref="story" class="cs-story" @scroll="onScrollEnd">
+    <section v-if="story.data.header">
       <header>
-        <h1>{{ story.header }}</h1>
+        <h1>{{ story.data.header }}</h1>
         <div class="perex">
-          <p @click="onTextClicked" class="sanitized" v-for="p in story.perex" v-html="sanitize(p)">{{ p }}</p>
+          <p @click="onTextClicked" class="sanitized" v-for="p in story.data.perex" v-html="sanitize(p)">{{ p }}</p>
         </div>
       </header>
       <section>
-        <section v-for="s in story.sections" :data-bbox="s.bbox">
+        <section v-for="s in story.data.sections" :data-bbox="s.bbox">
           <h2>{{ s.header }}</h2>
           <div>
             <p ref="cstext" @click="onTextClicked" class="sanitized" v-for="p in s.text"
@@ -27,6 +27,9 @@ export default {
       scrollTimeout: 250,
       scrollTimeoutID: null,
     };
+  },
+  mounted() {
+    this.$store.dispatch('loadFeatures');
   },
   computed: {
     highlightedFeature() {
@@ -52,6 +55,7 @@ export default {
   },
   methods: {
     scroll() {
+      console.log(this.highlightedFeature.link.id);
       this.$scrollTo(`#${this.highlightedFeature.link.id}`, undefined, {
         container: '#story-container',
         offset: -50,

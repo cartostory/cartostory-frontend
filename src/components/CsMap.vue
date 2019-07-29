@@ -61,8 +61,8 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.map.bounds = this.$refs.cstrack.getBounds();
-      this.$refs.csmap.mapObject.fitBounds(this.map.bounds);
+      this.map.bounds = this.$refs.cstrack && this.$refs.cstrack.getBounds();
+      this.$refs.csmap && this.$refs.csmap.mapObject.fitBounds(this.map.bounds);
     });
   },
   computed: {
@@ -109,9 +109,9 @@ export default {
     <div id="cs-map-container">
       <l-map :center="map.center" :zoom="map.zoom" ref="csmap">
         <l-tile-layer :url="map.baseLayer" />
-        <l-tile-layer :url="map.hikingOverlay" layer-type="overlay" opacity="0.7" />
+        <l-tile-layer :url="map.hikingOverlay" layer-type="overlay" :opacity="0.7" />
         <l-tile-layer :url="map.labelsOverlay" layer-type="overlay" />
-        <l-geo-json v-if="track" :geojson="track" :options="trackOptions" ref="cstrack" />
+        <l-geo-json :geojson="track.data" :options="trackOptions" ref="cstrack" />
 
         <l-circle-marker
           v-if="highlightedFeature"

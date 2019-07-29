@@ -13,18 +13,24 @@ export default new Vuex.Store({
     features: [],
     highlightedFeature: null,
     regex: /data-url='([^']+)'/g,
-    story: null,
-    track: null,
+    story: {
+      url: null,
+      data: null,
+    },
+    track: {
+      url: null,
+      data: null,
+    },
   },
   mutations: {
     setHighlightedFeature(state, feature) {
       state.highlightedFeature = feature;
     },
     setStory(state, story) {
-      state.story = story;
+      state.story.data = story;
     },
     setTrack(state, track) {
-      state.track = track;
+      state.track.data = track;
     },
     addFeature(state, feature) {
       if (!state.features.includes(feature)) {
@@ -61,6 +67,10 @@ export default new Vuex.Store({
     toggleSync(state) {
       state.enableSync = !state.enableSync;
     },
+    setUrls(state, urls) {
+      state.story.url = urls.storyUrl;
+      state.track.url = urls.trackUrl;
+    },
   },
   actions: {
     toggleSync({ commit }) {
@@ -88,14 +98,17 @@ export default new Vuex.Store({
     setHighlightedFeature({ commit }, feature) {
       commit('setHighlightedFeature', feature);
     },
+    setUrls({ commit, dispatch }, payload) {
+      commit('setUrls', payload);
+      dispatch('loadStory');
+    },
     async loadStory({ dispatch }) {
       await dispatch('loadText');
       await dispatch('loadTrack');
-      await dispatch('loadFeatures');
     },
     async loadTrack({ commit }) {
       try {
-        const track = await axios.get('/data/tracks/track-20180106-fatra.json');
+        const track = await axios.get(this.state.track.url);
         commit('setTrack', track.data);
       } catch (e) {
         // eslint-disable-next-line no-console
@@ -104,18 +117,18 @@ export default new Vuex.Store({
     },
     async loadText({ commit }) {
       try {
-        const story = await axios.get('/data/stories/story-20180106-fatra.json');
+        const story = await axios.get(this.state.story.url);
         commit('setStory', story.data);
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log(e);
       }
     },
-    loadFeatures({ commit, getters }) {
-      getters.links.forEach((l, i) => {
+    async loadFeatures({ commit }) {
+      document.querySelectorAll('a[data-url]').forEach((l, i) => {
         const url = l.attributes.getNamedItem('data-url').value;
         axios.get(url)
-          .then(geojson => {
+          .then((geojson) => {
             const f = {
               id: i,
               link: l,
@@ -126,8 +139,5 @@ export default new Vuex.Store({
           });
       });
     },
-  },
-  getters: {
-    links: state => [...document.querySelectorAll('a[data-url]')],
   },
 });
