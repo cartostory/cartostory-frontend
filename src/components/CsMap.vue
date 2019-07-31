@@ -48,7 +48,7 @@ export default {
      * @returns {void}
      */
     featureClicked(f) {
-      this.$store.dispatch('resetHighlightedLink');
+      this.$store.dispatch('story/resetHighlightedLink');
       this.$store.dispatch('highlightedFeatureInContext', {
         feature: f,
         context: 'MAP',
@@ -81,7 +81,7 @@ export default {
       return this.$store.state.highlightedFeature;
     },
     track() {
-      return this.$store.state.track;
+      return this.$store.state.track.data;
     },
     context() {
       return this.$store.state.context;
@@ -112,7 +112,7 @@ export default {
         <l-tile-layer :url="map.baseLayer" />
         <l-tile-layer :url="map.hikingOverlay" layer-type="overlay" :opacity="0.7" />
         <l-tile-layer :url="map.labelsOverlay" layer-type="overlay" />
-        <l-geo-json :geojson="track.data" :options="trackOptions" ref="cstrack" />
+        <l-geo-json :geojson="track.track" :options="trackOptions" ref="cstrack" />
 
         <l-circle-marker
           v-if="highlightedFeature"
@@ -148,4 +148,3 @@ export default {
     position: relative;
   }
 </style>
-

@@ -22,7 +22,7 @@ export default {
       return this.$store.state.enableSync;
     },
     ready() {
-      return this.track.data && this.story.data;
+      return this.track.data.track && this.story.data.story;
     }
   },
   methods: {

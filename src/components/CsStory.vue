@@ -1,14 +1,14 @@
 <template>
-  <div v-if="story.data" ref="story" class="cs-story" @scroll="onScrollEnd">
-    <section v-if="story.data.header">
+  <div v-if="story.story" ref="story" class="cs-story" @scroll="onScrollEnd">
+    <section v-if="story.story.header">
       <header>
-        <h1>{{ story.data.header }}</h1>
+        <h1>{{ story.story.header }}</h1>
         <div class="perex">
-          <p @click="onTextClicked" class="sanitized" v-for="p in story.data.perex" v-html="sanitize(p)">{{ p }}</p>
+          <p @click="onTextClicked" class="sanitized" v-for="p in story.story.perex" v-html="sanitize(p)">{{ p }}</p>
         </div>
       </header>
       <section>
-        <section v-for="s in story.data.sections" :data-bbox="s.bbox">
+        <section v-for="s in story.story.sections" :data-bbox="s.bbox">
           <h2>{{ s.header }}</h2>
           <div>
             <p ref="cstext" @click="onTextClicked" class="sanitized" v-for="p in s.text"
@@ -29,7 +29,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch('loadFeatures');
+    this.$store.dispatch('story/loadFeatures');
   },
   computed: {
     highlightedFeature() {
@@ -39,7 +39,7 @@ export default {
       return this.$store.state.context;
     },
     story() {
-      return this.$store.state.story;
+      return this.$store.state.story.data;
     },
   },
   watch: {
@@ -62,10 +62,10 @@ export default {
       });
     },
     resetHighlightedFeatures() {
-      this.$store.dispatch('resetHighlightedLink');
+      this.$store.dispatch('story/resetHighlightedLink');
     },
     setHighlightedLink() {
-      this.$store.dispatch('setHighlightedLink');
+      this.$store.dispatch('story/setHighlightedLink');
     },
     /**
      * Get the first bounding box as [[upperLeftX, upperLeftY], [bottomRightX, bottomRightY]]
@@ -103,7 +103,7 @@ export default {
      * @param {object} e
      * @returns {void}
      */
-    onScrollEnd(e) {
+    onScrollEnd() {
       if (this.scrollTimeoutID) {
         window.clearTimeout(this.scrollTimeoutID);
       }

@@ -2,52 +2,37 @@ import axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
+import storyModule from './store.story';
+import trackModule from './store.track';
+import { set, toggle } from './store.helpers';
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
+  modules: {
+    story: storyModule,
+    track: trackModule,
+  },
   state: {
     bbox: null,
     context: null,
     enableSync: false,
     features: [],
     highlightedFeature: null,
-    regex: /data-url='([^']+)'/g,
-    story: {
-      url: null,
-      data: null,
-    },
-    track: {
-      url: null,
-      data: null,
-    },
   },
   mutations: {
-    setHighlightedFeature(state, feature) {
-      state.highlightedFeature = feature;
-    },
-    setStory(state, story) {
-      state.story.data = story;
-    },
-    setTrack(state, track) {
-      state.track.data = track;
-    },
+    setHighlightedFeature: set('highlightedFeature'),
+    setContext: set('context'),
+    setBbox: set('bbox'),
+    toggleSync: toggle('enableSync'),
     addFeature(state, feature) {
       if (!state.features.includes(feature)) {
         state.features.push(feature);
       }
     },
-    resetHighlightedFeature(state) {
-      state.highlightedFeature = null;
-    },
-    resetStory(state) {
-      state.story = null;
-    },
-    resetTrack(state) {
-      state.track = null;
-    },
     resetFeatures(state) {
-      state.features = null;
+      state.features = [];
     },
     resetHighlightedLink(state) {
       state.features.forEach(f => f.link.classList && f.link.classList.remove('highlighted'));
@@ -57,21 +42,9 @@ export default new Vuex.Store({
         state.highlightedFeature.link.classList.add('highlighted');
       }
     },
-    setContext(state, context) {
-      state.context = context;
-    },
-    setBbox(state, bbox) {
-      state.bbox = bbox;
-    },
-    resetBbox(state) {
-      state.bbox = null;
-    },
-    toggleSync(state) {
-      state.enableSync = !state.enableSync;
-    },
     setUrls(state, urls) {
-      state.story.url = urls.storyUrl;
-      state.track.url = urls.trackUrl;
+      state.story.data.url = urls.storyUrl;
+      state.track.data.url = urls.trackUrl;
     },
   },
   actions: {
@@ -82,24 +55,15 @@ export default new Vuex.Store({
       commit('setBbox', payload);
     },
     resetBbox({ commit }) {
-      commit('resetBbox');
-    },
-    setHighlightedLink({ commit }) {
-      commit('setHighlightedLink');
+      commit('setBbox', null);
     },
     highlightedFeatureInContext({ commit }, payload) {
-      commit('resetHighlightedFeature');
+      commit('setHighlightedFeature', null);
       commit('setHighlightedFeature', payload.feature);
       commit('setContext', payload.context);
     },
     setContext({ commit }, payload) {
       commit('setContext', payload);
-    },
-    resetHighlightedLink({ commit }) {
-      commit('resetHighlightedLink');
-    },
-    resetHighlightedFeature({ commit }) {
-      commit('resetHighlightedFeature');
     },
     setHighlightedFeature({ commit }, feature) {
       commit('setHighlightedFeature', feature);
@@ -109,41 +73,8 @@ export default new Vuex.Store({
       dispatch('loadStory');
     },
     async loadStory({ dispatch }) {
-      await dispatch('loadText');
-      await dispatch('loadTrack');
-    },
-    async loadTrack({ commit }) {
-      try {
-        const track = await axios.get(this.state.track.url);
-        commit('setTrack', track.data);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log(e);
-      }
-    },
-    async loadText({ commit }) {
-      try {
-        const story = await axios.get(this.state.story.url);
-        commit('setStory', story.data);
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log(e);
-      }
-    },
-    async loadFeatures({ commit }) {
-      document.querySelectorAll('a[data-url]').forEach((l, i) => {
-        const url = l.attributes.getNamedItem('data-url').value;
-        axios.get(url)
-          .then((geojson) => {
-            const f = {
-              id: i,
-              link: l,
-              feature: geojson.data,
-            };
-            l.id = `cs-link-${f.id}`;
-            commit('addFeature', f);
-          });
-      });
+      await dispatch('story/loadText', { root: true });
+      await dispatch('track/loadTrack', { root: true });
     },
   },
 });
