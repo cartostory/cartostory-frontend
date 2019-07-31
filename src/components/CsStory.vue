@@ -45,8 +45,9 @@ export default {
   watch: {
     highlightedFeature() {
       if (this.context === 'TEXT') {
-        console.log('text scroll');
+        console.log('scroll called from text');
       } else if (this.context === 'MAP') {
+        console.log('scroll called from map');
         this.scroll();
         this.resetHighlightedFeatures();
         this.setHighlightedLink();
@@ -55,14 +56,13 @@ export default {
   },
   methods: {
     scroll() {
-      console.log(this.highlightedFeature.link.id);
       this.$scrollTo(`#${this.highlightedFeature.link.id}`, undefined, {
         container: '#story-container',
         offset: -50,
       });
     },
     resetHighlightedFeatures() {
-      this.$store.dispatch('resetHighlighted');
+      this.$store.dispatch('resetHighlightedLink');
     },
     setHighlightedLink() {
       this.$store.dispatch('setHighlightedLink');
@@ -118,7 +118,7 @@ export default {
           this.$store.dispatch('setBbox', bbox);
           // @todo: pan map if context is set to TEXT even before the dispatch below
           this.$store.dispatch('setContext', 'TEXT');
-          console.log('first visible element', bbox);
+          //console.log('first visible element', bbox);
         }, this.scrollTimeout);
       };
       fn();
@@ -164,7 +164,6 @@ export default {
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .cs-story {
     padding: 0 64px 50px;
@@ -203,9 +202,11 @@ export default {
     background-color: #42b983;
     color: white;
     /*color: #d55635 !important;*/
+    /*
     -webkit-transition: background-color 500ms ease-out 200ms;
     -moz-transition: background-color 500ms ease-out 200ms;
     -o-transition: background-color 500ms ease-out 200ms;
     transition: background-color 500ms ease-out 200ms;
+    */
   }
 </style>

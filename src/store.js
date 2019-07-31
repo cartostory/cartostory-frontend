@@ -9,7 +9,7 @@ export default new Vuex.Store({
   state: {
     bbox: null,
     context: null,
-    enableSync: true,
+    enableSync: false,
     features: [],
     highlightedFeature: null,
     regex: /data-url='([^']+)'/g,
@@ -49,11 +49,13 @@ export default new Vuex.Store({
     resetFeatures(state) {
       state.features = null;
     },
-    resetHighlighted(state) {
+    resetHighlightedLink(state) {
       state.features.forEach(f => f.link.classList && f.link.classList.remove('highlighted'));
     },
     setHighlightedLink(state) {
-      state.highlightedFeature.link.classList.add('highlighted');
+      if (state.highlightedFeature.link) {
+        state.highlightedFeature.link.classList.add('highlighted');
+      }
     },
     setContext(state, context) {
       state.context = context;
@@ -61,7 +63,7 @@ export default new Vuex.Store({
     setBbox(state, bbox) {
       state.bbox = bbox;
     },
-    resetBbox(state, bbox) {
+    resetBbox(state) {
       state.bbox = null;
     },
     toggleSync(state) {
@@ -86,14 +88,18 @@ export default new Vuex.Store({
       commit('setHighlightedLink');
     },
     highlightedFeatureInContext({ commit }, payload) {
+      commit('resetHighlightedFeature');
       commit('setHighlightedFeature', payload.feature);
       commit('setContext', payload.context);
     },
     setContext({ commit }, payload) {
       commit('setContext', payload);
     },
-    resetHighlighted({ commit }) {
-      commit('resetHighlighted');
+    resetHighlightedLink({ commit }) {
+      commit('resetHighlightedLink');
+    },
+    resetHighlightedFeature({ commit }) {
+      commit('resetHighlightedFeature');
     },
     setHighlightedFeature({ commit }, feature) {
       commit('setHighlightedFeature', feature);

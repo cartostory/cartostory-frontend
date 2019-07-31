@@ -48,6 +48,7 @@ export default {
      * @returns {void}
      */
     featureClicked(f) {
+      this.$store.dispatch('resetHighlightedLink');
       this.$store.dispatch('highlightedFeatureInContext', {
         feature: f,
         context: 'MAP',
