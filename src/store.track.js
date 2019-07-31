@@ -12,10 +12,6 @@ const trackModule = {
   },
   mutations: {
     setTrack: setPath(['data', 'track']),
-    resetTrack(state) {
-      state.data.url = null;
-      state.data.track = null;
-    },
   },
   actions: {
     async loadTrack({ commit, state }) {

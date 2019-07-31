@@ -1,10 +1,9 @@
-import axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
 
 import storyModule from './store.story';
 import trackModule from './store.track';
-import { set, toggle } from './store.helpers';
+import { set, setPath, toggle } from './store.helpers';
 
 Vue.use(Vuex);
 
@@ -26,6 +25,8 @@ export default new Vuex.Store({
     setContext: set('context'),
     setBbox: set('bbox'),
     toggleSync: toggle('enableSync'),
+    setStoryUrl: setPath(['story', 'data', 'url']),
+    setTrackUrl: setPath(['track', 'data', 'url']),
     addFeature(state, feature) {
       if (!state.features.includes(feature)) {
         state.features.push(feature);
@@ -41,10 +42,6 @@ export default new Vuex.Store({
       if (state.highlightedFeature.link) {
         state.highlightedFeature.link.classList.add('highlighted');
       }
-    },
-    setUrls(state, urls) {
-      state.story.data.url = urls.storyUrl;
-      state.track.data.url = urls.trackUrl;
     },
   },
   actions: {
@@ -69,7 +66,8 @@ export default new Vuex.Store({
       commit('setHighlightedFeature', feature);
     },
     setUrls({ commit, dispatch }, payload) {
-      commit('setUrls', payload);
+      commit('setStoryUrl', payload.storyUrl);
+      commit('setTrackUrl', payload.trackUrl);
       dispatch('loadStory');
     },
     async loadStory({ dispatch }) {

@@ -12,10 +12,6 @@ const storyModule = {
   },
   mutations: {
     setStory: setPath(['data', 'story']),
-    resetStory(state) {
-      state.data.story.story = null;
-      state.data.story.url = null;
-    },
   },
   actions: {
     setHighlightedLink({ commit }) {
@@ -33,7 +29,7 @@ const storyModule = {
         console.log(e);
       }
     },
-    async loadFeatures({ commit }) {
+    loadFeatures({ commit }) {
       document.querySelectorAll('a[data-url]').forEach((l, i) => {
         const url = l.attributes.getNamedItem('data-url').value;
         axios.get(url)
