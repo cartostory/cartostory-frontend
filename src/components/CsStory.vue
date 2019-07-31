@@ -49,7 +49,7 @@ export default {
       } else if (this.context === 'MAP') {
         console.log('scroll called from map');
         this.scroll();
-        this.resetHighlightedFeatures();
+        this.resetHighlightedLinks();
         this.setHighlightedLink();
       }
     },
@@ -61,7 +61,7 @@ export default {
         offset: -50,
       });
     },
-    resetHighlightedFeatures() {
+    resetHighlightedLinks() {
       this.$store.dispatch('story/resetHighlightedLink');
     },
     setHighlightedLink() {
@@ -149,7 +149,7 @@ export default {
         return;
       }
 
-      this.resetHighlightedFeatures();
+      this.resetHighlightedLinks();
 
       if (highlightedFeature) {
         this.$store.dispatch('highlightedFeatureInContext', {
