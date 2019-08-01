@@ -167,7 +167,7 @@ export default {
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
   .cs-story {
     padding: 0 40px;
     height: 100%;
@@ -207,9 +207,10 @@ export default {
   .bbox-section {
     border: 2px dashed #eee;
     position: relative;
-    &:hover {
-      border-color: #42b983;
-    }
+  }
+
+  .bbox-section:hover {
+    border-color: #42b983;
   }
 
   .bbox-link {
