@@ -16,7 +16,6 @@ export default new Vuex.Store({
   state: {
     bbox: null,
     context: null,
-    enableSync: false,
     features: [],
     highlightedFeature: null,
   },
@@ -24,7 +23,6 @@ export default new Vuex.Store({
     setHighlightedFeature: set('highlightedFeature'),
     setContext: set('context'),
     setBbox: set('bbox'),
-    toggleSync: toggle('enableSync'),
     setStoryUrl: setPath(['story', 'data', 'url']),
     setTrackUrl: setPath(['track', 'data', 'url']),
     addFeature(state, feature) {
@@ -45,9 +43,6 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    toggleSync({ commit }) {
-      commit('toggleSync');
-    },
     setBbox({ commit }, payload) {
       commit('setBbox', payload);
     },
