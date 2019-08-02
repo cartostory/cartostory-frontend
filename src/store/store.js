@@ -1,13 +1,29 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { pointsWithinPolygon, featureCollection }  from '@turf/turf';
 import L from 'leaflet';
+import {
+  booleanPointInPolygon,
+  featureCollection,
+  lineSplit,
+  lineString,
+  point,
+  pointsWithinPolygon,
+} from '@turf/turf';
 
 import storyModule from './store.story';
 import trackModule from './store.track';
 import { set, setPath } from './store.helpers';
 
 Vue.use(Vuex);
+
+const turf = {
+  booleanPointInPolygon,
+  featureCollection,
+  lineSplit,
+  lineString,
+  point,
+  pointsWithinPolygon,
+};
 
 export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
@@ -89,14 +105,38 @@ export default new Vuex.Store({
     bboxGeoJson: state => state.bbox && L.rectangle(state.bbox).toGeoJSON(),
     featuresInsideBbox: (state, getters) => {
       if (!getters.bboxGeoJson) {
-        return;
+        return null;
       }
 
       const features = state.features.map(f => f.feature);
-      const fc = featureCollection(features);
-      const pointsWithinBbox = pointsWithinPolygon(fc, getters.bboxGeoJson);
+      const fc = turf.featureCollection(features);
+      const pointsWithinBbox = turf.pointsWithinPolygon(fc, getters.bboxGeoJson);
 
       return pointsWithinBbox.features;
+    },
+    trackInsideBbox: (state, getters) => {
+      if (!getters.bboxGeoJson) {
+        return null;
+      }
+
+      const parts = [];
+      const track = state.track.data.track.features[0];
+      const { coordinates } = track.geometry;
+
+      coordinates.forEach((part) => {
+        const split = turf.lineSplit(turf.lineString(part), getters.bboxGeoJson);
+        const oddPair = turf.booleanPointInPolygon(point(part[0]), getters.bboxGeoJson)
+          ? 0
+          : 1;
+
+        split.features.forEach((splitedPart, i) => {
+          if ((i + oddPair) % 2 === 0) {
+            parts.push(splitedPart);
+          }
+        });
+      });
+
+      return featureCollection(parts);
     },
   },
 });

@@ -61,17 +61,22 @@ export default {
           style: {
             color: '#42b983',
             fillColor: '#42b983',
+            fillOpacity: 0,
             dashArray: '5',
             weight: 2
           }
         }
       },
       trackOptions: {
-        style() {
-          return {
-            color: '#5a5a66',
+        style: {
+          plain: {
+              color: '#5a5a66',
+              dashArray: '6',
+          },
+          inBbox: {
+            color: '#42b983',
             dashArray: '6',
-          };
+          },
         },
       },
     };
@@ -131,6 +136,9 @@ export default {
     track() {
       return this.$store.state.track.data;
     },
+    trackInsideBbox() {
+      return this.$store.getters.trackInsideBbox;
+    }
   },
   watch: {
     highlightedFeature() {
@@ -152,7 +160,8 @@ export default {
         <l-tile-layer :url="map.baseLayer" />
         <l-tile-layer :url="map.hikingOverlay" layer-type="overlay" :opacity="0.7" />
         <l-tile-layer :url="map.labelsOverlay" layer-type="overlay" />
-        <l-geo-json :geojson="track.track" :options="trackOptions" ref="cstrack" />
+        <l-geo-json :geojson="track.track" :options="trackOptions.style.plain" ref="cstrack" />
+        <l-geo-json v-if="trackInsideBbox" :geojson="trackInsideBbox" :options="trackOptions.style.inBbox" ref="cstrack" />
         <l-rectangle v-if="bboxHovered && bboxesDiffer" :bounds="bboxHovered" :l-style="bboxOptions.hovered.style"></l-rectangle>
         <l-rectangle v-if="bbox" :bounds="bbox" :l-style="bboxOptions.selected.style"></l-rectangle>
 
