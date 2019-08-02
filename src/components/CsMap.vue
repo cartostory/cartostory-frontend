@@ -1,5 +1,11 @@
 <script>
-import { LCircleMarker, LGeoJson, LMap, LTileLayer } from 'vue2-leaflet';
+import {
+  LCircleMarker,
+  LGeoJson,
+  LMap,
+  LTileLayer,
+  LRectangle
+} from 'vue2-leaflet';
 
 require('../../node_modules/leaflet/dist/leaflet.css');
 
@@ -10,6 +16,7 @@ export default {
     LGeoJson,
     LMap,
     LTileLayer,
+    LRectangle,
   },
   data() {
     return {
@@ -31,6 +38,24 @@ export default {
         color: '#fffc31',
         fillOpacity: 0.8,
       },
+      bboxOptions: {
+        hovered: {
+          style: {
+            color: '#5a5a66',
+            fillColor: '#5a5a66',
+            dashArray: '5',
+            weight: 2
+          }
+        },
+        selected: {
+          style: {
+            color: '#42b983',
+            fillColor: '#42b983',
+            dashArray: '5',
+            weight: 2
+          }
+        }
+      },
       trackOptions: {
         style() {
           return {
@@ -49,10 +74,7 @@ export default {
      */
     featureClicked(f) {
       this.$store.dispatch('story/resetHighlightedLink');
-      this.$store.dispatch('highlightedFeatureInContext', {
-        feature: f,
-        context: 'MAP',
-      });
+      this.$store.dispatch('setHighlightedFeature', f);
       this.map.center = this.$refs.csmap.mapObject.getBounds().getCenter();
     },
     flyTo(f) {
@@ -70,6 +92,12 @@ export default {
     bbox() {
       return this.$store.state.bbox;
     },
+    bboxHovered() {
+      return this.$store.state.bboxHovered;
+    },
+    bboxesDiffer() {
+      return this.bbox !== this.bboxHovered;
+    },
     features() {
       if (!this.highlightedFeature) {
         return this.$store.state.features;
@@ -83,22 +111,14 @@ export default {
     track() {
       return this.$store.state.track.data;
     },
-    context() {
-      return this.$store.state.context;
-    },
   },
   watch: {
     highlightedFeature() {
-      if (this.context !== 'TEXT') {
-        return;
-      }
-
       this.flyTo(this.highlightedFeature);
     },
     bbox() {
       if (this.bbox) {
         this.$refs.csmap.mapObject.flyToBounds(this.bbox);
-        this.$store.dispatch('resetBbox');
       }
     },
   },
@@ -113,6 +133,8 @@ export default {
         <l-tile-layer :url="map.hikingOverlay" layer-type="overlay" :opacity="0.7" />
         <l-tile-layer :url="map.labelsOverlay" layer-type="overlay" />
         <l-geo-json :geojson="track.track" :options="trackOptions" ref="cstrack" />
+        <l-rectangle v-if="bboxHovered && bboxesDiffer" :bounds="bboxHovered" :l-style="bboxOptions.hovered.style"></l-rectangle>
+        <l-rectangle v-if="bbox" :bounds="bbox" :l-style="bboxOptions.selected.style"></l-rectangle>
 
         <l-circle-marker
           v-if="highlightedFeature"

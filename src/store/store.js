@@ -15,6 +15,7 @@ export default new Vuex.Store({
   },
   state: {
     bbox: null,
+    bboxHovered: null,
     context: null,
     features: [],
     highlightedFeature: null,
@@ -23,6 +24,7 @@ export default new Vuex.Store({
     setHighlightedFeature: set('highlightedFeature'),
     setContext: set('context'),
     setBbox: set('bbox'),
+    setBboxHovered: set('bboxHovered'),
     setStoryUrl: setPath(['story', 'data', 'url']),
     setTrackUrl: setPath(['track', 'data', 'url']),
     addFeature(state, feature) {
@@ -44,13 +46,21 @@ export default new Vuex.Store({
   },
   actions: {
     setBbox({ commit }, payload) {
+      if (payload) {
+        commit('setBbox', null);
+      }
       commit('setBbox', payload);
     },
-    resetBbox({ commit }) {
-      commit('setBbox', null);
+    setBboxHovered({ commit }, payload) {
+      if (payload) {
+        commit('setBboxHovered', null);
+      }
+      commit('setBboxHovered', payload);
     },
     highlightedFeatureInContext({ commit }, payload) {
-      commit('setHighlightedFeature', null);
+      if (payload) {
+        commit('setHighlightedFeature', null);
+      }
       commit('setHighlightedFeature', payload.feature);
       commit('setContext', payload.context);
     },
@@ -58,6 +68,9 @@ export default new Vuex.Store({
       commit('setContext', payload);
     },
     setHighlightedFeature({ commit }, feature) {
+      if (feature) {
+        commit('setHighlightedFeature', null);
+      }
       commit('setHighlightedFeature', feature);
     },
     setUrls({ commit, dispatch }, payload) {

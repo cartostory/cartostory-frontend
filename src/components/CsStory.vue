@@ -1,5 +1,5 @@
 <template>
-  <div v-if="story.story" ref="story" class="cs-story" @scroll="onScrollEnd">
+  <div v-if="story.story" ref="story" class="cs-story">
     <section v-if="story.story.header">
       <header>
         <h1>{{ story.story.header }}</h1>
@@ -8,7 +8,7 @@
         </div>
       </header>
       <section>
-        <section v-bind:class="{ 'bbox-section': s.bbox }" v-for="s in story.story.sections" :data-bbox="s.bbox">
+        <section @mouseenter="onBboxHovered(s.bbox)" @mouseleave="onBboxLeft" v-bind:class="{ 'bbox-section': s.bbox, 'bbox-section_active': s.bbox === bbox }" v-for="s in story.story.sections" :data-bbox="s.bbox">
           <a class="bbox-link" @click="onBboxClicked(s.bbox)" v-if="s.bbox">bbox zoom</a>
           <h2>{{ s.header }}</h2>
           <div>
@@ -32,11 +32,11 @@ export default {
     this.$store.dispatch('story/loadFeatures');
   },
   computed: {
+    bbox() {
+      return this.$store.state.bbox;
+    },
     highlightedFeature() {
       return this.$store.state.highlightedFeature;
-    },
-    context() {
-      return this.$store.state.context;
     },
     story() {
       return this.$store.state.story.data;
@@ -44,19 +44,20 @@ export default {
   },
   watch: {
     highlightedFeature() {
-      if (this.context === 'TEXT') {
-        console.log('scroll called from text');
-      } else if (this.context === 'MAP') {
-        console.log('scroll called from map');
-        this.scroll();
-        this.resetHighlightedLinks();
-        this.setHighlightedLink();
-      }
+      this.scroll();
+      this.resetHighlightedLinks();
+      this.setHighlightedLink();
     },
   },
   methods: {
     onBboxClicked(bbox) {
       this.$store.dispatch('setBbox', bbox);
+    },
+    onBboxHovered(bbox) {
+      this.$store.dispatch('setBboxHovered', bbox);
+    },
+    onBboxLeft() {
+      this.$store.dispatch('setBboxHovered', null);
     },
     scroll() {
       this.$scrollTo(`#${this.highlightedFeature.link.id}`, undefined, {
@@ -69,62 +70,6 @@ export default {
     },
     setHighlightedLink() {
       this.$store.dispatch('story/setHighlightedLink');
-    },
-    /**
-     * Get the first bounding box as [[upperLeftX, upperLeftY], [bottomRightX, bottomRightY]]
-     *
-     * @returns {array}
-     */
-    $_getFirstVisibleBBox() {
-      const storyOffsetTop = this.$refs.story.scrollTop;
-      const bboxes = document.querySelectorAll('[data-bbox]');
-
-      let firstVisibleBBox = null;
-
-      for (let bbox of bboxes.values()) {
-        if (bbox.offsetTop >= storyOffsetTop) {
-          firstVisibleBBox = bbox
-            .getAttribute('data-bbox')
-            .split(',')
-            .map(c => parseFloat(c));
-          break;
-        }
-      }
-
-      if (!firstVisibleBBox) {
-        return;
-      }
-
-      const upperLeft = [firstVisibleBBox[1], firstVisibleBBox[0]];
-      const bottomRight = [firstVisibleBBox[3], firstVisibleBBox[2]];
-      return [upperLeft, bottomRight];
-    },
-    /**
-     * Pan map to the location of the first visible element of the story
-     * when map <-> text sync is enabled.
-     *
-     * @param {object} e
-     * @returns {void}
-     */
-    onScrollEnd() {
-      if (this.scrollTimeoutID) {
-        window.clearTimeout(this.scrollTimeoutID);
-      }
-
-      const fn = () => {
-        if (!this.$store.state.enableSync) {
-          return;
-        }
-
-        this.scrollTimeoutID = window.setTimeout(() => {
-          const bbox = this.$_getFirstVisibleBBox();
-          this.$store.dispatch('setBbox', bbox);
-          // @todo: pan map if context is set to TEXT even before the dispatch below
-          this.$store.dispatch('setContext', 'TEXT');
-          //console.log('first visible element', bbox);
-        }, this.scrollTimeout);
-      };
-      fn();
     },
     sanitize(txt) {
       return this.$sanitize(txt);
@@ -155,16 +100,12 @@ export default {
       this.resetHighlightedLinks();
 
       if (highlightedFeature) {
-        this.$store.dispatch('highlightedFeatureInContext', {
-          feature: highlightedFeature,
-          context: 'TEXT',
-        });
+        this.$store.dispatch('setHighlightedFeature', highlightedFeature);
         this.setHighlightedLink();
       }
     },
   },
 };
-
 </script>
 
 <style scoped>
@@ -210,6 +151,12 @@ export default {
   }
 
   .bbox-section:hover {
+    border-color: #bbb;
+  }
+
+  .bbox-section_active,
+  .bbox-section_active:hover
+  {
     border-color: #42b983;
   }
 
