@@ -101,6 +101,7 @@ export default {
 
       if (highlightedFeature) {
         this.$store.dispatch('setHighlightedFeature', highlightedFeature);
+        this.$store.dispatch('setBbox', null);
         this.setHighlightedLink();
       }
     },

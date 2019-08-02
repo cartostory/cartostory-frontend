@@ -28,15 +28,25 @@ export default {
         labelsOverlay: 'https://api.mapbox.com/styles/v1/cartostory/cjugqfe8r1lhh1ftgrmr7v9zj/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
         zoom: 8,
       },
-      marker: {
-        color: '#3185fc',
-        fillOpacity: 0.5,
-        radius: 8,
-        weight: 1,
-      },
-      highlightedMarker: {
-        color: '#fffc31',
-        fillOpacity: 0.8,
+      markerOptions: {
+        style: {
+          common: {
+            radius: 8,
+            weight: 1,
+          },
+          highlighted: {
+            color: '#fffc31',
+            fillOpacity: 0.8,
+          },
+          inBbox: {
+            color: '#42b983',
+            fillOpacity: 0.5,
+          },
+          plain: {
+            color: '#3185fc',
+            fillOpacity: 0.5,
+          },
+        },
       },
       bboxOptions: {
         hovered: {
@@ -99,11 +109,21 @@ export default {
       return this.bbox !== this.bboxHovered;
     },
     features() {
-      if (!this.highlightedFeature) {
+      if (!this.highlightedFeature && !this.featuresInsideBbox) {
         return this.$store.state.features;
       }
 
-      return this.$store.state.features.filter(f => f.id !== this.highlightedFeature.id);
+      if (this.highlightedFeature) {
+        return this.$store.state.features.filter(f => f.id !== this.highlightedFeature.id);
+      }
+
+      if (this.featuresInsideBbox) {
+        const idsInsideBbox = this.featuresInsideBbox.map(f => f.properties.id);
+        return this.$store.state.features.filter(f => !idsInsideBbox.includes(f.feature.properties.id));
+      }
+    },
+    featuresInsideBbox() {
+      return this.$store.getters.featuresInsideBbox;
     },
     highlightedFeature() {
       return this.$store.state.highlightedFeature;
@@ -139,24 +159,36 @@ export default {
         <l-circle-marker
           v-if="highlightedFeature"
           @click="featureClicked(highlightedFeature)"
-          :color="highlightedMarker.color"
-          :fill-color="highlightedMarker.color"
-          :fill-opacity="highlightedMarker.fillOpacity"
+          :color="markerOptions.style.highlighted.color"
+          :fill-color="markerOptions.style.highlighted.color"
+          :fill-opacity="markerOptions.style.highlighted.fillOpacity"
           :latLng="[highlightedFeature.feature.geometry.coordinates[1], highlightedFeature.feature.geometry.coordinates[0]]"
-          :radius="marker.radius"
-          :weight="marker.weight">
+          :radius="markerOptions.style.common.radius"
+          :weight="markerOptions.style.common.weight">
         </l-circle-marker>
 
         <l-circle-marker
           @click="featureClicked(f)"
-          :color="marker.color"
-          :fill-color="marker.color"
-          :fill-opacity="marker.fillOpacity"
+          :color="markerOptions.style.plain.color"
+          :fill-color="markerOptions.style.plain.color"
+          :fill-opacity="markerOptions.style.plain.fillOpacity"
           :key="f.id"
           :latLng="[f.feature.geometry.coordinates[1], f.feature.geometry.coordinates[0]]"
-          :radius="marker.radius"
-          :weight="marker.weight"
+          :radius="markerOptions.style.common.radius"
+          :weight="markerOptions.style.common.weight"
           v-for="f in features">
+        </l-circle-marker>
+
+        <l-circle-marker
+          @click="featureClicked(f)"
+          :color="markerOptions.style.inBbox.color"
+          :fill-color="markerOptions.style.inBbox.color"
+          :fill-opacity="markerOptions.style.inBbox.fillOpacity"
+          :key="f.id"
+          :latLng="[f.geometry.coordinates[1], f.geometry.coordinates[0]]"
+          :radius="markerOptions.style.common.radius"
+          :weight="markerOptions.style.common.weight"
+          v-for="f in featuresInsideBbox">
         </l-circle-marker>
       </l-map>
     </div>

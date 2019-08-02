@@ -1,9 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import { pointsWithinPolygon, featureCollection }  from '@turf/turf';
+import L from 'leaflet';
 
 import storyModule from './store.story';
 import trackModule from './store.track';
-import { set, setPath, toggle } from './store.helpers';
+import { set, setPath } from './store.helpers';
 
 Vue.use(Vuex);
 
@@ -81,6 +83,20 @@ export default new Vuex.Store({
     async loadStory({ dispatch }) {
       await dispatch('story/loadText', { root: true });
       await dispatch('track/loadTrack', { root: true });
+    },
+  },
+  getters: {
+    bboxGeoJson: state => state.bbox && L.rectangle(state.bbox).toGeoJSON(),
+    featuresInsideBbox: (state, getters) => {
+      if (!getters.bboxGeoJson) {
+        return;
+      }
+
+      const features = state.features.map(f => f.feature);
+      const fc = featureCollection(features);
+      const pointsWithinBbox = pointsWithinPolygon(fc, getters.bboxGeoJson);
+
+      return pointsWithinBbox.features;
     },
   },
 });
