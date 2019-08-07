@@ -6,6 +6,7 @@ import {
   LTileLayer,
   LRectangle
 } from 'vue2-leaflet';
+import * as LEdgeMarker from 'leaflet-edge-marker';
 
 require('../../node_modules/leaflet/dist/leaflet.css');
 
@@ -27,6 +28,7 @@ export default {
         hikingOverlay: 'http://tile.mtbmap.cz/overlay_hiking/{z}/{x}/{y}.png',
         labelsOverlay: 'https://api.mapbox.com/styles/v1/cartostory/cjugqfe8r1lhh1ftgrmr7v9zj/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
         zoom: 8,
+        edgeMarker: null,
       },
       markerOptions: {
         style: {
@@ -125,7 +127,6 @@ export default {
       }
     },
     featuresInsideBbox() {
-      console.log(this.$store.getters['track/featuresInsideBbox']);
       return this.$store.getters['track/featuresInsideBbox'];
     },
     highlightedFeature() {
@@ -148,6 +149,15 @@ export default {
     bbox() {
       if (this.bbox) {
         this.$refs.csmap.mapObject.flyToBounds(this.bbox);
+      }
+    },
+    bboxHovered() {
+      if (!this.bboxHovered) {
+        this.$refs.csmap.mapObject.removeLayer(this.map.edgeMarker);
+      } else {
+        const bboxCenter = L.latLngBounds(this.bboxHovered).getCenter();
+        this.map.edgeMarker = new LEdgeMarker(bboxCenter);
+        this.$refs.csmap.mapObject.addLayer(this.map.edgeMarker);
       }
     },
   },

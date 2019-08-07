@@ -13,6 +13,7 @@
     "@turf/turf": "^5.1.6",
     "axios": "^0.19.0",
     "leaflet": "^1.4.0",
+    "leaflet-edge-marker": "https://github.com/zimmicz/leaflet-edge-marker",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
     "vue-sanitize": "^0.2.0",
