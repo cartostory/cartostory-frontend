@@ -8,7 +8,8 @@
         </div>
       </header>
       <section>
-        <section @mouseenter="onBboxHovered(s.bbox)" @mouseleave="onBboxLeft" v-bind:class="{ 'bbox-section': s.bbox, 'bbox-section_active': s.bbox === bbox }" v-for="s in story.story.sections" :data-bbox="s.bbox">
+        <section @mouseenter="onBboxHovered(s.bbox)" @mouseleave="onBboxLeft" v-bind:class="{
+          'bbox-section': s.bbox, 'bbox-section__active': s.bbox === bbox }" v-for="s in story.story.sections" :data-bbox="s.bbox">
           <a class="bbox-link" @click="onBboxClicked(s.bbox)" v-if="s.bbox">bbox zoom</a>
           <h2>{{ s.header }}</h2>
           <div>
@@ -41,19 +42,27 @@ export default {
     story() {
       return this.$store.state.story.data;
     },
+    scrollToFeature() {
+      return this.$store.state.scrollToFeature;
+    }
   },
   watch: {
     highlightedFeature() {
-      this.scroll();
+      if (this.scrollToFeature) {
+        this.scroll();
+      }
+
       this.resetHighlightedLinks();
       this.setHighlightedLink();
     },
   },
   methods: {
     onBboxClicked(bbox) {
+      this.$store.dispatch('setBbox', null);
       this.$store.dispatch('setBbox', bbox);
     },
     onBboxHovered(bbox) {
+      this.$store.dispatch('setBboxHovered', null);
       this.$store.dispatch('setBboxHovered', bbox);
     },
     onBboxLeft() {
@@ -101,7 +110,7 @@ export default {
 
       if (highlightedFeature) {
         this.$store.dispatch('setHighlightedFeature', highlightedFeature);
-        this.$store.dispatch('setBbox', null);
+        this.$store.dispatch('setScrollToFeature', false);
         this.setHighlightedLink();
       }
     },
@@ -155,8 +164,8 @@ export default {
     border-color: #bbb;
   }
 
-  .bbox-section_active,
-  .bbox-section_active:hover
+  .bbox-section__active,
+  .bbox-section__active:hover
   {
     border-color: #42b983;
   }
@@ -174,7 +183,12 @@ export default {
     text-decoration: underline;
   }
 
-  .sanitized >>> .highlighted {
+  .sanitized >>> a:hover {
+    color: #bbb;
+  }
+
+  .sanitized >>> .highlighted,
+  .sanitized >>> .highlighted:hover {
     background-color: #42b983;
     color: white;
     /*color: #d55635 !important;*/

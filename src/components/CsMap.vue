@@ -90,6 +90,7 @@ export default {
     featureClicked(f) {
       this.$store.dispatch('story/resetHighlightedLink');
       this.$store.dispatch('setHighlightedFeature', f);
+      this.$store.dispatch('setScrollToFeature', true);
       this.map.center = this.$refs.csmap.mapObject.getBounds().getCenter();
     },
     flyTo(f) {
@@ -116,19 +117,16 @@ export default {
     features() {
       if (!this.highlightedFeature && !this.featuresInsideBbox) {
         return this.$store.state.features;
-      }
-
-      if (this.highlightedFeature) {
-        return this.$store.state.features.filter(f => f.id !== this.highlightedFeature.id);
-      }
-
-      if (this.featuresInsideBbox) {
-        const idsInsideBbox = this.featuresInsideBbox.map(f => f.properties.id);
-        return this.$store.state.features.filter(f => !idsInsideBbox.includes(f.feature.properties.id));
+      } else {
+        const highlightedId = [this.highlightedFeature && this.highlightedFeature.feature.properties.id];
+        const idsInsideBbox = this.featuresInsideBbox && this.featuresInsideBbox.map(f => f.feature.properties.id);
+        const ids = highlightedId.concat(idsInsideBbox);
+        return this.$store.state.features.filter(f => !ids.includes(f.feature.properties.id));
       }
     },
     featuresInsideBbox() {
-      return this.$store.getters.featuresInsideBbox;
+      console.log(this.$store.getters['track/featuresInsideBbox']);
+      return this.$store.getters['track/featuresInsideBbox'];
     },
     highlightedFeature() {
       return this.$store.state.highlightedFeature;
@@ -137,7 +135,10 @@ export default {
       return this.$store.state.track.data;
     },
     trackInsideBbox() {
-      return this.$store.getters.trackInsideBbox;
+      return this.$store.getters['track/trackBboxRelation']('within');
+    },
+    trackOutsideBbox() {
+      return this.$store.getters['track/trackBboxRelation']('disjoint');
     }
   },
   watch: {
@@ -160,8 +161,9 @@ export default {
         <l-tile-layer :url="map.baseLayer" />
         <l-tile-layer :url="map.hikingOverlay" layer-type="overlay" :opacity="0.7" />
         <l-tile-layer :url="map.labelsOverlay" layer-type="overlay" />
-        <l-geo-json :geojson="track.track" :options="trackOptions.style.plain" ref="cstrack" />
+        <l-geo-json v-if="!trackOutsideBbox && !trackInsideBbox" :geojson="track.track" :options="trackOptions.style.plain" ref="cstrack" />
         <l-geo-json v-if="trackInsideBbox" :geojson="trackInsideBbox" :options="trackOptions.style.inBbox" ref="cstrack" />
+        <l-geo-json v-if="trackOutsideBbox" :geojson="trackOutsideBbox" :options="trackOptions.style.plain" ref="cstrack" />
         <l-rectangle v-if="bboxHovered && bboxesDiffer" :bounds="bboxHovered" :l-style="bboxOptions.hovered.style"></l-rectangle>
         <l-rectangle v-if="bbox" :bounds="bbox" :l-style="bboxOptions.selected.style"></l-rectangle>
 
@@ -181,7 +183,7 @@ export default {
           :color="markerOptions.style.plain.color"
           :fill-color="markerOptions.style.plain.color"
           :fill-opacity="markerOptions.style.plain.fillOpacity"
-          :key="f.id"
+          :key="f.feature.properties.id"
           :latLng="[f.feature.geometry.coordinates[1], f.feature.geometry.coordinates[0]]"
           :radius="markerOptions.style.common.radius"
           :weight="markerOptions.style.common.weight"
@@ -193,8 +195,8 @@ export default {
           :color="markerOptions.style.inBbox.color"
           :fill-color="markerOptions.style.inBbox.color"
           :fill-opacity="markerOptions.style.inBbox.fillOpacity"
-          :key="f.id"
-          :latLng="[f.geometry.coordinates[1], f.geometry.coordinates[0]]"
+          :key="f.feature.properties.id"
+          :latLng="[f.feature.geometry.coordinates[1], f.feature.geometry.coordinates[0]]"
           :radius="markerOptions.style.common.radius"
           :weight="markerOptions.style.common.weight"
           v-for="f in featuresInsideBbox">
