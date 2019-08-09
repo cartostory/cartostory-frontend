@@ -6521,7 +6521,7 @@ lcid@^2.0.0:
 
 "leaflet-edge-marker@https://github.com/zimmicz/leaflet-edge-marker":
   version "1.0.0"
-  resolved "https://github.com/zimmicz/leaflet-edge-marker#bc98dcaa9b1ba6bdc0326dd198a2d577e4b4f970"
+  resolved "https://github.com/zimmicz/leaflet-edge-marker#0f7cea6161cf0e090293bb4e82b5a69029b6a96f"
   dependencies:
     leaflet "^1.5.1"
     leaflet-rotatedmarker "^0.2.0"

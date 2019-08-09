@@ -48,6 +48,18 @@ export default {
             color: '#3185fc',
             fillOpacity: 0.5,
           },
+          edge: {
+            icon: L.icon({
+              iconUrl: '../../node_modules/leaflet/dist/images/marker-icon.png',
+              iconRetinaUrl: 'marker-icon-2x.png',
+              shadowUrl:     'marker-shadow.png',
+              iconSize:    [25, 41],
+              iconAnchor:  [12, 41],
+              popupAnchor: [1, -34],
+              tooltipAnchor: [16, -28],
+              shadowSize:  [0, 0],
+            }),
+          },
         },
       },
       bboxOptions: {
@@ -152,11 +164,22 @@ export default {
       }
     },
     bboxHovered() {
+      const icon = L.icon({
+        iconUrl: 'img/map-marker.svg',
+        iconRetinaUrl: 'marker-icon-2x.png',
+        shadowUrl:     'marker-shadow.png',
+        iconSize:    [25, 41],
+        iconAnchor:  [12, 41],
+        popupAnchor: [1, -34],
+        tooltipAnchor: [16, -28],
+        shadowSize:  [0, 0],
+      });
+
       if (!this.bboxHovered) {
         this.$refs.csmap.mapObject.removeLayer(this.map.edgeMarker);
       } else {
         const bboxCenter = L.latLngBounds(this.bboxHovered).getCenter();
-        this.map.edgeMarker = new LEdgeMarker(bboxCenter);
+        this.map.edgeMarker = new LEdgeMarker(bboxCenter, { icon: icon });
         this.$refs.csmap.mapObject.addLayer(this.map.edgeMarker);
       }
     },
