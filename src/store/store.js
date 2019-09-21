@@ -1,91 +1,84 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import L from 'leaflet';
-import {
-  booleanPointInPolygon,
-  featureCollection,
-  lineSplit,
-  lineString,
-  point,
-  pointsWithinPolygon,
-} from '@turf/turf';
 
+import featuresModule from './store.features';
 import storyModule from './store.story';
 import trackModule from './store.track';
 import { set, setPath } from './store.helpers';
 
 Vue.use(Vuex);
 
-const turf = {
-  booleanPointInPolygon,
-  featureCollection,
-  lineSplit,
-  lineString,
-  point,
-  pointsWithinPolygon,
+const state = {
+  bbox: undefined,
+  bboxHovered: undefined,
+  highlightedFeature: undefined,
+  shouldScrollToFeature: undefined,
 };
 
-export default new Vuex.Store({
+const actions = {
+  setBbox({ commit }, payload) {
+    commit('setBbox', payload);
+  },
+  setBboxHovered({ commit }, payload) {
+    commit('setBboxHovered', payload);
+  },
+  setHighlightedFeature({ commit }, feature) {
+    commit('setBbox', null);
+    commit('setHighlightedFeature', feature);
+  },
+  setShouldScrollToFeature( { commit }, should ) {
+    commit('setShouldScrollToFeature', should);
+  },
+  setUrls({ commit }, urls) {
+    commit('setFeaturesUrl', urls.featuresUrl);
+    commit('setStoryUrl', urls.storyUrl);
+    commit('setTrackUrl', urls.trackUrl);
+  },
+  async loadStory({ dispatch }) {
+    await dispatch('story/loadText', { root: true });
+    await dispatch('track/loadTrack', { root: true });
+    await dispatch('features/loadFeatures', { root: true });
+  },
+};
+
+const modules = {
+  features: featuresModule,
+  story: storyModule,
+  track: trackModule,
+};
+
+const mutations = {
+  setHighlightedFeature: set('highlightedFeature'),
+  setBbox: set('bbox'),
+  setBboxHovered: set('bboxHovered'),
+  setShouldScrollToFeature: set('shouldScrollToFeature'),
+  setFeaturesUrl: setPath(['features', 'data', 'url']),
+  setStoryUrl: setPath(['story', 'data', 'url']),
+  setTrackUrl: setPath(['track', 'data', 'url']),
+  resetHighlightedLink() {
+    document.querySelectorAll('[data-cs-id]').forEach((elm) => {
+      if (elm.classList) {
+        elm.classList.remove('highlighted');
+      }
+    });
+  },
+  setHighlightedLink(state) {
+    if (!state.highlightedFeature) {
+      return;
+    }
+
+    const highlightedId = state.highlightedFeature.properties.id;
+    const highlightedElement = document.querySelectorAll(`[data-cs-id='${highlightedId}']`)[0];
+    if (state.highlightedFeature && highlightedElement) {
+      elm.classList.add('highlighted');
+    }
+  },
+};
+
+export default ({
   strict: process.env.NODE_ENV !== 'production',
-  modules: {
-    story: storyModule,
-    track: trackModule,
-  },
-  state: {
-    bbox: null,
-    bboxHovered: null,
-    context: null,
-    features: [],
-    highlightedFeature: null,
-    scrollToFeature: null,
-  },
-  mutations: {
-    setHighlightedFeature: set('highlightedFeature'),
-    setContext: set('context'),
-    setBbox: set('bbox'),
-    setBboxHovered: set('bboxHovered'),
-    setScrollToFeature: set('scrollToFeature'),
-    setStoryUrl: setPath(['story', 'data', 'url']),
-    setTrackUrl: setPath(['track', 'data', 'url']),
-    addFeature(state, feature) {
-      if (!state.features.includes(feature)) {
-        state.features.push(feature);
-      }
-    },
-    resetFeatures(state) {
-      state.features = [];
-    },
-    resetHighlightedLink(state) {
-      state.features.forEach(f => f.link.classList && f.link.classList.remove('highlighted'));
-    },
-    setHighlightedLink(state) {
-      if (state.highlightedFeature.link) {
-        state.highlightedFeature.link.classList.add('highlighted');
-      }
-    },
-  },
-  actions: {
-    setBbox({ commit }, payload) {
-      commit('setBbox', payload);
-    },
-    setBboxHovered({ commit }, payload) {
-      commit('setBboxHovered', payload);
-    },
-    setHighlightedFeature({ commit }, feature) {
-      commit('setBbox', null);
-      commit('setHighlightedFeature', feature);
-    },
-    setScrollToFeature( { commit }, payload ) {
-      commit('setScrollToFeature', payload);
-    },
-    setUrls({ commit, dispatch }, payload) {
-      commit('setStoryUrl', payload.storyUrl);
-      commit('setTrackUrl', payload.trackUrl);
-      dispatch('loadStory');
-    },
-    async loadStory({ dispatch }) {
-      await dispatch('story/loadText', { root: true });
-      await dispatch('track/loadTrack', { root: true });
-    },
-  },
+  modules,
+  state,
+  mutations,
+  actions,
 });

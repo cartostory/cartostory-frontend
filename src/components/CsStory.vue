@@ -29,9 +29,6 @@ export default {
       scrollTimeoutID: null,
     };
   },
-  mounted() {
-    this.$store.dispatch('story/loadFeatures');
-  },
   computed: {
     bbox() {
       return this.$store.state.bbox;
@@ -42,13 +39,13 @@ export default {
     story() {
       return this.$store.state.story.data;
     },
-    scrollToFeature() {
-      return this.$store.state.scrollToFeature;
+    shouldScrollToFeature() {
+      return this.$store.state.shouldScrollToFeature;
     }
   },
   watch: {
     highlightedFeature() {
-      if (this.scrollToFeature) {
+      if (this.shouldScrollToFeature) {
         this.scroll();
       }
 
@@ -69,7 +66,9 @@ export default {
       this.$store.dispatch('setBboxHovered', null);
     },
     scroll() {
-      this.$scrollTo(`#${this.highlightedFeature.link.id}`, undefined, {
+      const id = this.highlightedFeature.properties.id;
+      const elm = document.querySelectorAll(`[data-cs-id='${id}']`)[0];
+      this.$scrollTo(elm, undefined, {
         container: '#story-container',
         offset: -50,
       });
@@ -84,33 +83,26 @@ export default {
       return this.$sanitize(txt);
     },
     /**
-     * Find story <a> element corresponding to the given JSON feature.
-     *
-     * @param {object} f
-     * @returns {DOMElement}
-     */
-    $_getElementFromFeature(f) {
-      return f.link;
-    },
-    /**
      * Toggle highlight class on click and set the new highlighted link.
      * Note the link click shifts the map center to the newly highlighted feature.
      * @todo solve duplicate links
      * @param {object} e
      */
     onTextClicked(e) {
-      const t = e.target || this.$_getElementFromFeature(e);
-      const highlightedFeature = this.$store.state.features.find(f => f.link.id === t.id);
+      const t = e.target;
 
-      if (t.localName !== 'a') {
+      if (t.localName !== 'a' || !t.attributes.getNamedItem('data-cs-id')) {
         return;
       }
+
+      const id = t.attributes.getNamedItem('data-cs-id').value;
+      const highlightedFeature = this.$store.state.features.data.features.find(f => f.properties.id == id);
 
       this.resetHighlightedLinks();
 
       if (highlightedFeature) {
         this.$store.dispatch('setHighlightedFeature', highlightedFeature);
-        this.$store.dispatch('setScrollToFeature', false);
+        this.$store.dispatch('setShouldScrollToFeature', false);
         this.setHighlightedLink();
       }
     },

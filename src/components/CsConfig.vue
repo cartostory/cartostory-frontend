@@ -3,17 +3,23 @@ export default {
   name: 'CsConfig',
   data() {
     return {
-      trackUrl: undefined,
-      storyUrl: undefined,
+      trackUrl: 'https://gist.githubusercontent.com/zimmicz/ec2c456bef24e46554db30d4540d41f9/raw/cd8014a0edfb9e11b972e7161b1d9904f81b79ee/hochschwab-track.json',
+      storyUrl: 'https://gist.githubusercontent.com/zimmicz/ec2c456bef24e46554db30d4540d41f9/raw/cd8014a0edfb9e11b972e7161b1d9904f81b79ee/hochschwab-story.json',
+      featuresUrl: 'https://gist.githubusercontent.com/zimmicz/ec2c456bef24e46554db30d4540d41f9/raw/cd8014a0edfb9e11b972e7161b1d9904f81b79ee/hochschwab-features.json',
     };
   },
+  mounted() {
+    this.onSubmit();
+  },
   methods: {
-    onLoadRequest() {
+    onSubmit() {
       const payload = {
         trackUrl: this.trackUrl,
         storyUrl: this.storyUrl,
+        featuresUrl: this.featuresUrl,
       };
       this.$store.dispatch('setUrls', payload);
+      this.$store.dispatch('loadStory');
       this.$router.push('/');
     }
   }
@@ -32,7 +38,11 @@ export default {
       <input v-model="storyUrl" type="text">
     </div>
     <div class="form-block">
-      <button @click="onLoadRequest">Load</button>
+      <label>Features file URL:</label>
+      <input v-model="featuresUrl" type="text">
+    </div>
+    <div class="form-block">
+      <button @click="onSubmit">Load</button>
     </div>
   </div>
 </template>

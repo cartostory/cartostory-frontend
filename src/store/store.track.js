@@ -47,13 +47,11 @@ const trackModule = {
         return null;
       }
 
-      const features = rootState.features.map(f => f.feature);
+      const features = rootState.features.data.features;
       const fc = turf.featureCollection(features);
       const pointsInsideBbox = turf.pointsWithinPolygon(fc, getters.bboxGeoJson);
-      const idsInsideBbox = pointsInsideBbox.features.map(f => f.properties.id);
 
-      // has to return state.features again to keep custom properties (`link`)
-      return rootState.features.filter(f => idsInsideBbox.includes(f.feature.properties.id));
+      return pointsInsideBbox && pointsInsideBbox.features;
     },
     trackBboxRelation: (state, getters, rootState) => (relation) => {
       const ALLOWED_RELATIONS = ['within', 'disjoint'];

@@ -2,19 +2,19 @@
 export default {
   name: 'app',
   beforeMount() {
-    if (!this.track.url || !this.story.url) {
+    if (!this.track.url || !this.story.url || !this.features.url) {
       this.$router.push('/config');
     }
   },
   computed: {
+    features() {
+      return this.$store.state.features;
+    },
     track() {
       return this.$store.state.track;
     },
     story() {
       return this.$store.state.story;
-    },
-    enableSync() {
-      return this.$store.state.enableSync;
     },
   },
 };
