@@ -3,13 +3,10 @@ export default {
   name: 'CsConfig',
   data() {
     return {
-      trackUrl: 'https://gist.githubusercontent.com/zimmicz/ec2c456bef24e46554db30d4540d41f9/raw/cd8014a0edfb9e11b972e7161b1d9904f81b79ee/hochschwab-track.json',
-      storyUrl: 'https://gist.githubusercontent.com/zimmicz/ec2c456bef24e46554db30d4540d41f9/raw/cd8014a0edfb9e11b972e7161b1d9904f81b79ee/hochschwab-story.json',
-      featuresUrl: 'https://gist.githubusercontent.com/zimmicz/ec2c456bef24e46554db30d4540d41f9/raw/cd8014a0edfb9e11b972e7161b1d9904f81b79ee/hochschwab-features.json',
+      trackUrl: undefined,
+      storyUrl: undefined,
+      featuresUrl: undefined,
     };
-  },
-  mounted() {
-    this.onSubmit();
   },
   methods: {
     onSubmit() {
