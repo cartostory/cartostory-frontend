@@ -94,14 +94,11 @@ const mutations = {
       return;
     }
 
-    if (payload.length === 1) {
-      state.features.data.url = payload[0].featuresUrl;
-      state.story.data.url = payload[0].storyUrl;
-      state.story.data.name = payload[0].storyName;
-      state.track.data.url = payload[0].trackUrl;
-    } else {
-      state.availableStories = payload;
-    }
+    state.features.data.url = payload[0].featuresUrl;
+    state.story.data.url = payload[0].storyUrl;
+    state.story.data.name = payload[0].storyName;
+    state.track.data.url = payload[0].trackUrl;
+    state.availableStories = payload;
   },
   setHighlightedFeature: set('highlightedFeature'),
   setBbox: set('bbox'),
