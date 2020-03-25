@@ -44,14 +44,14 @@ const vuexLocal = new VuexPersistence({
     }
 
     return currentStorage[0];
-  }
+  },
 });
 
 const plugins = [
   vuexLocal.plugin,
 ];
 
-const state = {
+const baseState = {
   bbox: undefined,
   bboxHovered: undefined,
   highlightedFeature: undefined,
@@ -69,7 +69,7 @@ const actions = {
     commit('setBbox', null);
     commit('setHighlightedFeature', feature);
   },
-  setShouldScrollToFeature( { commit }, should ) {
+  setShouldScrollToFeature({ commit }, should) {
     commit('setShouldScrollToFeature', should);
   },
   setStoryName({ commit }, name) {
@@ -131,7 +131,7 @@ const mutations = {
 export default ({
   strict: true,
   modules,
-  state,
+  state: baseState,
   mutations,
   actions,
   plugins,
