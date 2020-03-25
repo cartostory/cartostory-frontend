@@ -99,7 +99,7 @@ const modules = {
   track: trackModule,
 };
 
-const mutations = {
+export const mutations = {
   RESTORE_MUTATION(state, payload) {
     if (!payload) {
       return;
