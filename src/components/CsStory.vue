@@ -1,5 +1,6 @@
 <template>
   <div v-if="story.story" ref="story" class="cs-story">
+    <router-link class="header-link" to="/config">Nahrát jiný příběh</router-link>
     <section v-if="story.story.header">
       <header>
         <h1>{{ story.story.header }}</h1>
@@ -145,6 +146,14 @@ export default {
     line-height: 32px;
     margin-bottom: 20px;
     margin-top: 0px;
+  }
+
+  .header-link {
+    font-family: sans-serif;
+    font-size: x-small;
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
   }
 
   .bbox-section {
