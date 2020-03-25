@@ -9,6 +9,7 @@ import {
 } from '@turf/turf';
 
 import { setPath } from './store.helpers';
+import { SET_TRACK } from './mutations';
 
 const turf = {
   booleanPointInPolygon,
@@ -27,13 +28,13 @@ const trackModule = {
     },
   },
   mutations: {
-    setTrack: setPath(['data', 'track']),
+    [SET_TRACK]: setPath(['data', 'track']),
   },
   actions: {
     async loadTrack({ commit, state }) {
       try {
         const track = await axios.get(state.data.url);
-        commit('setTrack', track.data);
+        commit(SET_TRACK, track.data);
       } catch (e) {
         // eslint-disable-next-line no-console
         console.log(e);
