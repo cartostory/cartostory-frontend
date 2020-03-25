@@ -29,10 +29,11 @@ const actions = {
   setShouldScrollToFeature( { commit }, should ) {
     commit('setShouldScrollToFeature', should);
   },
-  setUrls({ commit }, urls) {
-    commit('setFeaturesUrl', urls.featuresUrl);
-    commit('setStoryUrl', urls.storyUrl);
-    commit('setTrackUrl', urls.trackUrl);
+  setUrls({ commit }, payload) {
+    commit('setStoryName', payload.storyName);
+    commit('setFeaturesUrl', payload.featuresUrl);
+    commit('setStoryUrl', payload.storyUrl);
+    commit('setTrackUrl', payload.trackUrl);
   },
   async loadStory({ dispatch }) {
     await dispatch('story/loadText', { root: true });
@@ -53,6 +54,7 @@ const mutations = {
   setBboxHovered: set('bboxHovered'),
   setShouldScrollToFeature: set('shouldScrollToFeature'),
   setFeaturesUrl: setPath(['features', 'data', 'url']),
+  setStoryName: setPath(['story', 'data', 'name']),
   setStoryUrl: setPath(['story', 'data', 'url']),
   setTrackUrl: setPath(['track', 'data', 'url']),
   resetHighlightedLink() {

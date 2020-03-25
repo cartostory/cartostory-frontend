@@ -4,6 +4,7 @@ import { setPath } from './store.helpers';
 
 const state = {
   data: {
+    name: undefined,
     url: undefined,
     story: undefined,
   },

@@ -4,6 +4,7 @@ export default {
   data() {
     return {
       trackUrl: undefined,
+      storyName: undefined,
       storyUrl: undefined,
       featuresUrl: undefined,
     };
@@ -12,6 +13,7 @@ export default {
     onSubmit() {
       const payload = {
         trackUrl: this.trackUrl,
+        storyName: this.storyName,
         storyUrl: this.storyUrl,
         featuresUrl: this.featuresUrl,
       };
@@ -27,6 +29,10 @@ export default {
   <div class="container">
     <h1>Cartostory</h1>
     <div class="form-block">
+      <label>story name:</label>
+      <input v-model="storyName" type="text">
+    </div>
+    <div class="form-block">
       <label>track file URL:</label>
       <input v-model="trackUrl" type="text">
     </div>
@@ -35,7 +41,7 @@ export default {
       <input v-model="storyUrl" type="text">
     </div>
     <div class="form-block">
-      <label>Features file URL:</label>
+      <label>features file URL:</label>
       <input v-model="featuresUrl" type="text">
     </div>
     <div class="form-block">
