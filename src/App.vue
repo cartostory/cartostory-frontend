@@ -1,17 +1,15 @@
 <script>
-import CsStory from './components/CsStory.vue';
-import CsMap from './components/CsMap.vue';
-
 export default {
   name: 'app',
-  components: {
-    CsStory,
-    CsMap,
-  },
   mounted() {
-    this.$store.dispatch('loadStory');
+    if (!this.track.data.url || !this.story.data.url || !this.features.data.url) {
+      this.$router.push('/config');
+    }
   },
   computed: {
+    features() {
+      return this.$store.state.features;
+    },
     track() {
       return this.$store.state.track;
     },
@@ -24,8 +22,7 @@ export default {
 
 <template>
   <div id="app">
-    <cs-map v-if="track"/>
-    <cs-story id="story-container" v-if="story"/>
+    <router-view/>
   </div>
 </template>
 
@@ -40,6 +37,7 @@ export default {
 
   html,
   body,
+  #screen,
   #app {
     width: 100%;
     height: 100%;

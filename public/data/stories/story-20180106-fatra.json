@@ -7,6 +7,7 @@
   "sections": [
     {
       "header": "Na Malý Kriváň",
+      "bbox": [[0,0], [10,10]],
       "text": [
         "Ze <a data-url='data/stories/story-20180106-fatra/sucany.json'>Sučan</a> (392 m) přímo na sever až na <a data-url='data/stories/story-20180106-fatra/maly-krivan.json'>Malý Kriváň (1671 m)</a> vede modře značený turistický chodník. Prvních pár kilometrů podél Bielého potoka vede po asfaltce a stoupá jen velmi pozvolna. Projde se okolo chatové osady, za kterou <a data-url='data/stories/story-20180106-fatra/biely-potok-asfalt.json'>značka odbočuje z asfaltky doprava přes potok</a>. Začíná první ostřejší stoupání, navíc po dost rozryté lesácké cestě. Občas je jednodušší jít vedle ní a raději přeskakovat padlé stromy. Cesta se tady dostává z <a data-url='data/stories/story-20180106-fatra/udoli-hreben.json'>údolí na hřbet</a>, po kterém vede prakticky až na hřeben.",
         "Na hranici 900 m n. m. začíná být souvislá vrstva sněhu a tak nasazujeme mačky nebo nesmeky. V mokrém sněhu to jde určitě i bez nich, ale proč se zbytečně trápit. Po třech hodinách stoupání stojíme na prvním předvrcholu <a data-url='data/stories/story-20180106-fatra/velka-kralova.json'>Veľká Kráľová</a> (1170 m). Cesta se tu nakrátko narovnává, ideální místo k obědu.",
@@ -16,6 +17,7 @@
     },
     {
       "header": "Večerní hřeben",
+      "bbox": [[0,0], [20,20]],
       "text": [
         "Jsou tři hodiny odpoledne a Slunce, které se nám konečně ukázalo, evidentně rychle klesá k obzoru. Nezbývá než se taky vydat dolů, zpátky do mlhy, ale teď už po červené hřebenovce na východ. Vítr zesílil, sníh zmrzl a moc se nepropadá. Tady už bych šel bez maček či nesmeků nerad. Pokračujeme do <a data-url='data/stories/story-20180106-fatra/sedlo-bublen.json'>sedla Bublen</a>, z něhož se dá sestoupit na severozápad do Bránice nebo na sever po nádherném hřbetu na <a data-url='data/stories/story-20180106-fatra/kraviarske.json'>Kraviarske</a> a <a data-url='data/stories/story-20180106-fatra/baraniarky.json'>Baraniarky</a>. Je tma a mlha, ale ze sněhu i přesto pořád hezky vystupuje tyčové značení. Ještě na <a data-url='data/stories/story-20180106-fatra/maly-krivan.json'>Malém Kriváni</a> jsme váhali, jestli si vyšlápnem odbočkou i na Veľký, když ji teď doopravdy míjíme, nikoho to ani nenapadne.",
         "Z <a data-url='data/stories/story-20180106-fatra/hrana-velkeho-krivane.json'>hrany Kriváně</a> (1640 m) sestupujeme už rychle do <a data-url='data/stories/story-20180106-fatra/snilovske-sedlo.json'>Snilovského sedla</a>. Cesta je evidentně rozšlapaná stovkami turistů, kteří vyšli pouze z lanovky na vrchol. Odsud už zbývá ujít jen asi 25 minut k chatě po zelené, případně po zimní trase značené tyčemi. Ta se lépe vyhýbá potenciálním lavinovým drahám, ale je tak málo sněhu, že se není čeho bát ani na jedné."
