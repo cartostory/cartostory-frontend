@@ -123,7 +123,7 @@ const mutations = {
     const highlightedId = state.highlightedFeature.properties.id;
     const highlightedElement = document.querySelectorAll(`[data-cs-id='${highlightedId}']`)[0];
     if (state.highlightedFeature && highlightedElement) {
-      elm.classList.add('highlighted');
+      highlightedElement.classList.add('highlighted');
     }
   },
 };
