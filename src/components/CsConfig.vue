@@ -3,11 +3,17 @@ export default {
   name: 'CsConfig',
   data() {
     return {
+      currentStory: undefined,
       trackUrl: undefined,
       storyName: undefined,
       storyUrl: undefined,
       featuresUrl: undefined,
     };
+  },
+  computed: {
+    availableStories() {
+      return this.$store.state.availableStories;
+    },
   },
   methods: {
     onSubmit() {
@@ -20,7 +26,17 @@ export default {
       this.$store.dispatch('setStoryName', this.storyName);
       this.$store.dispatch('loadStory');
       this.$router.push('/');
-    }
+    },
+    handleStorySelect(event) {
+      const story = this.availableStories.find(story => story.storyName === this.currentStory);
+
+      if (story) {
+        this.featuresUrl = story.featuresUrl;
+        this.storyUrl = story.storyUrl;
+        this.storyName = story.storyName;
+        this.trackUrl = story.trackUrl;
+      }
+    },
   }
 };
 </script>
@@ -28,6 +44,12 @@ export default {
 <template>
   <div class="container">
     <h1>Cartostory</h1>
+    <div class="form-block">
+      <label>existing story:</label>
+      <select v-model="currentStory" @change="handleStorySelect">
+        <option v-for="story in availableStories">{{ story.storyName }}</option>
+      </select>
+    </div>
     <div class="form-block">
       <label>story name:</label>
       <input v-model="storyName" type="text">

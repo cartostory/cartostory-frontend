@@ -37,13 +37,7 @@ const vuexLocal = new VuexPersistence({
     }
   },
   restoreState: (key, storage) => {
-    const currentStorage = JSON.parse(storage.getItem(key)) || [];
-
-    if (!currentStorage || currentStorage.length > 1) {
-      return;
-    }
-
-    return currentStorage[0];
+    return JSON.parse(storage.getItem(key)) || [];
   },
 });
 
@@ -52,6 +46,7 @@ const plugins = [
 ];
 
 const baseState = {
+  availableStories: [],
   bbox: undefined,
   bboxHovered: undefined,
   highlightedFeature: undefined,
@@ -95,10 +90,18 @@ const modules = {
 
 const mutations = {
   RESTORE_MUTATION(state, payload) {
-    state.features.data.url = payload.featuresUrl;
-    state.story.data.url = payload.storyUrl;
-    state.story.data.name = payload.storyName;
-    state.track.data.url = payload.trackUrl;
+    if (!payload) {
+      return;
+    }
+
+    if (payload.length === 1) {
+      state.features.data.url = payload[0].featuresUrl;
+      state.story.data.url = payload[0].storyUrl;
+      state.story.data.name = payload[0].storyName;
+      state.track.data.url = payload[0].trackUrl;
+    } else {
+      state.availableStories = payload;
+    }
   },
   setHighlightedFeature: set('highlightedFeature'),
   setBbox: set('bbox'),
