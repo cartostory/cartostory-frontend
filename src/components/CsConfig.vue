@@ -11,13 +11,13 @@ export default {
   },
   methods: {
     onSubmit() {
-      const payload = {
+      const urlPayload = {
         trackUrl: this.trackUrl,
-        storyName: this.storyName,
         storyUrl: this.storyUrl,
         featuresUrl: this.featuresUrl,
       };
-      this.$store.dispatch('setUrls', payload);
+      this.$store.dispatch('setUrls', urlPayload);
+      this.$store.dispatch('setStoryName', this.storyName);
       this.$store.dispatch('loadStory');
       this.$router.push('/');
     }

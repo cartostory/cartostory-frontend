@@ -1,8 +1,8 @@
 <script>
 export default {
   name: 'app',
-  beforeMount() {
-    if (!this.track.url || !this.story.url || !this.features.url) {
+  mounted() {
+    if (!this.track.data.url || !this.story.data.url || !this.features.data.url) {
       this.$router.push('/config');
     }
   },

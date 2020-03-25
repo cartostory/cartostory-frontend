@@ -11,7 +11,15 @@ export default {
     CsMap,
     PulseLoader,
   },
+  mounted() {
+    if (this.readyAndNotDownloadedYet) {
+      this.$store.dispatch('loadStory');
+    }
+  },
   computed: {
+    features() {
+      return this.$store.state.features;
+    },
     track() {
       return this.$store.state.track;
     },
@@ -20,7 +28,10 @@ export default {
     },
     ready() {
       return this.track.data.track && this.story.data.story;
-    }
+    },
+    readyAndNotDownloadedYet() {
+      return this.features.data.url && this.track.data.url && this.story.data.url && !this.ready;
+    },
   },
   methods: {
     toggleSync() {
