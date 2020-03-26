@@ -1,10 +1,18 @@
 import { expect } from 'chai';
+import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
+
 import CsConfig from '@/components/CsConfig.vue';
+import store from '@/store/store';
+import { defaultStoryUrls } from '../helpers/data';
+
+const defaultStore = store;
 
 const localVue = createLocalVue();
+const router = new VueRouter();
 localVue.use(Vuex);
+localVue.use(VueRouter);
 
 describe('CsConfig.vue', () => {
   it('renders a form without story select when no stories are available', () => {
@@ -62,5 +70,25 @@ describe('CsConfig.vue', () => {
     expect(wrapper.vm.storyName).equal('storyName');
     expect(wrapper.vm.storyUrl).equal('storyUrl');
     expect(wrapper.vm.trackUrl).equal('trackUrl');
+  });
+  it('loads the story from the given urls', async () => {
+    const store = new Vuex.Store(defaultStore);
+    const wrapper = shallowMount(CsConfig, {
+      router,
+      store,
+      localVue,
+    });
+
+    wrapper.findAll('input').at(0).setValue('Hochschwab');
+    wrapper.findAll('input').at(1).setValue(defaultStoryUrls.trackUrl);
+    wrapper.findAll('input').at(2).setValue(defaultStoryUrls.storyUrl);
+    wrapper.findAll('input').at(3).setValue(defaultStoryUrls.featuresUrl);
+    wrapper.find('button').trigger('click');
+
+    await store.dispatch('loadStory');
+
+    expect(store.state.features.data.features).to.be.an('array').that.has.lengthOf(12);
+    expect(store.state.story.data.story).to.be.an('object').that.has.all.keys('header', 'perex', 'sections');
+    expect(store.state.track.data.track).to.be.an('object').that.has.any.keys('features');
   });
 });

@@ -105,10 +105,10 @@ export const mutations = {
       return;
     }
 
-    state.features.data.url = payload[0].featuresUrl;
-    state.story.data.url = payload[0].storyUrl;
-    state.story.data.name = payload[0].storyName;
-    state.track.data.url = payload[0].trackUrl;
+    state.features.data.url = payload[0] && payload[0].featuresUrl;
+    state.story.data.url = payload[0] && payload[0].storyUrl;
+    state.story.data.name = payload[0] && payload[0].storyName;
+    state.track.data.url = payload[0] && payload[0].trackUrl;
     state.availableStories = payload;
   },
   [SET_HIGHLIGHTED_FEATURE]: set('highlightedFeature'),
