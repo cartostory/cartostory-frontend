@@ -44,7 +44,7 @@ export default {
 <template>
   <div class="container">
     <h1>Cartostory</h1>
-    <div class="form-block">
+    <div v-if="availableStories.length > 0" class="form-block">
       <label>existing story:</label>
       <select v-model="currentStory" @change="handleStorySelect">
         <option v-for="story in availableStories">{{ story.storyName }}</option>
