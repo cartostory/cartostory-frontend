@@ -1,11 +1,13 @@
 import { expect } from 'chai';
+eval("require('jsdom-global')()"); // see https://github.com/vuejs/vue-test-utils/issues/1288
 
 import { mutations } from '@/store/store';
 import {
-  // RESET_HIGHLIGHTED_LINK,
+  RESET_HIGHLIGHTED_LINK,
   SET_BBOX,
   SET_BBOX_HOVERED,
   SET_FEATURES_URL,
+  SET_HIGHLIGHTED_FEATURE,
 } from '@/store/mutations';
 
 const BBOX = [[0, 0], [10, 10]];
@@ -48,5 +50,28 @@ describe('SET_FEATURES_URL', () => {
     mutations[SET_FEATURES_URL](state, FEATURES_URL);
 
     expect(state.features.data.url).equal(FEATURES_URL);
+  });
+});
+
+describe('SET_HIGHLIGHTED_FEATURE', () => {
+  it('it sets highlighted feature', () => {
+    const feature = 'feature';
+    const state = {
+      highlightedFeature: undefined,
+    };
+    mutations[SET_HIGHLIGHTED_FEATURE](state, feature);
+    expect(state.highlightedFeature).equal(feature);
+  });
+});
+
+describe('RESET_HIGHLIGHTED_LINK', () => {
+  it('it resets highlighted link', () => {
+    const link = document.createElement('a');
+    document.body.appendChild(link);
+    link.setAttribute('data-cs-id', 1);
+    link.classList = 'highlighted';
+    mutations[RESET_HIGHLIGHTED_LINK]();
+    const highlightedFeatures = document.querySelectorAll(['data-cs-id']).length;
+    expect(highlightedFeatures).equal(0);
   });
 });
