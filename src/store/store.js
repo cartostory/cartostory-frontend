@@ -6,6 +6,17 @@ import featuresModule from './store.features';
 import storyModule from './store.story';
 import trackModule from './store.track';
 import { set, setPath } from './store.helpers';
+import {
+  RESET_HIGHLIGHTED_LINK,
+  SET_BBOX,
+  SET_BBOX_HOVERED,
+  SET_FEATURES_URL,
+  SET_HIGHLIGHTED_FEATURE,
+  SET_SHOULD_SCROLL_TO_FEATURE,
+  SET_STORY_NAME,
+  SET_STORY_URL,
+  SET_TRACK_URL,
+} from './mutations';
 
 Vue.use(Vuex);
 
@@ -55,25 +66,25 @@ const baseState = {
 
 const actions = {
   setBbox({ commit }, payload) {
-    commit('setBbox', payload);
+    commit(SET_BBOX, payload);
   },
   setBboxHovered({ commit }, payload) {
-    commit('setBboxHovered', payload);
+    commit(SET_BBOX_HOVERED, payload);
   },
   setHighlightedFeature({ commit }, feature) {
-    commit('setBbox', null);
-    commit('setHighlightedFeature', feature);
+    commit(SET_BBOX, null);
+    commit(SET_HIGHLIGHTED_FEATURE, feature);
   },
   setShouldScrollToFeature({ commit }, should) {
-    commit('setShouldScrollToFeature', should);
+    commit(SET_SHOULD_SCROLL_TO_FEATURE, should);
   },
   setStoryName({ commit }, name) {
-    commit('setStoryName', name);
+    commit(SET_STORY_NAME, name);
   },
   setUrls({ commit }, payload) {
-    commit('setFeaturesUrl', payload.featuresUrl);
-    commit('setStoryUrl', payload.storyUrl);
-    commit('setTrackUrl', payload.trackUrl);
+    commit(SET_FEATURES_URL, payload.featuresUrl);
+    commit(SET_STORY_URL, payload.storyUrl);
+    commit(SET_TRACK_URL, payload.trackUrl);
   },
   async loadStory({ dispatch }) {
     await dispatch('story/loadText', { root: true });
@@ -88,7 +99,7 @@ const modules = {
   track: trackModule,
 };
 
-const mutations = {
+export const mutations = {
   RESTORE_MUTATION(state, payload) {
     if (!payload) {
       return;
@@ -100,15 +111,15 @@ const mutations = {
     state.track.data.url = payload[0].trackUrl;
     state.availableStories = payload;
   },
-  setHighlightedFeature: set('highlightedFeature'),
-  setBbox: set('bbox'),
-  setBboxHovered: set('bboxHovered'),
-  setShouldScrollToFeature: set('shouldScrollToFeature'),
-  setFeaturesUrl: setPath(['features', 'data', 'url']),
-  setStoryName: setPath(['story', 'data', 'name']),
-  setStoryUrl: setPath(['story', 'data', 'url']),
-  setTrackUrl: setPath(['track', 'data', 'url']),
-  resetHighlightedLink() {
+  [SET_HIGHLIGHTED_FEATURE]: set('highlightedFeature'),
+  [SET_BBOX]: set('bbox'),
+  [SET_BBOX_HOVERED]: set('bboxHovered'),
+  [SET_SHOULD_SCROLL_TO_FEATURE]: set('shouldScrollToFeature'),
+  [SET_FEATURES_URL]: setPath(['features', 'data', 'url']),
+  [SET_STORY_NAME]: setPath(['story', 'data', 'name']),
+  [SET_STORY_URL]: setPath(['story', 'data', 'url']),
+  [SET_TRACK_URL]: setPath(['track', 'data', 'url']),
+  [RESET_HIGHLIGHTED_LINK]: () => {
     document.querySelectorAll('[data-cs-id]').forEach((elm) => {
       if (elm.classList) {
         elm.classList.remove('highlighted');
