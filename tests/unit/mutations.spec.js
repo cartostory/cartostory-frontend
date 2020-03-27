@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { mutations } from '@/store/store';
 import {
   RESET_HIGHLIGHTED_LINK,
@@ -12,8 +11,6 @@ import {
   SET_TRACK_URL,
 } from '@/store/mutations';
 import { getPath, setPath } from '@/store/store.helpers';
-
-eval("require('jsdom-global')()"); // see https://github.com/vuejs/vue-test-utils/issues/1288
 
 const BBOX = [[0, 0], [10, 10]];
 const FEATURES_URL = 'https://gist.githubusercontent.com/zimmicz/ec2c456bef24e46554db30d4540d41f9/raw/11d3380df2575b108ab8e04b2e5618567aaf97cc/hochschwab-features.json';
@@ -32,7 +29,7 @@ const describeHelper = (description, mutation, path, payload) => {
       setState(state, payload);
       mutations[mutation](state, payload);
 
-      expect(getPath(state, path)).equal(payload);
+      expect(getPath(state, path)).toEqual(payload);
     });
   });
 };
@@ -53,7 +50,9 @@ describe('RESET_HIGHLIGHTED_LINK', () => {
     link.setAttribute('data-cs-id', 1);
     link.classList = 'highlighted';
     mutations[RESET_HIGHLIGHTED_LINK]();
+    const features = document.querySelectorAll('a').length;
+    expect(features).toEqual(1);
     const highlightedFeatures = document.querySelectorAll(['data-cs-id']).length;
-    expect(highlightedFeatures).equal(0);
+    expect(highlightedFeatures).toEqual(0);
   });
 });

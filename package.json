@@ -1,16 +1,14 @@
 {
   "name": "cartostory-frontend",
-  "homepage": "https://cartostory.github.io/cartostory-frontend/",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predeploy": "yarn run build",
-    "deploy": "gh-pages -d dist",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit",
-    "test:vuex": "vue-cli-service test:vuex"
+    "deploy": "gh-pages -d dist",
+    "predeploy": "yarn run build",
+    "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "@turf/points-within-polygon": "^5.1.5",
@@ -30,21 +28,23 @@
     "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
     "@vue/cli-plugin-babel": "^3.4.0",
     "@vue/cli-plugin-eslint": "^3.4.0",
-    "@vue/cli-plugin-unit-mocha": "^3.4.0",
+    "@vue/cli-plugin-unit-jest": "^4.2.3",
     "@vue/cli-service": "^3.4.0",
     "@vue/eslint-config-airbnb": "^4.0.0",
-    "@vue/test-utils": "^1.0.0-beta.20",
+    "@vue/test-utils": "1.0.0-beta.31",
     "babel-eslint": "^10.0.1",
-    "chai": "^4.1.2",
+    "babel-jest": "^25.2.3",
     "eslint": "^6.1.0",
     "eslint-plugin-vue": "^5.0.0",
     "gh-pages": "^2.2.0",
-    "jsdom": "^16.2.1",
-    "jsdom-global": "^3.0.2",
+    "jest": "^25.2.3",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
+    "vue-jest": "^3.0.5",
     "vue-template-compiler": "^2.5.21"
-  }
+  },
+  "homepage": "https://cartostory.github.io/cartostory-frontend/"
 }

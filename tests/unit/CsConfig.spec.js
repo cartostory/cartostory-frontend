@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import { shallowMount, createLocalVue } from '@vue/test-utils';
@@ -26,7 +25,7 @@ describe('CsConfig.vue', () => {
       localVue,
     });
 
-    expect(wrapper.findAll('label').length).equal(4);
+    expect(wrapper.findAll('label').length).toEqual(4);
   });
   it('renders a form with story select where at least one story is available', () => {
     const store = new Vuex.Store({
@@ -40,7 +39,7 @@ describe('CsConfig.vue', () => {
       localVue,
     });
 
-    expect(wrapper.findAll('label').length).equal(5);
+    expect(wrapper.findAll('label').length).toEqual(5);
   });
   it('sets input values when a story is selected', async () => {
     const store = new Vuex.Store({
@@ -55,11 +54,11 @@ describe('CsConfig.vue', () => {
     });
     wrapper.find('select').setValue(defaultStoryName);
     await wrapper.vm.$nextTick();
-    expect(wrapper.find('select').element.value).equal(defaultStoryName);
-    expect(wrapper.vm.featuresUrl).equal(defaultStoryUrls.featuresUrl);
-    expect(wrapper.vm.storyName).equal(defaultStoryName);
-    expect(wrapper.vm.storyUrl).equal(defaultStoryUrls.storyUrl);
-    expect(wrapper.vm.trackUrl).equal(defaultStoryUrls.trackUrl);
+    expect(wrapper.find('select').element.value).toEqual(defaultStoryName);
+    expect(wrapper.vm.featuresUrl).toEqual(defaultStoryUrls.featuresUrl);
+    expect(wrapper.vm.storyName).toEqual(defaultStoryName);
+    expect(wrapper.vm.storyUrl).toEqual(defaultStoryUrls.storyUrl);
+    expect(wrapper.vm.trackUrl).toEqual(defaultStoryUrls.trackUrl);
   });
   it('loads the story from the given urls', async () => {
     const store = new Vuex.Store(defaultStore);
@@ -77,8 +76,13 @@ describe('CsConfig.vue', () => {
 
     await store.dispatch('loadStory');
 
-    expect(store.state.features.data.features).to.be.an('array').that.has.lengthOf(12);
-    expect(store.state.story.data.story).to.be.an('object').that.has.all.keys('header', 'perex', 'sections');
-    expect(store.state.track.data.track).to.be.an('object').that.has.any.keys('features');
+    expect(Array.isArray(store.state.features.data.features)).toBe(true);
+    expect(store.state.features.data.features).toHaveLength(12);
+    expect(typeof store.state.story.data.story).toBe('object');
+    expect(store.state.story.data.story).toHaveProperty('header');
+    expect(store.state.story.data.story).toHaveProperty('perex');
+    expect(store.state.story.data.story).toHaveProperty('sections');
+    expect(typeof store.state.track.data.track).toBe('object');
+    expect(store.state.track.data.track).toHaveProperty('features');
   });
 });
