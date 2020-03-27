@@ -5,7 +5,7 @@ import { shallowMount, createLocalVue } from '@vue/test-utils';
 
 import CsConfig from '@/components/CsConfig.vue';
 import store from '@/store/store';
-import { defaultStoryUrls } from '../helpers/data';
+import { defaultStoryName, defaultStoryUrls } from '../helpers/data';
 
 const defaultStore = store;
 
@@ -31,12 +31,7 @@ describe('CsConfig.vue', () => {
   it('renders a form with story select where at least one story is available', () => {
     const store = new Vuex.Store({
       state: {
-        availableStories: [{
-          storyUrl: 'test',
-          featuresUrl: 'test',
-          trackUrl: 'test',
-          storyName: 'test',
-        }],
+        availableStories: [{...defaultStoryUrls, storyName: defaultStoryName}],
       },
     });
 
@@ -50,12 +45,7 @@ describe('CsConfig.vue', () => {
   it('sets input values when a story is selected', async () => {
     const store = new Vuex.Store({
       state: {
-        availableStories: [{
-          storyUrl: 'storyUrl',
-          featuresUrl: 'featuresUrl',
-          trackUrl: 'trackUrl',
-          storyName: 'storyName',
-        }],
+        availableStories: [{...defaultStoryUrls, storyName: defaultStoryName}],
       },
     });
 
@@ -63,13 +53,13 @@ describe('CsConfig.vue', () => {
       store,
       localVue,
     });
-    wrapper.find('select').setValue('storyName');
+    wrapper.find('select').setValue(defaultStoryName);
     await wrapper.vm.$nextTick();
-    expect(wrapper.find('select').element.value).equal('storyName');
-    expect(wrapper.vm.featuresUrl).equal('featuresUrl');
-    expect(wrapper.vm.storyName).equal('storyName');
-    expect(wrapper.vm.storyUrl).equal('storyUrl');
-    expect(wrapper.vm.trackUrl).equal('trackUrl');
+    expect(wrapper.find('select').element.value).equal(defaultStoryName);
+    expect(wrapper.vm.featuresUrl).equal(defaultStoryUrls.featuresUrl);
+    expect(wrapper.vm.storyName).equal(defaultStoryName);
+    expect(wrapper.vm.storyUrl).equal(defaultStoryUrls.storyUrl);
+    expect(wrapper.vm.trackUrl).equal(defaultStoryUrls.trackUrl);
   });
   it('loads the story from the given urls', async () => {
     const store = new Vuex.Store(defaultStore);
@@ -79,7 +69,7 @@ describe('CsConfig.vue', () => {
       localVue,
     });
 
-    wrapper.findAll('input').at(0).setValue('Hochschwab');
+    wrapper.findAll('input').at(0).setValue(defaultStoryName);
     wrapper.findAll('input').at(1).setValue(defaultStoryUrls.trackUrl);
     wrapper.findAll('input').at(2).setValue(defaultStoryUrls.storyUrl);
     wrapper.findAll('input').at(3).setValue(defaultStoryUrls.featuresUrl);
