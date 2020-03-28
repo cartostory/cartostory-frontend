@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueLogger from 'vuejs-logger';
-import Vuetify from 'vuetify';
 import VueSanitize from 'vue-sanitize';
 import VueScrollTo from 'vue-scrollto';
 import App from './App.vue';
@@ -11,7 +10,6 @@ import store from './store/store';
 Vue.config.productionTip = false;
 Vue.use(VueLogger);
 Vue.use(VueScrollTo);
-Vue.use(Vuetify);
 Vue.use(Vuex);
 Vue.use(VueSanitize, {
   allowedTags: ['a'],
