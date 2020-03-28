@@ -33,22 +33,19 @@ export default {
       return this.features.data.url && this.track.data.url && this.story.data.url && !this.ready;
     },
   },
-  methods: {
-    toggleSync() {
-      this.$store.dispatch('toggleSync');
-    },
-  },
 };
 </script>
 
 <template>
-  <div id="screen">
-    <div v-if="!ready" class="spinner">
-      <pulse-loader></pulse-loader>
-    </div>
-    <cs-map v-if="ready"></cs-map>
-    <cs-story v-if="ready" id="story-container"></cs-story>
-  </div>
+  <el-container id="screen">
+    <pulse-loader class="spinner" v-if="!ready" color="#2c3e50"></pulse-loader>
+    <el-col v-if="ready" :span="12">
+      <cs-map></cs-map>
+    </el-col>
+    <el-col v-if="ready" :span="12">
+      <cs-story></cs-story>
+    </el-col>
+  </el-container>
 </template>
 
 <style lang="scss" scoped>
