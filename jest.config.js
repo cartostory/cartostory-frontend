@@ -17,13 +17,7 @@ module.exports = {
     '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.js'
   },
 
-  //snapshotSerializers: [
-  //'jest-serializer-vue'
-  //],
-  //testMatch: [
-  //'<rootDir>/(tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx))'
-  //],
-  transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!vue-spinner)'],
 
   preset: '@vue/cli-plugin-unit-jest'
 }
