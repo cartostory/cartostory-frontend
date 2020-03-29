@@ -243,6 +243,10 @@ export default {
 </template>
 
 <style>
+  .cs-map {
+    height: 100%;
+  }
+
   #cs-map-container {
     width: auto;
     height: 100%;

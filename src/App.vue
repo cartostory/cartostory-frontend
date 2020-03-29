@@ -21,25 +21,16 @@ export default {
 </script>
 
 <template>
-  <div id="app">
+  <el-container id="app">
     <router-view/>
-  </div>
+  </el-container>
 </template>
 
 <style lang="scss">
-  html {
-    box-sizing: border-box;
-  }
-
-  *, *:before, *:after {
-    box-sizing: inherit;
-  }
-
   html,
   body,
   #screen,
   #app {
-    width: 100%;
     height: 100%;
     overflow-y: hidden;
     margin: 0;
@@ -48,17 +39,6 @@ export default {
 
   #app {
     color: #2c3e50;
-    font-family: Georgia, "times new roman", times, serif;
   }
 
-  .cs-story,
-  .cs-map {
-    width: 50%;
-    position: relative;
-    float: left;
-  }
-
-  .cs-map {
-    height: 100%;
-  }
 </style>
