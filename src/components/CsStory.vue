@@ -1,6 +1,6 @@
 <template>
   <div v-if="story.story" ref="story" class="cs-story">
-    <router-link title="Nahrát jiný příběh" class="header-link" to="/config">
+    <router-link title="Nahrát jiný příběh" class="header-link" to="/load">
       <el-button size="mini" type="plain" icon="el-icon-plus" circle></el-button>
     </router-link>
     <section v-if="story.story.header">

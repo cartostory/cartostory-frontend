@@ -2,7 +2,7 @@ import ElementUI from 'element-ui';
 import Vuex from 'vuex';
 import { mount, createLocalVue } from '@vue/test-utils';
 
-import CsConfig from '@/App.vue';
+import App from '@/App.vue';
 import store from '@/store/store';
 
 const defaultStore = store;
@@ -26,7 +26,7 @@ describe('App.vue', () => {
       },
     };
 
-    const wrapper = mount(CsConfig, options);
-    expect(push).toHaveBeenCalledWith('/config');
+    const wrapper = mount(App, options);
+    expect(push).toHaveBeenCalledWith('/load');
   });
 });
