@@ -1,4 +1,6 @@
 <script>
+import { SCROLL_CONTAINER_ID, STORY_LINK_DATA_ID } from '@/config';
+
 export default {
   data() {
     return {
@@ -44,9 +46,9 @@ export default {
     },
     scroll() {
       const id = this.highlightedFeature.properties.id;
-      const elm = document.querySelectorAll(`[data-cs-id='${id}']`)[0];
+      const elm = document.querySelectorAll(`[${STORY_LINK_DATA_ID}='${id}']`)[0];
       this.$scrollTo(elm, undefined, {
-        container: '#story-scroll-container',
+        container: `#${SCROLL_CONTAINER_ID}`,
         offset: -50,
       });
     },
@@ -68,11 +70,11 @@ export default {
     onTextClicked(e) {
       const t = e.target;
 
-      if (t.localName !== 'a' || !t.attributes.getNamedItem('data-cs-id')) {
+      if (t.localName !== 'a' || !t.attributes.getNamedItem(STORY_LINK_DATA_ID)) {
         return;
       }
 
-      const id = t.attributes.getNamedItem('data-cs-id').value;
+      const id = t.attributes.getNamedItem(STORY_LINK_DATA_ID).value;
       const highlightedFeature = this.$store.state.features.data.features.find(f => f.properties.id == id);
 
       this.resetHighlightedLinks();

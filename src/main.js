@@ -22,6 +22,7 @@ import '@/assets/css/index.css';
 import App from './App.vue';
 import router from './router';
 import store from './store/store';
+import { STORY_LINK_DATA_ID } from './config';
 
 Vue.config.productionTip = false;
 Vue.use(Button);
@@ -42,7 +43,7 @@ Vue.use(VueSanitize, {
   allowedTags: ['a'],
   allowedAttributes: {
     // eslint-disable-next-line quote-props
-    'a': ['data-url', 'id', 'data-cs-id'],
+    'a': ['data-url', 'id', STORY_LINK_DATA_ID],
   },
 });
 

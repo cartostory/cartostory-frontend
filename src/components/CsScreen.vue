@@ -1,6 +1,7 @@
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 
+import { SCROLL_CONTAINER_ID } from '@/config';
 import CsStory from './CsStory.vue';
 import CsMap from './CsMap.vue';
 
@@ -10,6 +11,11 @@ export default {
     CsStory,
     CsMap,
     PulseLoader,
+  },
+  data() {
+    return {
+      SCROLL_CONTAINER_ID,
+    };
   },
   mounted() {
     if (this.readyAndNotDownloadedYet) {
@@ -43,7 +49,7 @@ export default {
       <cs-map></cs-map>
     </el-col>
     <el-col v-if="ready" :span="12">
-      <cs-story id="story-scroll-container"></cs-story>
+      <cs-story :id="SCROLL_CONTAINER_ID"></cs-story>
     </el-col>
   </el-container>
 </template>

@@ -11,6 +11,7 @@ import {
   SET_TRACK_URL,
 } from '@/store/mutations';
 import { getPath, setPath } from '@/store/store.helpers';
+import { STORY_LINK_DATA_ID } from '@/config';
 
 const BBOX = [[0, 0], [10, 10]];
 const FEATURES_URL = 'https://gist.githubusercontent.com/zimmicz/ec2c456bef24e46554db30d4540d41f9/raw/11d3380df2575b108ab8e04b2e5618567aaf97cc/hochschwab-features.json';
@@ -47,12 +48,12 @@ describe('RESET_HIGHLIGHTED_LINK', () => {
   it('it resets highlighted link', () => {
     const link = document.createElement('a');
     document.body.appendChild(link);
-    link.setAttribute('data-cs-id', 1);
+    link.setAttribute(STORY_LINK_DATA_ID, 1);
     link.classList = 'highlighted';
     mutations[RESET_HIGHLIGHTED_LINK]();
     const features = document.querySelectorAll('a').length;
     expect(features).toEqual(1);
-    const highlightedFeatures = document.querySelectorAll(['data-cs-id']).length;
+    const highlightedFeatures = document.querySelectorAll([STORY_LINK_DATA_ID]).length;
     expect(highlightedFeatures).toEqual(0);
   });
 });
