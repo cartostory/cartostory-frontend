@@ -1,29 +1,3 @@
-<template>
-  <div v-if="story.story" ref="story" class="cs-story">
-    <router-link title="Nahrát jiný příběh" class="header-link" to="/load">
-      <el-button size="mini" type="plain" icon="el-icon-plus" circle></el-button>
-    </router-link>
-    <section v-if="story.story.header">
-      <header>
-        <h1>{{ story.story.header }}</h1>
-        <div class="perex">
-          <p @click="onTextClicked" class="sanitized" v-for="p in story.story.perex" v-html="sanitize(p)">{{ p }}</p>
-        </div>
-      </header>
-      <section>
-        <section @mouseenter="onBboxHovered(s.bbox)" @mouseleave="onBboxLeft" v-bind:class="{
-          'bbox-section': s.bbox, 'bbox-section__active': s.bbox === bbox }" v-for="s in story.story.sections" :data-bbox="s.bbox">
-          <el-button title="Vycentrovat v mapě" @click="onBboxClicked(s.bbox)" v-if="s.bbox" size="mini" type="plain" icon="el-icon-full-screen" circle></el-button>
-          <h2>{{ s.header }}</h2>
-          <div>
-            <p ref="cstext" @click="onTextClicked" class="sanitized" v-for="p in s.text" v-html="sanitize(p)">{{ p }}</p>
-          </div>
-        </section>
-      </section>
-    </section>
-  </div>
-</template>
-
 <script>
 export default {
   data() {
@@ -72,7 +46,7 @@ export default {
       const id = this.highlightedFeature.properties.id;
       const elm = document.querySelectorAll(`[data-cs-id='${id}']`)[0];
       this.$scrollTo(elm, undefined, {
-        container: '#story-container',
+        container: '#story-scroll-container',
         offset: -50,
       });
     },
@@ -112,6 +86,32 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div v-if="story.story" ref="story" class="cs-story">
+    <router-link title="Nahrát jiný příběh" class="header-link" to="/load">
+      <el-button size="mini" type="plain" icon="el-icon-plus" circle></el-button>
+    </router-link>
+    <section v-if="story.story.header">
+      <header>
+        <h1>{{ story.story.header }}</h1>
+        <div class="perex">
+          <p @click="onTextClicked" class="sanitized" v-for="p in story.story.perex" v-html="sanitize(p)">{{ p }}</p>
+        </div>
+      </header>
+      <section>
+        <section @mouseenter="onBboxHovered(s.bbox)" @mouseleave="onBboxLeft" v-bind:class="{
+          'bbox-section': s.bbox, 'bbox-section__active': s.bbox === bbox }" v-for="s in story.story.sections" :data-bbox="s.bbox">
+          <el-button title="Vycentrovat v mapě" @click="onBboxClicked(s.bbox)" v-if="s.bbox" size="mini" type="plain" icon="el-icon-full-screen" circle></el-button>
+          <h2>{{ s.header }}</h2>
+          <div>
+            <p ref="cstext" @click="onTextClicked" class="sanitized" v-for="p in s.text" v-html="sanitize(p)">{{ p }}</p>
+          </div>
+        </section>
+      </section>
+    </section>
+  </div>
+</template>
 
 <style scoped>
   .cs-story {

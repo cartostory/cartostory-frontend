@@ -43,7 +43,7 @@ export default {
       <cs-map></cs-map>
     </el-col>
     <el-col v-if="ready" :span="12">
-      <cs-story></cs-story>
+      <cs-story id="story-scroll-container"></cs-story>
     </el-col>
   </el-container>
 </template>
