@@ -6,11 +6,8 @@ import CsScreen from './components/CsScreen.vue';
 
 Vue.use(Router);
 
-const routes = [
-  {
-    path: '/',
-    component: CsScreen,
-  },
+export const routes = [
+  { path: '/', component: CsScreen, },
   { path: '/load', component: CsLoadStoryForm },
   { path: '/create', component: CsCreateStoryForm },
 ];
