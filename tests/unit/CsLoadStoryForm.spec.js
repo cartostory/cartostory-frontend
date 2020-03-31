@@ -4,13 +4,11 @@ import Vuex from 'vuex';
 import { mount, createLocalVue } from '@vue/test-utils';
 
 import CsLoadStoryForm from '@/components/CsLoadStoryForm.vue';
-import store from '@/store/store';
 import { defaultStoryName, defaultStoryUrls } from '../helpers/data';
-
-const defaultStore = store;
+import { routes } from '@/router';
 
 const localVue = createLocalVue();
-const router = new VueRouter();
+const router = new VueRouter(routes);
 localVue.use(ElementUI);
 localVue.use(Vuex);
 localVue.use(VueRouter);
@@ -63,14 +61,23 @@ describe('CsLoadStoryForm.vue', () => {
     expect(wrapper.vm.storyUrl).toEqual(defaultStoryUrls.storyUrl);
     expect(wrapper.vm.trackUrl).toEqual(defaultStoryUrls.trackUrl);
   });
+
   test('loads the story from the given urls', async () => {
-    const store = new Vuex.Store(defaultStore);
+    const mockStore = {
+      state: {
+        availableStories: [],
+      },
+      dispatch: jest.fn() };
+
     const wrapper = mount(CsLoadStoryForm, {
       router,
-      store,
+      mocks: {
+        $store: mockStore,
+      },
       localVue,
     });
 
+    wrapper.vm.$router.push('load');
     wrapper.findAll('input').at(0).setValue(defaultStoryName);
     wrapper.findAll('input').at(1).setValue(defaultStoryUrls.trackUrl);
     wrapper.findAll('input').at(2).setValue(defaultStoryUrls.storyUrl);
@@ -78,15 +85,10 @@ describe('CsLoadStoryForm.vue', () => {
 
     await wrapper.vm.$nextTick();
     wrapper.get(Button).vm.$el.click();
-    await store.dispatch('loadStory');
 
-    expect(Array.isArray(store.state.features.data.features)).toBe(true);
-    expect(store.state.features.data.features).toHaveLength(12);
-    expect(typeof store.state.story.data.story).toBe('object');
-    expect(store.state.story.data.story).toHaveProperty('header');
-    expect(store.state.story.data.story).toHaveProperty('perex');
-    expect(store.state.story.data.story).toHaveProperty('sections');
-    expect(typeof store.state.track.data.track).toBe('object');
-    expect(store.state.track.data.track).toHaveProperty('features');
+    expect(wrapper.vm.$route.path).toBe('/');
+    expect(mockStore.dispatch).toHaveBeenCalledWith('setStoryName', defaultStoryName);
+    expect(mockStore.dispatch).toHaveBeenCalledWith('setUrls', defaultStoryUrls);
+    expect(mockStore.dispatch).toHaveBeenCalledWith('loadStory');
   });
 });
