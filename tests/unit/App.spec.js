@@ -1,6 +1,6 @@
 import ElementUI from 'element-ui';
 import Vuex from 'vuex';
-import { mount, createLocalVue } from '@vue/test-utils';
+import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
 
 import App from '@/App.vue';
 import store from '@/store/store';
@@ -24,9 +24,12 @@ describe('App.vue', () => {
       mocks: {
         $router,
       },
+      stubs: [
+        'router-view',
+      ],
     };
 
-    const wrapper = mount(App, options);
+    const wrapper = shallowMount(App, options);
     expect(push).toHaveBeenCalledWith('/load');
   });
 });
