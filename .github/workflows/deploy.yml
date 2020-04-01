@@ -20,7 +20,7 @@ jobs:
       - name: Install SSH Client 🔑
         uses: webfactory/ssh-agent@v0.2.0
         with:
-          ssh-private-key: ${{ secrets.DEPLOY_KEY }} # Public key goes to from https://github.com/zimmicz/cartostory/settings/keys and private key goes to https://github.com/zimmicz/cartostory/settings/secrets/
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }} # Public key goes to from https://github.com/cartostory/cartostory-frontend/settings/keys and private key goes to https://github.com/cartostory/cartostory-frontend/settings/secrets.
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3-test
