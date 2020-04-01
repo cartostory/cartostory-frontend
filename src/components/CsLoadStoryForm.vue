@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: 'CsConfig',
+  name: 'CsLoadStoryForm',
   data() {
     return {
       currentStory: undefined,

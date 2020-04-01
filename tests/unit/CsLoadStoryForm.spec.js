@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import { mount, createLocalVue } from '@vue/test-utils';
 
-import CsConfig from '@/components/CsConfig.vue';
+import CsLoadStoryForm from '@/components/CsLoadStoryForm.vue';
 import store from '@/store/store';
 import { defaultStoryName, defaultStoryUrls } from '../helpers/data';
 
@@ -15,14 +15,14 @@ localVue.use(ElementUI);
 localVue.use(Vuex);
 localVue.use(VueRouter);
 
-describe('CsConfig.vue', () => {
+describe('CsLoadStoryForm.vue', () => {
   test('renders a form without story select when no stories are available', () => {
     const store = new Vuex.Store({
       state: {
         availableStories: [],
       },
     });
-    const wrapper = mount(CsConfig, {
+    const wrapper = mount(CsLoadStoryForm, {
       store,
       localVue,
     });
@@ -36,7 +36,7 @@ describe('CsConfig.vue', () => {
       },
     });
 
-    const wrapper = mount(CsConfig, {
+    const wrapper = mount(CsLoadStoryForm, {
       store,
       localVue,
     });
@@ -50,7 +50,7 @@ describe('CsConfig.vue', () => {
       },
     });
 
-    const wrapper = mount(CsConfig, {
+    const wrapper = mount(CsLoadStoryForm, {
       store,
       localVue,
     });
@@ -58,7 +58,6 @@ describe('CsConfig.vue', () => {
     const option = wrapper.get('.el-select-dropdown__item');
     option.vm.$el.dispatchEvent(new Event('click'));
     await wrapper.vm.$nextTick();
-    //expect(wrapper.find('select').element.value).toEqual(defaultStoryName);
     expect(wrapper.vm.featuresUrl).toEqual(defaultStoryUrls.featuresUrl);
     expect(wrapper.vm.storyName).toEqual(defaultStoryName);
     expect(wrapper.vm.storyUrl).toEqual(defaultStoryUrls.storyUrl);
@@ -66,7 +65,7 @@ describe('CsConfig.vue', () => {
   });
   test('loads the story from the given urls', async () => {
     const store = new Vuex.Store(defaultStore);
-    const wrapper = mount(CsConfig, {
+    const wrapper = mount(CsLoadStoryForm, {
       router,
       store,
       localVue,

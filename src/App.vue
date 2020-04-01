@@ -3,7 +3,7 @@ export default {
   name: 'app',
   mounted() {
     if (!this.track.data.url || !this.story.data.url || !this.features.data.url) {
-      this.$router.push('/config');
+      this.$router.push('/load');
     }
   },
   computed: {
