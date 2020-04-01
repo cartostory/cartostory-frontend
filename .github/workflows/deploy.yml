@@ -22,6 +22,11 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
+    - name: Configure git credentials
+      run: |
+        git config --global user.email "cartostory@cartostory.com"
+        git config --global user.name "Cartostory"
+
     - name: Install dependencies
       run: yarn install
 
