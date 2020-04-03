@@ -1,8 +1,11 @@
 <script>
 import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap';
-import { markInputRule, toggleMark } from 'tiptap-commands';
 import { Bold, Heading, Link } from 'tiptap-extensions';
+import { LCircleMarker, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
+require('../../node_modules/leaflet/dist/leaflet.css');
 
+import { STORY_LINK_LAT_ATTR, STORY_LINK_LON_ATTR } from '@/config/config.js'
+import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
 import FeatureMark from '@/editor/FeatureMark';
 
 export default {
@@ -11,9 +14,18 @@ export default {
     EditorContent,
     EditorMenuBar,
     EditorMenuBubble,
+    LCircleMarker,
+    LGeoJson,
+    LMap,
+    LTileLayer,
+    LRectangle,
   },
   data() {
     return {
+      features: [],
+      latLonCallback: undefined,
+      markerOptions,
+      mapOptions,
       keepInBounds: true,
       editor: new Editor({
         extensions: [
@@ -30,9 +42,28 @@ export default {
     };
   },
   methods: {
-    test(fn) {
-      console.log(fn);
-      fn({dataCsId: 'test'});
+    handleFeatureMarkClick(fn) {
+      this.latLonCallback = fn;
+    },
+    handleRemoveFeatureMark(attrs, removeMark) {
+      const idx = this.features.findIndex(f => f.lat === attrs['data-cs-lat'] && f.lng === attrs['data-cs-lng']);
+
+      if (idx > -1) {
+        this.features.splice(idx, 1);
+        removeMark();
+      }
+    },
+    handleMapClick(latLng) {
+      if (!this.latLonCallback || typeof this.latLonCallback !== 'function') {
+        return;
+      }
+
+      this.latLonCallback({
+        [STORY_LINK_LAT_ATTR]: latLng.lat,
+        [STORY_LINK_LON_ATTR]: latLng.lng,
+      });
+      this.features = [...this.features, latLng];
+      this.latLonCallback = undefined;
     },
   },
   beforeDestroy() {
@@ -43,8 +74,27 @@ export default {
 <template>
   <el-container class="story-form">
     <el-col :span="12">
-      todo map
+      <div class="cs-map">
+        <div id="cs-map-container">
+          <l-map @click="handleMapClick($event.latlng)" :center="mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
+            <l-tile-layer :url="mapOptions.baseLayer" />
+            <l-tile-layer :url="mapOptions.hikingOverlay" layer-type="overlay" :opacity="0.7" />
+            <l-tile-layer :url="mapOptions.labelsOverlay" layer-type="overlay" />
+
+            <l-circle-marker
+              :color="markerOptions.style.plain.color"
+              :fill-color="markerOptions.style.plain.color"
+              :fill-opacity="markerOptions.style.plain.fillOpacity"
+              :latLng="f"
+              :radius="markerOptions.style.common.radius"
+              :weight="markerOptions.style.common.weight"
+              v-for="f in features">
+            </l-circle-marker>
+          </l-map>
+        </div>
+      </div>
     </el-col>
+
     <el-col class="story-form__story" :span="12">
       <el-form>
         <el-form-item>
@@ -84,7 +134,7 @@ export default {
         </div>
       </editor-menu-bar>
 
-      <editor-menu-bubble :editor="editor" :keep-in-bounds="keepInBounds" v-slot="{ commands, isActive, menu }">
+      <editor-menu-bubble :editor="editor" :keep-in-bounds="keepInBounds" v-slot="{ commands, getMarkAttrs, isActive, menu }">
         <div
           class="menububble"
           :class="{ 'is-active': menu.isActive }"
@@ -93,8 +143,15 @@ export default {
           <el-button
             class="menububble__button"
             :class="{ 'is-active': isActive.featureMark() }"
-            @click="commands.featureMark({'data-cs-id': 'test'})"
+            @click="handleFeatureMarkClick(commands.featureMark)"
             icon="el-icon-location-outline"
+          ></el-button>
+
+          <el-button
+            class="menububble__button"
+            :class="{ 'is-active': isActive.featureMark() }"
+            @click="handleRemoveFeatureMark(getMarkAttrs('featureMark'), commands.featureMark)"
+            icon="el-icon-delete-location"
           ></el-button>
 
         </div>
@@ -107,6 +164,22 @@ export default {
 
 <!-- don't scope to overwrite element ui -->
 <style lang="scss">
+.cs-map {
+  height: 100%;
+}
+
+a[data-cs-lat] {
+  color: #F56C6C;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+#cs-map-container {
+  width: auto;
+  height: 100%;
+  position: relative;
+}
+
 .story-form__story {
   border: 1px solid tomato;
 }
@@ -116,6 +189,8 @@ export default {
   padding-left: 1rem;
   padding-right: 1rem;
 }
+
+/* editor start */
 
 .editor-menu-bar {
   margin-left: 1rem;
@@ -189,4 +264,6 @@ export default {
     color: white;
   }
 }
+
+/* editor end */
 </style>
