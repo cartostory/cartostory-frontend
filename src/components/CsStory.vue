@@ -1,5 +1,5 @@
 <script>
-import { SCROLL_CONTAINER_ID, STORY_LINK_DATA_ID } from '@/config';
+import { SCROLL_CONTAINER_ID, STORY_LINK_DATA_ID } from '@/config/config';
 
 export default {
   data() {

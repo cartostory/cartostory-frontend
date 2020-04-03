@@ -1,7 +1,7 @@
 <script>
 import PulseLoader from 'vue-spinner/src/PulseLoader.vue';
 
-import { SCROLL_CONTAINER_ID } from '@/config';
+import { SCROLL_CONTAINER_ID } from '@/config/config';
 import CsStory from './CsStory.vue';
 import CsMap from './CsMap.vue';
 

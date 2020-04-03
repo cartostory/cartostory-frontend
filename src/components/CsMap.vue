@@ -7,8 +7,9 @@ import {
   LRectangle
 } from 'vue2-leaflet';
 import * as LEdgeMarker from 'leaflet-edge-marker';
-
 require('../../node_modules/leaflet/dist/leaflet.css');
+
+import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
 
 export default {
   name: 'CsMap',
@@ -21,78 +22,10 @@ export default {
   },
   data() {
     return {
-      map: {
-        bounds: null,
-        center: [50, 19],
-        baseLayer: 'https://api.mapbox.com/styles/v1/cartostory/cjugqcypf27581gnry4y59lxy/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
-        hikingOverlay: 'http://tile.mtbmap.cz/overlay_hiking/{z}/{x}/{y}.png',
-        labelsOverlay: 'https://api.mapbox.com/styles/v1/cartostory/cjugqfe8r1lhh1ftgrmr7v9zj/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
-        zoom: 8,
-        edgeMarker: null,
-      },
-      markerOptions: {
-        style: {
-          common: {
-            radius: 8,
-            weight: 1,
-          },
-          highlighted: {
-            color: '#fffc31',
-            fillOpacity: 0.8,
-          },
-          inBbox: {
-            color: '#42b983',
-            fillOpacity: 0.5,
-          },
-          plain: {
-            color: '#3185fc',
-            fillOpacity: 0.5,
-          },
-          edge: {
-            icon: L.icon({
-              iconUrl: '../../node_modules/leaflet/dist/images/marker-icon.png',
-              iconRetinaUrl: 'marker-icon-2x.png',
-              shadowUrl:     'marker-shadow.png',
-              iconSize:    [25, 41],
-              iconAnchor:  [12, 41],
-              popupAnchor: [1, -34],
-              tooltipAnchor: [16, -28],
-              shadowSize:  [0, 0],
-            }),
-          },
-        },
-      },
-      bboxOptions: {
-        hovered: {
-          style: {
-            color: '#5a5a66',
-            fillColor: '#5a5a66',
-            dashArray: '5',
-            weight: 2
-          }
-        },
-        selected: {
-          style: {
-            color: '#42b983',
-            fillColor: '#42b983',
-            fillOpacity: 0,
-            dashArray: '5',
-            weight: 2
-          }
-        }
-      },
-      trackOptions: {
-        style: {
-          plain: {
-              color: '#5a5a66',
-              dashArray: '6',
-          },
-          inBbox: {
-            color: '#42b983',
-            dashArray: '6',
-          },
-        },
-      },
+      bboxOptions,
+      mapOptions,
+      markerOptions,
+      trackOptions,
     };
   },
   methods: {
@@ -105,7 +38,7 @@ export default {
       this.$store.dispatch('story/resetHighlightedLink');
       this.$store.dispatch('setHighlightedFeature', feature);
       this.$store.dispatch('setShouldScrollToFeature', true);
-      this.map.center = this.$refs.csmap.mapObject.getBounds().getCenter();
+      this.mapOptions.center = this.$refs.csmap.mapObject.getBounds().getCenter();
     },
     flyTo(feature) {
       const center = [feature.geometry.coordinates[1], feature.geometry.coordinates[0]];
@@ -114,8 +47,8 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.map.bounds = this.$refs.cstrack && this.$refs.cstrack.getBounds();
-      this.$refs.csmap && this.$refs.csmap.mapObject.fitBounds(this.map.bounds);
+      this.mapOptions.bounds = this.$refs.cstrack && this.$refs.cstrack.getBounds();
+      this.$refs.csmap && this.$refs.csmap.mapObject.fitBounds(this.mapOptions.bounds);
     });
   },
   computed: {
@@ -176,11 +109,11 @@ export default {
       });
 
       if (!this.bboxHovered) {
-        this.$refs.csmap.mapObject.removeLayer(this.map.edgeMarker);
+        this.$refs.csmap.mapObject.removeLayer(this.mapOptions.edgeMarker);
       } else {
         const bboxCenter = L.latLngBounds(this.bboxHovered).getCenter();
-        this.map.edgeMarker = new LEdgeMarker(bboxCenter, { icon: icon });
-        this.$refs.csmap.mapObject.addLayer(this.map.edgeMarker);
+        this.mapOptions.edgeMarker = new LEdgeMarker(bboxCenter, { icon: icon });
+        this.$refs.csmap.mapObject.addLayer(this.mapOptions.edgeMarker);
       }
     },
   },
@@ -190,10 +123,10 @@ export default {
 <template>
   <div class="cs-map">
     <div id="cs-map-container">
-      <l-map :center="map.center" :zoom="map.zoom" ref="csmap">
-        <l-tile-layer :url="map.baseLayer" />
-        <l-tile-layer :url="map.hikingOverlay" layer-type="overlay" :opacity="0.7" />
-        <l-tile-layer :url="map.labelsOverlay" layer-type="overlay" />
+      <l-map :center="mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
+        <l-tile-layer :url="mapOptions.baseLayer" />
+        <l-tile-layer :url="mapOptions.hikingOverlay" layer-type="overlay" :opacity="0.7" />
+        <l-tile-layer :url="mapOptions.labelsOverlay" layer-type="overlay" />
         <l-geo-json v-if="!trackOutsideBbox && !trackInsideBbox" :geojson="track.track" :options="trackOptions.style.plain" ref="cstrack" />
         <l-geo-json v-if="trackInsideBbox" :geojson="trackInsideBbox" :options="trackOptions.style.inBbox" ref="cstrack" />
         <l-geo-json v-if="trackOutsideBbox" :geojson="trackOutsideBbox" :options="trackOptions.style.plain" ref="cstrack" />

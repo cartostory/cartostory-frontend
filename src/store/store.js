@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
 
-import { STORY_LINK_DATA_ID } from '@/config';
+import { STORY_LINK_DATA_ID } from '@/config/config';
 import featuresModule from './store.features';
 import storyModule from './store.story';
 import trackModule from './store.track';
