@@ -1,6 +1,6 @@
 <script>
 import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap';
-import { Bold, Heading, Link } from 'tiptap-extensions';
+import { Heading } from 'tiptap-extensions';
 import { LCircleMarker, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
 require('../../node_modules/leaflet/dist/leaflet.css');
 
@@ -29,12 +29,10 @@ export default {
       keepInBounds: true,
       editor: new Editor({
         extensions: [
-          new Bold(),
           new FeatureMark(),
           new Heading({
             levels: [1, 2, 3,],
           }),
-          new Link(),
         ],
         content:  '<p>This is just a boring paragraph</p>',
       }),
@@ -42,6 +40,15 @@ export default {
     };
   },
   methods: {
+    /*
+     * Checks if selected text already has the feature mark on the map.
+     * It renders remove button if true or add button otherwise.
+     * @param {object} attributes
+     * @returns {boolean}
+     */
+    isNewFeatureMarkButtonVisible(attrs) {
+      return attrs && attrs[STORY_LINK_LAT_ATTR];
+    },
     handleFeatureMarkClick(fn) {
       this.latLonCallback = fn;
     },
@@ -141,6 +148,7 @@ export default {
           :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`">
 
           <el-button
+            v-if="!isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
             class="menububble__button"
             :class="{ 'is-active': isActive.featureMark() }"
             @click="handleFeatureMarkClick(commands.featureMark)"
@@ -148,6 +156,7 @@ export default {
           ></el-button>
 
           <el-button
+            v-if="isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
             class="menububble__button"
             :class="{ 'is-active': isActive.featureMark() }"
             @click="handleRemoveFeatureMark(getMarkAttrs('featureMark'), commands.featureMark)"
