@@ -4,7 +4,7 @@ import { Heading } from 'tiptap-extensions';
 import { LCircleMarker, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
 require('../../node_modules/leaflet/dist/leaflet.css');
 
-import { STORY_LINK_LAT_ATTR, STORY_LINK_LON_ATTR } from '@/config/config.js'
+import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js'
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
 import FeatureMark from '@/editor/FeatureMark';
 
@@ -22,8 +22,9 @@ export default {
   },
   data() {
     return {
+      STORY_LINK_CLICK_EVENT,
       features: [],
-      latLonCallback: undefined,
+      addFeatureMark: undefined,
       markerOptions,
       mapOptions,
       keepInBounds: true,
@@ -43,34 +44,60 @@ export default {
     /*
      * Checks if selected text already has the feature mark on the map.
      * It renders remove button if true or add button otherwise.
-     * @param {object} attributes
+     * @param {object} selected text attributes
      * @returns {boolean}
      */
     isNewFeatureMarkButtonVisible(attrs) {
       return attrs && attrs[STORY_LINK_LAT_ATTR];
     },
-    handleFeatureMarkClick(fn) {
-      this.latLonCallback = fn;
+
+    /*
+     * Stores provided function to be called later when user clicks location on the map.
+     * @param {Function} tiptap featureMark create function
+     */
+    handleAddFeatureMarkClick(fn) {
+      this.addFeatureMark = fn;
     },
-    handleRemoveFeatureMark(attrs, removeMark) {
-      const idx = this.features.findIndex(f => f.lat === attrs['data-cs-lat'] && f.lng === attrs['data-cs-lng']);
+
+    /*
+     * Removes link from the story and the corresponding feature from the map.
+     * @param {object} selected text attributes
+     * @param {Function} tiptap featureMark remove function
+     */
+    handleRemoveFeatureMarkClick(attrs, removeMarkFn) {
+      const idx = this.features.findIndex(f => f.lat === attrs[STORY_LINK_LAT_ATTR] && f.lng === attrs[STORY_LINK_LNG_ATTR]);
 
       if (idx > -1) {
         this.features.splice(idx, 1);
-        removeMark();
+        removeMarkFn();
       }
     },
+
+    /*
+     * Links the position to the selected text.
+     * Uses the addFeatureMark function created in handleAddFeatureMarkClick.
+     * @param {object}
+     */
     handleMapClick(latLng) {
-      if (!this.latLonCallback || typeof this.latLonCallback !== 'function') {
+      if (!this.addFeatureMark || typeof this.addFeatureMark !== 'function') {
         return;
       }
 
-      this.latLonCallback({
+      this.addFeatureMark({
         [STORY_LINK_LAT_ATTR]: latLng.lat,
-        [STORY_LINK_LON_ATTR]: latLng.lng,
+        [STORY_LINK_LNG_ATTR]: latLng.lng,
       });
       this.features = [...this.features, latLng];
-      this.latLonCallback = undefined;
+      this.addFeatureMark = undefined;
+    },
+
+    /*
+     * Zooms map to the provided position.
+     * @param {object}
+     */
+    handleStoryLinkClick(latLng) {
+      const map = this.$refs.csmap.mapObject;
+      map.setView(latLng, map.getZoom());
     },
   },
   beforeDestroy() {
@@ -112,6 +139,7 @@ export default {
       <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
         <div class="editor-menu-bar">
           <el-button
+            title="Nadpis 1. kategorie"
             size="mini"
             type="plain"
             class="menubar__button"
@@ -121,6 +149,7 @@ export default {
           </el-button>
 
           <el-button
+            title="Nadpis 2. kategorie"
             size="mini"
             type="plain"
             class="menubar__button"
@@ -130,6 +159,7 @@ export default {
           </el-button>
 
           <el-button
+            title="Nadpis 3. kategorie"
             size="mini"
             type="plain"
             class="menubar__button"
@@ -151,7 +181,7 @@ export default {
             v-if="!isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
             class="menububble__button"
             :class="{ 'is-active': isActive.featureMark() }"
-            @click="handleFeatureMarkClick(commands.featureMark)"
+            @click="handleAddFeatureMarkClick(commands.featureMark)"
             icon="el-icon-location-outline"
           ></el-button>
 
@@ -159,14 +189,14 @@ export default {
             v-if="isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
             class="menububble__button"
             :class="{ 'is-active': isActive.featureMark() }"
-            @click="handleRemoveFeatureMark(getMarkAttrs('featureMark'), commands.featureMark)"
+            @click="handleRemoveFeatureMarkClick(getMarkAttrs('featureMark'), commands.featureMark)"
             icon="el-icon-delete-location"
           ></el-button>
 
         </div>
       </editor-menu-bubble>
 
-      <editor-content v-if="editor" class="editor" :editor="editor" />
+      <editor-content @[STORY_LINK_CLICK_EVENT]="handleStoryLinkClick" v-if="editor" class="editor" :editor="editor" />
     </el-col>
   </el-container>
 </template>
