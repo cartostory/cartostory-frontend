@@ -21,6 +21,7 @@
     "tiptap": "^1.26.6",
     "tiptap-extensions": "^1.28.6",
     "vue": "^2.6.6",
+    "vue-filereader": "^0.1.1",
     "vue-router": "^3.0.1",
     "vue-sanitize": "^0.2.0",
     "vue-scrollto": "^2.14.0",

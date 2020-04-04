@@ -12880,6 +12880,13 @@ vue-eslint-parser@^5.0.0:
     esquery "^1.0.1"
     lodash "^4.17.11"
 
+vue-filereader@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/vue-filereader/-/vue-filereader-0.1.1.tgz#655a3c5b6cecd231ebcfbd9be96eb4bf39dfe6f2"
+  integrity sha512-98Y0FV4lTry7oVqd0S++Mqs7KAMPQm/9FDytsrsi5UcnARtlLtZXI6f/xOn/5FOFGY6T0hmqck2ulkyK2veBsw==
+  dependencies:
+    vue "^2.6.6"
+
 vue-hot-reload-api@^2.3.0:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"
