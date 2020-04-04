@@ -180,10 +180,6 @@ a[data-cs-lat] {
   position: relative;
 }
 
-.story-form__story {
-  border: 1px solid tomato;
-}
-
 .story-form__story .el-form {
   margin-top: 2rem;
   padding-left: 1rem;
@@ -206,7 +202,6 @@ a[data-cs-lat] {
 }
 
 .story-form__story .editor {
-  border: 1px solid tomato;
   margin-left: 1rem;
   margin-right: 1rem;
 }
@@ -216,6 +211,7 @@ a[data-cs-lat] {
   display: flex;
   z-index: 20;
   background: black;
+  background: #F56C6C;
   border-radius: 5px;
   padding: 0.3rem;
   margin-bottom: 0.5rem;
@@ -231,24 +227,22 @@ a[data-cs-lat] {
 
   &__button {
     display: inline-flex;
-    background: transparent;
+    background-color: transparent;
     border: 0;
-    color: white;
+    color: white !important;
     padding: 0.2rem 0.5rem;
     margin-right: 0.2rem;
     border-radius: 3px;
     cursor: pointer;
 
+    &:hover,
+    &:focus,
+    &.is-active {
+      background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
     &:last-child {
       margin-right: 0;
-    }
-
-    &:hover {
-      background-color: rgba(white, 0.1);
-    }
-
-    &.is-active {
-      background-color: rgba(white, 0.2);
     }
   }
 
