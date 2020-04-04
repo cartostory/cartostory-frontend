@@ -1,5 +1,4 @@
 <script>
-import FileReader from 'vue-filereader';
 import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap';
 import { Heading } from 'tiptap-extensions';
 import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
@@ -8,14 +7,15 @@ require('../../node_modules/leaflet/dist/leaflet.css');
 import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js'
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
 import FeatureMark from '@/editor/FeatureMark';
+import CsTrackUploadButton from '@/components/CsTrackUploadButton';
 
 export default {
   name: 'CsCreateStoryForm',
   components: {
+    CsTrackUploadButton,
     EditorContent,
     EditorMenuBar,
     EditorMenuBubble,
-    FileReader,
     LCircleMarker,
     LControl,
     LGeoJson,
@@ -102,9 +102,6 @@ export default {
       const map = this.$refs.csmap.mapObject;
       map.setView(latLng, map.getZoom());
     },
-    handleFileUpload(a, ...rest) {
-      console.log(a, ...rest);
-    }
   },
   beforeDestroy() {
     this.editor.destroy();
@@ -118,31 +115,7 @@ export default {
         <div id="cs-map-container">
           <l-map @click="handleMapClick($event.latlng)" :center="mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
             <l-control class="leaflet-bar leaflet-control" position="topleft" >
-              <file-reader style="height: 30px; width: 30px; line-height: 30px;"
-                accept=".json"
-                output="text"
-                @reader-load="handleFileUpload"
-              >
-              <template #reader="props">
-
-                <el-button
-                  style="width: 30px; height: 30px; text-align: center; line-height: 30px; padding-left: 0px; padding-right: 0px; padding-top: 0px; border-radius: 0;"
-                  @click="$refs.fileReader.click()"
-                  title="Nahrát soubor trasy"
-                  size="mini"
-                  type="plain"
-                  icon="el-icon-upload"
-                  ></el-button>
-
-                <input
-                  style="visibility: hidden"
-                  ref="fileReader"
-                  type="file"
-                  :accept="props.accept"
-                  @change="props.onchange"
-                />
-              </template>
-              </file-reader>
+              <cs-track-upload-button/>
             </l-control>
 
             <l-tile-layer :url="mapOptions.baseLayer" />
