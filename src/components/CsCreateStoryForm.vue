@@ -140,7 +140,7 @@ export default {
             <l-tile-layer :url="mapOptions.hikingOverlay" layer-type="overlay" :opacity="0.7" />
             <l-tile-layer :url="mapOptions.labelsOverlay" layer-type="overlay" />
 
-              <l-geo-json @ready="handleTrackReady($event)" v-if="track" :geojson="track" :options="trackOptions.style.plain" ref="cstrack" />
+            <l-geo-json @ready="handleTrackReady($event)" v-if="track" :geojson="track" :options="trackOptions.style.plain" ref="cstrack" />
 
             <l-circle-marker
               :color="markerOptions.style.plain.color"
