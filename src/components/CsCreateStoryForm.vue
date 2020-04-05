@@ -210,7 +210,7 @@ export default {
             :class="{ 'is-active': isActive.featureMark() }"
             @click="handleAddFeatureMarkClick(commands.featureMark)"
             icon="el-icon-location-outline"
-          ></el-button>
+            ></el-button>
 
           <el-button
             v-if="isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
@@ -305,6 +305,12 @@ a[data-cs-lat] {
     &:focus,
     &.is-active {
       background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    &:focus::after {
+      content: 'Klikněte do mapy';
+      font-size: 8px;
+      line-height: 14px;
     }
 
     &:last-child {
