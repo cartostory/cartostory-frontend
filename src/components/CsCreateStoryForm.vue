@@ -6,7 +6,7 @@ require('../../node_modules/leaflet/dist/leaflet.css');
 
 import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config.js'
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
-import FeatureMark from '@/editor/FeatureMark';
+import FeatureMark from '@/components/editor/FeatureMark';
 import TrackUploadButton from '@/components/TrackUploadButton';
 
 export default {
