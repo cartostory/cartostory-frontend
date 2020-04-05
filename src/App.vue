@@ -2,16 +2,15 @@
 export default {
   name: 'app',
   mounted() {
-    if (!this.track.data.url || !this.story.data.url || !this.features.data.url) {
-      this.$router.push('/load');
+    if (!this.ready) {
+      this.$router.push('/load').catch((e) => {
+        console.log(e);
+      });
     }
   },
   computed: {
-    features() {
-      return this.$store.state.features;
-    },
-    track() {
-      return this.$store.state.track;
+    ready() {
+      return this.story && this.story.name;
     },
     story() {
       return this.$store.state.story;

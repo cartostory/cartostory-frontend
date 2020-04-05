@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
 
 import App from '@/App.vue';
-import store from '@/store/store';
+import store from '@/store/newStore';
 
 const defaultStore = store;
 
@@ -13,7 +13,7 @@ localVue.use(ElementUI);
 
 describe('App.vue', () => {
   it('redirects when no story is loaded', () => {
-    const push = jest.fn();
+    const push = jest.fn().mockImplementation(() => Promise.resolve());
     const store = new Vuex.Store(defaultStore);
     const $router = {
       push,

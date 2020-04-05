@@ -1,3 +1,7 @@
+// new mutations
+export const UPDATE_STORY_URL = 'UPDATE_STORY_URL';
+export const UPDATE_STORY = 'UPDATE_STORY';
+
 export const RESET_HIGHLIGHTED_LINK = 'RESET_HIGHLIGHTED_LINK';
 export const SET_BBOX = 'SET_BBOX';
 export const SET_BBOX_HOVERED = 'SET_BBOX_HOVERED';
