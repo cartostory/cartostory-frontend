@@ -25,7 +25,7 @@ export default {
         extensions: [
           new FeatureMark(),
           new Heading({
-            levels: [1, 2, 3,],
+            levels: [2, 3, 4], // leave <h1> for the story title
           }),
         ],
         content: '',
@@ -48,15 +48,15 @@ export default {
 
 <template>
   <el-col>
-    <editor-menu-bar style="position: fixed; z-index: 100; width: 100%; background: white;" :editor="editor" v-slot="{ commands, isActive }">
+    <editor-menu-bar style="position: fixed; z-index: 10; width: 100%; background: white;" :editor="editor" v-slot="{ commands, isActive }">
       <div class="editor-menu-bar">
         <el-button
           title="Nadpis 1. kategorie"
           size="mini"
           type="plain"
           class="menubar__button"
-          :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-          @click="commands.heading({ level: 1 })">
+          :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+          @click="commands.heading({ level: 2 })">
           H1
         </el-button>
 
@@ -65,8 +65,8 @@ export default {
           size="mini"
           type="plain"
           class="menubar__button"
-          :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-          @click="commands.heading({ level: 2 })">
+          :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+          @click="commands.heading({ level: 3 })">
           H2
         </el-button>
 
@@ -75,8 +75,8 @@ export default {
           size="mini"
           type="plain"
           class="menubar__button"
-          :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-          @click="commands.heading({ level: 3 })">
+          :class="{ 'is-active': isActive.heading({ level: 4 }) }"
+          @click="commands.heading({ level: 4 })">
           H3
         </el-button>
       </div>
