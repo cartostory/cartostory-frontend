@@ -1,6 +1,8 @@
 <script>
 import FileReader from 'vue-filereader';
 
+import { TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
+
 export default {
   name: 'CsTrackUploadButton',
   components: {
@@ -8,7 +10,7 @@ export default {
   },
   methods: {
     handleFileUpload(fileObj) {
-      console.log(fileObj.data);
+      this.$emit(TRACK_FILE_UPLOAD_EVENT, fileObj && JSON.parse(fileObj.data));
     },
   },
 }

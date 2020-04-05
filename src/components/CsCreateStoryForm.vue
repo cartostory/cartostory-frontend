@@ -4,7 +4,7 @@ import { Heading } from 'tiptap-extensions';
 import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
 require('../../node_modules/leaflet/dist/leaflet.css');
 
-import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js'
+import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config.js'
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
 import FeatureMark from '@/editor/FeatureMark';
 import CsTrackUploadButton from '@/components/CsTrackUploadButton';
@@ -26,10 +26,14 @@ export default {
   data() {
     return {
       STORY_LINK_CLICK_EVENT,
+      TRACK_FILE_UPLOAD_EVENT,
       features: [],
+      track: undefined,
+      trackBounds: undefined,
       addFeatureMark: undefined,
       markerOptions,
       mapOptions,
+      trackOptions,
       keepInBounds: true,
       editor: new Editor({
         extensions: [
@@ -44,6 +48,13 @@ export default {
     };
   },
   methods: {
+    /*
+     * @param {L.geoJSON}
+     */
+    handleTrackReady(track) {
+      this.$refs.csmap.mapObject.fitBounds(track.getBounds());
+    },
+
     /*
      * Checks if selected text already has the feature mark on the map.
      * It renders remove button if true or add button otherwise.
@@ -102,6 +113,13 @@ export default {
       const map = this.$refs.csmap.mapObject;
       map.setView(latLng, map.getZoom());
     },
+
+    /*
+     * @param {object} geojson data
+     */
+    handleFileUpload(data) {
+      this.track = data;
+    }
   },
   beforeDestroy() {
     this.editor.destroy();
@@ -113,14 +131,16 @@ export default {
     <el-col :span="12">
       <div class="cs-map">
         <div id="cs-map-container">
-          <l-map @click="handleMapClick($event.latlng)" :center="mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
+          <l-map :bounds="track && trackBounds" @click="handleMapClick($event.latlng)" :center="mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
             <l-control class="leaflet-bar leaflet-control" position="topleft" >
-              <cs-track-upload-button/>
+              <cs-track-upload-button @[TRACK_FILE_UPLOAD_EVENT]="handleFileUpload($event)" />
             </l-control>
 
             <l-tile-layer :url="mapOptions.baseLayer" />
             <l-tile-layer :url="mapOptions.hikingOverlay" layer-type="overlay" :opacity="0.7" />
             <l-tile-layer :url="mapOptions.labelsOverlay" layer-type="overlay" />
+
+              <l-geo-json @ready="handleTrackReady($event)" v-if="track" :geojson="track" :options="trackOptions.style.plain" ref="cstrack" />
 
             <l-circle-marker
               :color="markerOptions.style.plain.color"
