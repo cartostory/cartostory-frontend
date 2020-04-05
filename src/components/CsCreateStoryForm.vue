@@ -42,7 +42,7 @@ export default {
             levels: [1, 2, 3,],
           }),
         ],
-        content:  '<p>This is just a boring paragraph</p>',
+        content: '',
       }),
       storyName: '',
     };
