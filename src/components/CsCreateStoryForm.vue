@@ -30,6 +30,7 @@ export default {
       markerOptions,
       mapOptions,
       trackOptions,
+      story: undefined,
       storyName: '',
     };
   },
@@ -91,6 +92,18 @@ export default {
       this.addFeatureMark = undefined;
     },
 
+    handleGetStoryText(jsonDoc) {
+      this.story = jsonDoc;
+    },
+
+    handleSave() {
+      const result = {
+        name: this.storyName,
+        story: this.story,
+        track: this.track,
+      };
+    },
+
     /*
      * Zooms map to the provided position.
      * @param {object}
@@ -106,9 +119,6 @@ export default {
     handleFileUpload(data) {
       this.track = data;
     },
-  },
-  beforeDestroy() {
-    this.editor.destroy();
   },
 };
 </script>
@@ -151,12 +161,13 @@ export default {
 
       <editor
         style="flex: 1; overflow: auto;"
+        :on-get-story-text="handleGetStoryText"
         :on-add-feature-mark="handleAddFeatureMarkClick"
         :on-story-link-click="handleStoryLinkClick"
         :on-remove-feature-mark="handleRemoveFeatureMarkClick"
       ></editor>
       <el-footer style="margin: auto;">
-        <el-button type="primary">Uložit</el-button>
+        <el-button @click="handleSave" type="primary">Uložit</el-button>
       </el-footer>
     </el-col>
   </el-container>

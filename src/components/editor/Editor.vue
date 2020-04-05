@@ -8,6 +8,7 @@ import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK
 export default {
   name: 'Editor',
   props: {
+    onGetStoryText: Function,
     onAddFeatureMark: Function,
     onRemoveFeatureMark: Function,
     onStoryLinkClick: Function,
@@ -29,6 +30,9 @@ export default {
           }),
         ],
         content: '',
+        onUpdate: function(payload) {
+          this.onGetStoryText(payload.getJSON());
+        }.bind(this),
       }),
     };
   },
@@ -42,6 +46,10 @@ export default {
     isNewFeatureMarkButtonVisible(attrs) {
       return attrs && attrs[STORY_LINK_LAT_ATTR];
     },
+  },
+
+  beforeDestroy() {
+    this.editor.destroy();
   },
 }
 </script>
