@@ -7,6 +7,7 @@ import {
   Button,
   Col,
   Container,
+  Footer,
   Form,
   FormItem,
   Input,
@@ -28,6 +29,7 @@ Vue.config.productionTip = false;
 Vue.use(Button);
 Vue.use(Col);
 Vue.use(Container);
+Vue.use(Footer);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);

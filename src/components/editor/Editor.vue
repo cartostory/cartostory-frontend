@@ -48,7 +48,7 @@ export default {
 
 <template>
   <el-col>
-    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+    <editor-menu-bar style="position: fixed; z-index: 100; width: 100%; background: white;" :editor="editor" v-slot="{ commands, isActive }">
       <div class="editor-menu-bar">
         <el-button
           title="Nadpis 1. kategorie"
@@ -56,30 +56,29 @@ export default {
           type="plain"
           class="menubar__button"
           :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-          @click="commands.heading({ level: 1 })"
-          >H1
+          @click="commands.heading({ level: 1 })">
+          H1
         </el-button>
 
-          <el-button
-            title="Nadpis 2. kategorie"
-            size="mini"
-            type="plain"
-            class="menubar__button"
-            :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-            @click="commands.heading({ level: 2 })"
-            >H2
-          </el-button>
+        <el-button
+          title="Nadpis 2. kategorie"
+          size="mini"
+          type="plain"
+          class="menubar__button"
+          :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+          @click="commands.heading({ level: 2 })">
+          H2
+        </el-button>
 
-            <el-button
-              title="Nadpis 3. kategorie"
-              size="mini"
-              type="plain"
-              class="menubar__button"
-              :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-              @click="commands.heading({ level: 3 })"
-              >H3
-            </el-button>
-
+        <el-button
+          title="Nadpis 3. kategorie"
+          size="mini"
+          type="plain"
+          class="menubar__button"
+          :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+          @click="commands.heading({ level: 3 })">
+          H3
+        </el-button>
       </div>
     </editor-menu-bar>
 
@@ -129,6 +128,7 @@ export default {
 .story-form__story .editor {
   margin-left: 1rem;
   margin-right: 1rem;
+  margin-top: 2.5rem;
 }
 
 .menububble {

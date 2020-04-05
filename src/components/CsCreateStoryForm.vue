@@ -150,10 +150,14 @@ export default {
       </el-form>
 
       <editor
+        style="flex: 1; overflow: auto;"
         :on-add-feature-mark="handleAddFeatureMarkClick"
         :on-story-link-click="handleStoryLinkClick"
         :on-remove-feature-mark="handleRemoveFeatureMarkClick"
       ></editor>
+      <el-footer style="margin: auto;">
+        <el-button type="primary">Uložit</el-button>
+      </el-footer>
     </el-col>
   </el-container>
 </template>
@@ -174,6 +178,14 @@ a[data-cs-lat] {
   width: auto;
   height: 100%;
   position: relative;
+}
+
+.story-form__story {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  flex-direction: column;
 }
 
 .story-form__story .el-form {
