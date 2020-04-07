@@ -17,26 +17,10 @@ export default {
       SCROLL_CONTAINER_ID,
     };
   },
-  mounted() {
-    if (this.readyAndNotDownloadedYet) {
-      this.$store.dispatch('loadStory');
-    }
-  },
+  mounted() { },
   computed: {
-    features() {
-      return this.$store.state.features;
-    },
-    track() {
-      return this.$store.state.track;
-    },
-    story() {
-      return this.$store.state.story;
-    },
     ready() {
-      return this.track.data.track && this.story.data.story;
-    },
-    readyAndNotDownloadedYet() {
-      return this.features.data.url && this.track.data.url && this.story.data.url && !this.ready;
+      return this.$store.state.story.track;
     },
   },
 };

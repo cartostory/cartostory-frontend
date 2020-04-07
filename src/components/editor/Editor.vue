@@ -4,15 +4,10 @@ import { Heading } from 'tiptap-extensions';
 
 import FeatureMark from '@/components/editor/FeatureMark';
 import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config.js'
+import { UPDATE_STORY_TEXT } from '@/store/mutations.js';
 
 export default {
   name: 'Editor',
-  props: {
-    onGetStoryText: Function,
-    onAddFeatureMark: Function,
-    onRemoveFeatureMark: Function,
-    onStoryLinkClick: Function,
-  },
   components: {
     EditorContent,
     EditorMenuBar,
@@ -29,9 +24,9 @@ export default {
             levels: [2, 3, 4], // leave <h1> for the story title
           }),
         ],
-        content: '',
+        content: this.$store.state.story.text,
         onUpdate: function(payload) {
-          this.onGetStoryText(payload.getJSON());
+          this.$store.commit(UPDATE_STORY_TEXT, payload);
         }.bind(this),
       }),
     };
@@ -46,6 +41,11 @@ export default {
     isNewFeatureMarkButtonVisible(attrs) {
       return attrs && attrs[STORY_LINK_LAT_ATTR];
     },
+
+    handleAddFeatureMarkClick(fn) {
+      console.log('handleAddFeatureMarkClick', fn);
+      this.$emit('add-feature-mark', fn);
+    }
   },
 
   beforeDestroy() {
@@ -100,7 +100,7 @@ export default {
           v-if="!isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
           class="menububble__button"
           :class="{ 'is-active': isActive.featureMark() }"
-          @click="onAddFeatureMark(commands.featureMark)"
+          @click="handleAddFeatureMarkClick(commands.featureMark)"
           icon="el-icon-location-outline"
           ></el-button>
 
@@ -108,14 +108,14 @@ export default {
             v-if="isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
             class="menububble__button"
             :class="{ 'is-active': isActive.featureMark() }"
-            @click="onRemoveFeatureMark(getMarkAttrs('featureMark'), commands.featureMark)"
+            @click="commands.featureMark()"
             icon="el-icon-delete-location"
             ></el-button>
 
       </div>
     </editor-menu-bubble>
 
-    <editor-content @[STORY_LINK_CLICK_EVENT]="onStoryLinkClick" v-if="editor" class="editor" :editor="editor" />
+    <editor-content v-if="editor" class="editor" :editor="editor" />
   </el-col>
 </template>
 

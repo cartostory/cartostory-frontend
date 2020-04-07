@@ -10,6 +10,15 @@ describe('CsCreateStoryForm.vue', () => {
   test('renders a story name input', () => {
     const wrapper = mount(CsCreateStoryForm, {
       localVue,
+      mocks: {
+        $store: {
+          getters: {},
+          state: {
+            story: {},
+            map: {},
+          },
+        },
+      },
     });
 
     expect(wrapper.findAll(Form).length).toEqual(1);

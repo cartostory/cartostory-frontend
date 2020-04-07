@@ -16,7 +16,7 @@ export default {
       return this.$store.state.highlightedFeature;
     },
     story() {
-      return this.$store.state.story.data;
+      return this.$store.state.story;
     },
     shouldScrollToFeature() {
       return this.$store.state.shouldScrollToFeature;

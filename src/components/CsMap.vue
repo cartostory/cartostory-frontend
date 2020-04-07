@@ -48,10 +48,11 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.mapOptions.bounds = this.$refs.cstrack && this.$refs.cstrack.getBounds();
-      this.$refs.csmap && this.$refs.csmap.mapObject.fitBounds(this.mapOptions.bounds);
+      // this.$refs.csmap && this.$refs.csmap.mapObject.fitBounds(this.mapOptions.bounds);
     });
   },
   computed: {
+    /*
     bbox() {
       return this.$store.state.bbox;
     },
@@ -71,21 +72,26 @@ export default {
         return this.$store.state.features.data.features.filter(f => !ids.includes(f.properties.id));
       }
     },
+    */
+    /*
     featuresInsideBbox() {
       return this.$store.getters['track/featuresInsideBbox'];
     },
     highlightedFeature() {
       return this.$store.state.highlightedFeature;
     },
+    */
     track() {
-      return this.$store.state.track.data;
+      return this.$store.state.story.track;
     },
+    /*
     trackInsideBbox() {
       return this.$store.getters['track/trackBboxRelation']('within');
     },
     trackOutsideBbox() {
       return this.$store.getters['track/trackBboxRelation']('disjoint');
     }
+    */
   },
   watch: {
     highlightedFeature() {
@@ -127,49 +133,50 @@ export default {
         <l-tile-layer :url="mapOptions.baseLayer" />
         <l-tile-layer :url="mapOptions.hikingOverlay" layer-type="overlay" :opacity="0.7" />
         <l-tile-layer :url="mapOptions.labelsOverlay" layer-type="overlay" />
-        <l-geo-json v-if="!trackOutsideBbox && !trackInsideBbox" :geojson="track.track" :options="trackOptions.style.plain" ref="cstrack" />
-        <l-geo-json v-if="trackInsideBbox" :geojson="trackInsideBbox" :options="trackOptions.style.inBbox" ref="cstrack" />
-        <l-geo-json v-if="trackOutsideBbox" :geojson="trackOutsideBbox" :options="trackOptions.style.plain" ref="cstrack" />
-        <l-rectangle v-if="bboxHovered && bboxHoveredDifferentFromCurrentBbox" :bounds="bboxHovered" :l-style="bboxOptions.hovered.style"></l-rectangle>
-        <l-rectangle v-if="bbox" :bounds="bbox" :l-style="bboxOptions.selected.style"></l-rectangle>
+        <l-geo-json :geojson="track" :options="trackOptions.style.plain" ref="cstrack" />
+        <!--<l-geo-json v-if="!trackOutsideBbox && !trackInsideBbox" :geojson="track.track" :options="trackOptions.style.plain" ref="cstrack" />-->
+        <!--<l-geo-json v-if="trackInsideBbox" :geojson="trackInsideBbox" :options="trackOptions.style.inBbox" ref="cstrack" />-->
+        <!--<l-geo-json v-if="trackOutsideBbox" :geojson="trackOutsideBbox" :options="trackOptions.style.plain" ref="cstrack" />-->
+        <!--<l-rectangle v-if="bboxHovered && bboxHoveredDifferentFromCurrentBbox" :bounds="bboxHovered" :l-style="bboxOptions.hovered.style"></l-rectangle>-->
+        <!--<l-rectangle v-if="bbox" :bounds="bbox" :l-style="bboxOptions.selected.style"></l-rectangle>-->
 
         <!-- highlightedFeature -->
-        <l-circle-marker
-          v-if="highlightedFeature"
-          @click="featureClicked(highlightedFeature)"
-          :color="markerOptions.style.highlighted.color"
-          :fill-color="markerOptions.style.highlighted.color"
-          :fill-opacity="markerOptions.style.highlighted.fillOpacity"
-          :latLng="[highlightedFeature.geometry.coordinates[1], highlightedFeature.geometry.coordinates[0]]"
-          :radius="markerOptions.style.common.radius"
-          :weight="markerOptions.style.common.weight">
-        </l-circle-marker>
+        <!--<l-circle-marker-->
+          <!--v-if="highlightedFeature"-->
+          <!--@click="featureClicked(highlightedFeature)"-->
+          <!--:color="markerOptions.style.highlighted.color"-->
+          <!--:fill-color="markerOptions.style.highlighted.color"-->
+          <!--:fill-opacity="markerOptions.style.highlighted.fillOpacity"-->
+          <!--:latLng="[highlightedFeature.geometry.coordinates[1], highlightedFeature.geometry.coordinates[0]]"-->
+          <!--:radius="markerOptions.style.common.radius"-->
+          <!--:weight="markerOptions.style.common.weight">-->
+        <!--</l-circle-marker>-->
 
         <!-- features -->
-        <l-circle-marker
-          @click="featureClicked(f)"
-          :color="markerOptions.style.plain.color"
-          :fill-color="markerOptions.style.plain.color"
-          :fill-opacity="markerOptions.style.plain.fillOpacity"
-          :key="f.properties.id"
-          :latLng="[f.geometry.coordinates[1], f.geometry.coordinates[0]]"
-          :radius="markerOptions.style.common.radius"
-          :weight="markerOptions.style.common.weight"
-          v-for="f in features">
-        </l-circle-marker>
+        <!--<l-circle-marker-->
+          <!--@click="featureClicked(f)"-->
+          <!--:color="markerOptions.style.plain.color"-->
+          <!--:fill-color="markerOptions.style.plain.color"-->
+          <!--:fill-opacity="markerOptions.style.plain.fillOpacity"-->
+          <!--:key="f.properties.id"-->
+          <!--:latLng="[f.geometry.coordinates[1], f.geometry.coordinates[0]]"-->
+          <!--:radius="markerOptions.style.common.radius"-->
+          <!--:weight="markerOptions.style.common.weight"-->
+          <!--v-for="f in features">-->
+        <!--</l-circle-marker>-->
 
         <!-- featuresInsideBbox -->
-        <l-circle-marker
-          @click="featureClicked(f)"
-          :color="markerOptions.style.inBbox.color"
-          :fill-color="markerOptions.style.inBbox.color"
-          :fill-opacity="markerOptions.style.inBbox.fillOpacity"
-          :key="f.properties.id"
-          :latLng="[f.geometry.coordinates[1], f.geometry.coordinates[0]]"
-          :radius="markerOptions.style.common.radius"
-          :weight="markerOptions.style.common.weight"
-          v-for="f in featuresInsideBbox">
-        </l-circle-marker>
+        <!--<l-circle-marker-->
+          <!--@click="featureClicked(f)"-->
+          <!--:color="markerOptions.style.inBbox.color"-->
+          <!--:fill-color="markerOptions.style.inBbox.color"-->
+          <!--:fill-opacity="markerOptions.style.inBbox.fillOpacity"-->
+          <!--:key="f.properties.id"-->
+          <!--:latLng="[f.geometry.coordinates[1], f.geometry.coordinates[0]]"-->
+          <!--:radius="markerOptions.style.common.radius"-->
+          <!--:weight="markerOptions.style.common.weight"-->
+          <!--v-for="f in featuresInsideBbox">-->
+        <!--</l-circle-marker>-->
       </l-map>
     </div>
   </div>

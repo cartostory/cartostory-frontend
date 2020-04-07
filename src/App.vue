@@ -3,9 +3,11 @@ export default {
   name: 'app',
   mounted() {
     if (!this.ready) {
+      /*
       this.$router.push('/load').catch((e) => {
         console.log(e);
       });
+      */
     }
   },
   computed: {
