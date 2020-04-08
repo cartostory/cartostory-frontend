@@ -1,11 +1,9 @@
-import axios from 'axios';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import { findChildrenByMark } from 'prosemirror-utils';
-
-import pickDeep from 'deepdash-es/pickDeep';
-import mapDeep from 'deepdash-es/mapDeep';
+import axios from 'axios';
 import chunk from 'lodash.chunk';
+import mapDeep from 'deepdash-es/mapDeep';
+import pickDeep from 'deepdash-es/pickDeep';
 
 import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js';
 import { set, setPath } from './store.helpers';
@@ -66,24 +64,23 @@ const actions = {
 const getters = {
   features: state => {
     let result = [];
-    const content = state.story.text && state.story.text.content;
+    let content = undefined;
+
+    if (state.story.text && state.story.text.state) { // editing
+      content = state.story.text.state.doc.content;
+    } else { // readonly
+      content = state.story.text && state.story.text.content;
+    }
 
     if (content) {
-      const features = mapDeep(pickDeep(state.story.text.content, [STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR]), v => v, {
+      const data = JSON.parse(JSON.stringify(content)); // get rid of vuex reactivity or deepdash would fail
+      const features = mapDeep(pickDeep(data, [STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR]), v => v, {
         leavesOnly: true,
-      });
+      }).filter(item => item !== null);
       result = chunk(features, 2).map(item => ({ lat: item[0], lng: item[1] }));
     }
 
     return result;
-
-
-    //return state.story && state.story.text && state.story.text.state
-      //? findChildrenByMark(state.story.text.state.doc, state.story.text.state.config.schema.marks.featureMark)
-          //.map(obj => obj.node.marks[0])
-          //.filter(mark => mark.attrs[STORY_LINK_LAT_ATTR])
-          //.map(mark => ({ lat: mark.attrs[STORY_LINK_LAT_ATTR], lng: mark.attrs[STORY_LINK_LNG_ATTR]}))
-      //: [];
   },
 };
 
