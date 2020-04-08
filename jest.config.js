@@ -17,7 +17,7 @@ module.exports = {
     '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.js'
   },
 
-  transformIgnorePatterns: ['<rootDir>/node_modules/(?!vue-spinner)'],
+  transformIgnorePatterns: ['<rootDir>/node_modules/(?!(vue-spinner|deepdash-es|lodash-es)/)'],
 
-  preset: '@vue/cli-plugin-unit-jest'
+  preset: '@vue/cli-plugin-unit-jest',
 }

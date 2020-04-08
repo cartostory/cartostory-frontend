@@ -1,23 +1,6 @@
 <script>
 export default {
   name: 'app',
-  mounted() {
-    if (!this.ready) {
-      /*
-      this.$router.push('/load').catch((e) => {
-        console.log(e);
-      });
-      */
-    }
-  },
-  computed: {
-    ready() {
-      return this.story && this.story.name;
-    },
-    story() {
-      return this.$store.state.story;
-    },
-  },
 };
 </script>
 
@@ -41,5 +24,4 @@ export default {
   #app {
     color: #2c3e50;
   }
-
 </style>

@@ -30,6 +30,6 @@ describe('App.vue', () => {
     };
 
     const wrapper = shallowMount(App, options);
-    expect(push).toHaveBeenCalledWith('/load');
+    expect(push).toHaveBeenCalledTimes(0);
   });
 });

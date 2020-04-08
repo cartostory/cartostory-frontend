@@ -16,6 +16,9 @@ const mountOptions = {
     ready: () => true,
   },
   mocks: {
+    $router: {
+      push: jest.fn().mockImplementation(() => Promise.resolve()),
+    },
     $store: {
       getters: {
         'track/trackBboxRelation': jest.fn(),

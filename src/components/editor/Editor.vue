@@ -17,7 +17,15 @@ export default {
     return {
       STORY_LINK_CLICK_EVENT,
       keepInBounds: true,
-      editor: new Editor({
+      editor: undefined,
+    };
+  },
+  mounted() {
+    this.editor = this.$createEditor();
+  },
+  methods: {
+    $createEditor() {
+      return new Editor({
         extensions: [
           new FeatureMark(),
           new Heading({
@@ -28,10 +36,8 @@ export default {
         onUpdate: function(payload) {
           this.$store.commit(UPDATE_STORY_TEXT, payload);
         }.bind(this),
-      }),
-    };
-  },
-  methods: {
+      });
+    },
     /*
      * Checks if selected text already has the feature mark on the map.
      * It renders remove button if true or add button otherwise.
@@ -43,7 +49,6 @@ export default {
     },
 
     handleAddFeatureMarkClick(fn) {
-      console.log('handleAddFeatureMarkClick', fn);
       this.$emit('add-feature-mark', fn);
     }
   },

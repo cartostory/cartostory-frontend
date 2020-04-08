@@ -17,10 +17,19 @@ export default {
       SCROLL_CONTAINER_ID,
     };
   },
-  mounted() { },
+  mounted() {
+    if (!this.ready) {
+      this.$router.push('/load').catch((e) => {
+        console.log(e);
+      });
+    }
+  },
   computed: {
     ready() {
-      return this.$store.state.story.track;
+      return this.story && this.story.name;
+    },
+    story() {
+      return this.$store.state.story;
     },
   },
 };

@@ -1,6 +1,7 @@
 // new mutations
 export const UPDATE_MAP_CENTER = 'UPDATE_MAP_CENTER';
 export const UPDATE_STORY = 'UPDATE_STORY';
+export const UPDATE_STORY_NAME = 'UPDATE_STORY_NAME';
 export const UPDATE_STORY_TEXT = 'UPDATE_STORY_TEXT';
 export const UPDATE_STORY_URL = 'UPDATE_STORY_URL';
 export const UPDATE_TRACK = 'UPDATE_TRACK';
