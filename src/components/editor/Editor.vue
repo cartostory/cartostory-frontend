@@ -3,8 +3,8 @@ import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap';
 import { Heading } from 'tiptap-extensions';
 
 import FeatureMark from '@/components/editor/FeatureMark';
-import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config.js'
-import { UPDATE_STORY_TEXT } from '@/store/mutations.js';
+import { STORY_LINK_LAT_ATTR } from '@/config/config.js'
+import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations.js';
 
 export default {
   name: 'Editor',
@@ -15,10 +15,19 @@ export default {
   },
   data() {
     return {
-      STORY_LINK_CLICK_EVENT,
       keepInBounds: true,
       editor: undefined,
     };
+  },
+  computed: {
+    storyName: {
+      get() {
+        return this.$store.state.story.name;
+      },
+      set(value) {
+        this.$store.commit(UPDATE_STORY_NAME, value);
+      },
+    },
   },
   mounted() {
     this.editor = this.$createEditor();
@@ -61,6 +70,13 @@ export default {
 
 <template>
   <el-col>
+
+    <el-form>
+      <el-form-item>
+        <el-input class="story-name" v-model="storyName" placeholder="Název příběhu..."></el-input>
+      </el-form-item>
+    </el-form>
+
     <editor-menu-bar style="position: fixed; z-index: 10; width: 100%; background: white;" :editor="editor" v-slot="{ commands, isActive }">
       <div class="editor-menu-bar">
         <el-button
@@ -129,7 +145,13 @@ export default {
   margin-left: 1rem;
 }
 
-.story-form__story .el-input__inner {
+.el-form {
+  margin-top: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.story-name .el-input__inner {
   border: 0;
   border-radius: 0;
   border-bottom: 1px solid gray;
@@ -138,10 +160,10 @@ export default {
   line-height: 3.5rem;
 }
 
-.story-form__story .editor {
+.editor {
   margin-left: 1rem;
   margin-right: 1rem;
-  margin-top: 2.5rem;
+  margin-top: 4.5rem;
 }
 
 .menububble {

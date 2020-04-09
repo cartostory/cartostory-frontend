@@ -35,17 +35,7 @@ export default {
     };
   },
   mounted() {
-    this.ready = this.$router.currentRoute.path === '/create';
-  },
-  computed: {
-    storyName: {
-      get() {
-        return this.$store.state.story.name;
-      },
-      set(value) {
-        this.$store.commit(UPDATE_STORY_NAME, value);
-      },
-    },
+    this.ready = this.$router.currentRoute.path === '/story/create';
   },
   methods: {
     /*
@@ -74,12 +64,6 @@ export default {
     </el-col>
 
     <el-col class="story-form__story" :span="12">
-      <el-form>
-        <el-form-item>
-          <el-input class="story-name" v-model="storyName" placeholder="Název příběhu..."></el-input>
-        </el-form-item>
-      </el-form>
-
       <editor
         v-if="$store.state.story.text || ready"
         @add-feature-mark="handleAddFeatureMarkClick($event)"
@@ -118,9 +102,4 @@ a[data-cs-lat] {
   flex-direction: column;
 }
 
-.story-form__story .el-form {
-  margin-top: 2rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
 </style>
