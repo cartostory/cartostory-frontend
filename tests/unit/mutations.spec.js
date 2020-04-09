@@ -1,19 +1,14 @@
 import { mutations } from '@/store/newStore';
 import {
+  UPDATE_FEATURE_MARK_CALLBACK,
+  UPDATE_MAP_CENTER,
   UPDATE_STORY,
+  UPDATE_STORY_NAME,
+  UPDATE_STORY_TEXT,
   UPDATE_STORY_URL,
-
-  RESET_HIGHLIGHTED_LINK,
-  SET_BBOX,
-  SET_BBOX_HOVERED,
-  SET_HIGHLIGHTED_FEATURE,
-  SET_SHOULD_SCROLL_TO_FEATURE,
+  UPDATE_TRACK,
 } from '@/store/mutations';
 import { getPath, setPath } from '@/store/store.helpers';
-import { STORY_LINK_DATA_ID } from '@/config/config';
-import { defaultUrl } from '../helpers/data.js';
-
-const BBOX = [[0, 0], [10, 10]];
 
 /*
  * @param {string}
@@ -34,23 +29,11 @@ const describeHelper = (description, mutation, path, payload) => {
   });
 };
 
+describeHelper('it sets feature mark callback', UPDATE_FEATURE_MARK_CALLBACK, ['addFeatureMarkCallback'], function () {});
+describeHelper('it sets map center', UPDATE_MAP_CENTER, ['map', 'center'], {lat: 0, lng: 0});
+describeHelper('it sets story', UPDATE_STORY, ['story'], {name: 'name', story: 'story', track: 'track'});
+describeHelper('it sets story name', UPDATE_STORY_NAME, ['story', 'name'], 'story name');
+describeHelper('it sets story text', UPDATE_STORY_TEXT, ['story', 'text'], 'story text');
 describeHelper('it sets story url', UPDATE_STORY_URL, ['storyUrl'], 'url');
-describeHelper('it sets story url', UPDATE_STORY, ['story'], {name: 'name', story: 'story', track: 'track'});
-//describeHelper('it sets bbox', SET_BBOX, ['bbox'], BBOX);
-//describeHelper('it sets bbox hovered', SET_BBOX_HOVERED, ['bboxHovered'], BBOX);
-//describeHelper('it sets highlighted feature', SET_HIGHLIGHTED_FEATURE, ['highlightedFeature'], 'feature');
-//describeHelper('it sets should scroll to feature', SET_SHOULD_SCROLL_TO_FEATURE, ['shouldScrollToFeature'], true);
+describeHelper('it sets story track', UPDATE_TRACK, ['story', 'track'], 'track');
 
-//describe('RESET_HIGHLIGHTED_LINK', () => {
-  //it('it resets highlighted link', () => {
-    //const link = document.createElement('a');
-    //document.body.appendChild(link);
-    //link.setAttribute(STORY_LINK_DATA_ID, 1);
-    //link.classList = 'highlighted';
-    //mutations[RESET_HIGHLIGHTED_LINK]();
-    //const features = document.querySelectorAll('a').length;
-    //expect(features).toEqual(1);
-    //const highlightedFeatures = document.querySelectorAll([STORY_LINK_DATA_ID]).length;
-    //expect(highlightedFeatures).toEqual(0);
-  //});
-//});
