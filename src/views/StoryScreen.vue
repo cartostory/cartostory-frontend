@@ -6,7 +6,7 @@ import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK
 import { UPDATE_FEATURE_MARK_CALLBACK, UPDATE_STORY_NAME } from '@/store/mutations.js';
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
 import Editor from '@/components/editor/Editor';
-import Map from '@/components/Map';
+import CsMap from '@/components/CsMap';
 
 export default {
   name: 'story-screen',
@@ -18,7 +18,7 @@ export default {
     LMap,
     LTileLayer,
     LRectangle,
-    'cs-map': Map,
+    CsMap,
   },
   data() {
     return {

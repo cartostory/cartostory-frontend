@@ -9,7 +9,7 @@ import { UPDATE_FEATURE_MARK_CALLBACK, UPDATE_TRACK } from '@/store/mutations.js
 import TrackUploadButton from '@/components/TrackUploadButton';
 
 export default {
-  name: 'Map',
+  name: 'CsMap',
   components: {
     TrackUploadButton,
     LCircleMarker,
