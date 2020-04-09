@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import { mount, createLocalVue } from '@vue/test-utils';
 
+import { UPDATE_STORY_URL } from '@/store/mutations';
 import CsLoadStoryForm from '@/components/CsLoadStoryForm.vue';
 import { defaultUrl, defaultStoryName, defaultStoryUrls } from '../helpers/data';
 import { routes } from '@/router';
@@ -59,10 +60,13 @@ describe('CsLoadStoryForm.vue', () => {
     expect(wrapper.vm.storyUrl).toEqual(defaultStoryUrls.storyUrl);
   });
 
-  test('loads the story from the given urls', async () => {
+  test.only('loads the story from the given url', async () => {
     const mockStore = {
       state: {
         availableStories: [],
+        story: {
+          url: undefined,
+        },
       },
       commit: jest.fn(),
       dispatch: jest.fn(),
@@ -73,18 +77,27 @@ describe('CsLoadStoryForm.vue', () => {
       mocks: {
         $store: mockStore,
       },
+      computed: {
+        storyUrl: {
+          get() {
+            return 'storyUrl';
+          },
+          set(value) {
+            this.$store.commit(UPDATE_STORY_URL, value);
+          },
+        },
+      },
       localVue,
     });
 
-    wrapper.vm.$router.push('load');
+    wrapper.vm.$router.push('story/load');
     wrapper.findAll('input').at(0).setValue(defaultUrl);
+    expect(mockStore.commit).toHaveBeenCalledWith(UPDATE_STORY_URL, defaultUrl);
 
     await wrapper.vm.$nextTick();
     wrapper.get(Button).vm.$el.click();
 
     expect(wrapper.vm.$route.path).toBe('/');
-    expect(mockStore.dispatch).toHaveBeenCalledWith('setStoryName', defaultStoryName);
-    expect(mockStore.dispatch).toHaveBeenCalledWith('setUrls', defaultStoryUrls);
     expect(mockStore.dispatch).toHaveBeenCalledWith('loadStory');
   });
 });
