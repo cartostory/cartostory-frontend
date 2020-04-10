@@ -9,13 +9,22 @@ const localVue = createLocalVue();
 localVue.use(ElementUI);
 
 describe('TrackUploadButton.vue', () => {
-  test.only('uploads file from local drive', async() => {
+  test('emits upload event when json file parsed', async() => {
     const wrapper = mount(TrackUploadButton, {
       localVue,
     });
 
     wrapper.find(FileReader).vm.$emit('reader-load',{ data: '{"data": true}'});
     expect(wrapper.emitted()[TRACK_FILE_UPLOAD_EVENT]).toEqual([[{data: true}]]);
+  });
+
+  test('emits upload event when json file is invalid', async() => {
+    const wrapper = mount(TrackUploadButton, {
+      localVue,
+    });
+
+    wrapper.find(FileReader).vm.$emit('reader-load',{ data: "invalid json"});
+    expect(wrapper.emitted()[TRACK_FILE_UPLOAD_EVENT]).toBeUndefined();
   });
 });
 

@@ -10,7 +10,11 @@ export default {
   },
   methods: {
     handleFileUpload(fileObj) {
-      this.$emit(TRACK_FILE_UPLOAD_EVENT, fileObj && JSON.parse(fileObj.data));
+      try {
+        this.$emit(TRACK_FILE_UPLOAD_EVENT, fileObj && JSON.parse(fileObj.data));
+      } catch(e) {
+
+      }
     },
   },
 }
