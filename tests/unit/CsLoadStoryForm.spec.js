@@ -79,7 +79,7 @@ describe('CsLoadStoryForm.vue', () => {
     expect(mockStore.commit).toHaveBeenCalledWith(UPDATE_STORY_URL, defaultUrl);
   });
 
-  test.only('sets submit button enabled when story url is filled', () => {
+  test('sets submit button enabled when story url is filled', () => {
     const wrapper = shallowMount(CsLoadStoryForm, {
       router,
       computed: {
