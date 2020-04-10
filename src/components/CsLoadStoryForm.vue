@@ -1,5 +1,5 @@
 <script>
-import { UPDATE_STORY_URL } from '@/store/mutations.js';
+import { UPDATE_STORY_URL } from '@/store/mutations';
 
 export default {
   name: 'CsLoadStoryForm',
@@ -29,14 +29,14 @@ export default {
       this.$store.dispatch('loadStory');
       this.$router.push('/');
     },
-    handleStorySelect(event) {
-      const story = this.availableStories.find(story => story.storyName === this.currentStory);
+    handleStorySelect() {
+      const story = this.availableStories.find(s => s.storyName === this.currentStory);
 
       if (story) {
         this.storyUrl = story.storyUrl;
       }
     },
-  }
+  },
 };
 </script>
 
@@ -77,5 +77,4 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
   padding: 2rem;
 }
-
 </style>
