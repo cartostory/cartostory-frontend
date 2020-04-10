@@ -1,18 +1,14 @@
 import ElementUI, { Button, FormItem } from 'element-ui';
-import VueRouter from 'vue-router';
 import Vuex from 'vuex';
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
 
 import { UPDATE_STORY_URL } from '@/store/mutations';
 import CsLoadStoryForm from '@/components/CsLoadStoryForm.vue';
 import { defaultUrl } from '../helpers/data';
-import { routes } from '@/router';
 
 const localVue = createLocalVue();
-const router = new VueRouter(routes);
 localVue.use(ElementUI);
 localVue.use(Vuex);
-localVue.use(VueRouter);
 
 describe('CsLoadStoryForm.vue', () => {
   test('renders a form without story select when no stories are available', () => {
@@ -67,21 +63,18 @@ describe('CsLoadStoryForm.vue', () => {
     };
 
     const wrapper = mount(CsLoadStoryForm, {
-      router,
       mocks: {
         $store: mockStore,
       },
       localVue,
     });
 
-    wrapper.vm.$router.push('story/load');
     wrapper.findAll('input').at(0).setValue(defaultUrl);
     expect(mockStore.commit).toHaveBeenCalledWith(UPDATE_STORY_URL, defaultUrl);
   });
 
   test('sets submit button enabled when story url is filled', () => {
     const wrapper = shallowMount(CsLoadStoryForm, {
-      router,
       computed: {
         availableStories: () => [],
         storyUrl: () => defaultUrl,
@@ -98,5 +91,32 @@ describe('CsLoadStoryForm.vue', () => {
     });
 
     expect(wrapper.vm.disabledSubmit).toBe(false);
+  });
+
+  test('loads story on submit', async() => {
+    const wrapper = mount(CsLoadStoryForm, {
+      computed: {
+        storyUrl: () => defaultUrl,
+      },
+      mocks: {
+        $store: {
+          state: {
+            availableStories: [],
+          },
+          dispatch: jest.fn(),
+        },
+        $router: {
+          push: jest.fn().mockImplementation(() => Promise.resolve()),
+        },
+      },
+      localVue,
+    });
+
+    await wrapper.vm.$nextTick();
+    wrapper.get(Button).vm.$el.click();
+    expect(wrapper.vm.$store.dispatch).toHaveBeenCalledTimes(1);
+    expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith('loadStory');
+    expect(wrapper.vm.$router.push).toHaveBeenCalledTimes(1);
+    expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/');
   });
 });
