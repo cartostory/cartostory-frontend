@@ -1,7 +1,7 @@
 import ElementUI, { Button, FormItem } from 'element-ui';
 import VueRouter from 'vue-router';
 import Vuex from 'vuex';
-import { mount, createLocalVue } from '@vue/test-utils';
+import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
 
 import { UPDATE_STORY_URL } from '@/store/mutations';
 import CsLoadStoryForm from '@/components/CsLoadStoryForm.vue';
@@ -39,7 +39,7 @@ describe('CsLoadStoryForm.vue', () => {
     expect(wrapper.findAll('.el-form-item').length).toEqual(3); // wrapper.findAll(FormItem) returns _FormItem is not defined
   });
 
-  test('sets input values when a story is selected', async () => {
+  test('sets dropdown value when a story is selected', async () => {
     const wrapper = mount(CsLoadStoryForm, {
       computed: {
         availableStories: () => [defaultUrl],
@@ -54,7 +54,7 @@ describe('CsLoadStoryForm.vue', () => {
     expect(wrapper.vm.storyUrl).toEqual(defaultUrl);
   });
 
-  test.only('loads the story from the given url', async () => {
+  test('sets story url to store', () => {
     const mockStore = {
       state: {
         availableStories: [],
@@ -71,27 +71,32 @@ describe('CsLoadStoryForm.vue', () => {
       mocks: {
         $store: mockStore,
       },
-      computed: {
-        storyUrl: {
-          get() {
-            return 'storyUrl';
-          },
-          set(value) {
-            this.$store.commit(UPDATE_STORY_URL, value);
-          },
-        },
-      },
       localVue,
     });
 
     wrapper.vm.$router.push('story/load');
     wrapper.findAll('input').at(0).setValue(defaultUrl);
     expect(mockStore.commit).toHaveBeenCalledWith(UPDATE_STORY_URL, defaultUrl);
+  });
 
-    await wrapper.vm.$nextTick();
-    wrapper.get(Button).vm.$el.click();
+  test.only('sets submit button enabled when story url is filled', () => {
+    const wrapper = shallowMount(CsLoadStoryForm, {
+      router,
+      computed: {
+        availableStories: () => [],
+        storyUrl: () => defaultUrl,
+      },
+      stubs: [
+        'el-button',
+        'el-col',
+        'el-form',
+        'el-form-item',
+        'el-input',
+        'el-main',
+        'el-row',
+      ],
+    });
 
-    expect(wrapper.vm.$route.path).toBe('/');
-    expect(mockStore.dispatch).toHaveBeenCalledWith('loadStory');
+    expect(wrapper.vm.disabledSubmit).toBe(false);
   });
 });
