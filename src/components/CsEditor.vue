@@ -7,7 +7,7 @@ import { STORY_LINK_LAT_ATTR } from '@/config/config.js'
 import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations.js';
 
 export default {
-  name: 'Editor',
+  name: 'CsEditor',
   components: {
     EditorContent,
     EditorMenuBar,

@@ -5,13 +5,13 @@ require('../../node_modules/leaflet/dist/leaflet.css');
 import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config.js'
 import { UPDATE_FEATURE_MARK_CALLBACK, UPDATE_STORY_NAME } from '@/store/mutations.js';
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
-import Editor from '@/components/editor/Editor';
+import CsEditor from '@/components/CsEditor';
 import CsMap from '@/components/CsMap';
 
 export default {
   name: 'story-screen',
   components: {
-    Editor,
+    CsEditor,
     LCircleMarker,
     LControl,
     LGeoJson,
@@ -64,11 +64,11 @@ export default {
     </el-col>
 
     <el-col class="story-form__story" :span="12">
-      <editor
+      <cs-editor
         v-if="$store.state.story.text || ready"
         @add-feature-mark="handleAddFeatureMarkClick($event)"
         style="flex: 1; overflow: auto;"
-      ></editor>
+      ></cs-editor>
       <el-footer style="margin: auto;">
         <el-button @click="handleSave" type="primary">Uložit</el-button>
       </el-footer>
