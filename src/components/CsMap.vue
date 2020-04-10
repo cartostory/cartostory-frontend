@@ -6,12 +6,12 @@ require('../../node_modules/leaflet/dist/leaflet.css');
 import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config.js'
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
 import { UPDATE_FEATURE_MARK_CALLBACK, UPDATE_TRACK } from '@/store/mutations.js';
-import TrackUploadButton from '@/components/TrackUploadButton';
+import CsTrackUploadButton from '@/components/CsTrackUploadButton';
 
 export default {
   name: 'CsMap',
   components: {
-    TrackUploadButton,
+    CsTrackUploadButton,
     LCircleMarker,
     LControl,
     LGeoJson,
@@ -81,7 +81,7 @@ export default {
     <div id="cs-map-container">
       <l-map @click="handleMapClick($event.latlng)" :center="mapCenter || mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
         <l-control class="leaflet-bar leaflet-control" position="topleft" >
-          <track-upload-button @[TRACK_FILE_UPLOAD_EVENT]="handleFileUpload($event)" />
+          <cs-track-upload-button @[TRACK_FILE_UPLOAD_EVENT]="handleFileUpload($event)" />
         </l-control>
 
         <l-tile-layer :url="mapOptions.baseLayer" />
