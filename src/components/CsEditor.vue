@@ -89,18 +89,18 @@ export default {
 </script>
 
 <template>
-  <el-col>
+  <el-col style="flex: 1 1 0%; overflow: hidden; display: flex; flex-wrap: wrap; flex-direction: column;">
 
-    <el-form>
+    <el-form style="flex: 0;">
       <el-form-item>
         <el-input class="story-name" v-model="storyName" placeholder="Název příběhu..."></el-input>
       </el-form-item>
     </el-form>
 
-    <editor-menu-bar style="position: fixed; z-index: 10; width: 100%; background: white;" :editor="editor" v-slot="{ commands, isActive }">
+    <editor-menu-bar style="background: white;" :editor="editor" v-slot="{ commands, isActive }">
       <div class="editor-menu-bar">
         <el-button
-          title="Nadpis 1. kategorie"
+          title="Nadpis 1. úrovně"
           size="mini"
           type="plain"
           class="menubar__button"
@@ -110,7 +110,7 @@ export default {
         </el-button>
 
         <el-button
-          title="Nadpis 2. kategorie"
+          title="Nadpis 2. úrovně"
           size="mini"
           type="plain"
           class="menubar__button"
@@ -120,7 +120,7 @@ export default {
         </el-button>
 
         <el-button
-          title="Nadpis 3. kategorie"
+          title="Nadpis 3. úrovně"
           size="mini"
           type="plain"
           class="menubar__button"
@@ -156,7 +156,7 @@ export default {
       </div>
     </editor-menu-bubble>
 
-    <editor-content v-if="editor" class="editor" :editor="editor" />
+    <editor-content style="flex: 1; overflow: auto;" v-if="editor" class="editor" :editor="editor" />
   </el-col>
 </template>
 
@@ -166,7 +166,7 @@ export default {
 }
 
 .el-form {
-  margin-top: 2rem;
+  margin-top: 1rem;
   padding-left: 1rem;
   padding-right: 1rem;
 }
@@ -182,8 +182,6 @@ export default {
 
 .editor {
   margin-left: 1rem;
-  margin-right: 1rem;
-  margin-top: 4.5rem;
 }
 
 .menububble {

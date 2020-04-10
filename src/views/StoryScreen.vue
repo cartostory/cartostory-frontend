@@ -22,6 +22,7 @@ export default {
   },
   data() {
     return {
+      storyName: undefined,
       ready: false,
       STORY_LINK_CLICK_EVENT,
       TRACK_FILE_UPLOAD_EVENT,
