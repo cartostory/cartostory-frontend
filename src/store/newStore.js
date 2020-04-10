@@ -9,6 +9,7 @@ import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js';
 import { set, setPath } from './store.helpers';
 import {
   UPDATE_FEATURE_MARK_CALLBACK,
+  UPDATE_HIGHLIGHTED_FEATURE_MARK,
   UPDATE_MAP_CENTER,
   UPDATE_STORY,
   UPDATE_STORY_NAME,
@@ -31,10 +32,12 @@ const state = {
   },
   addFeatureMarkCallback: undefined,
   availableStories: [],
+  highlightedFeatureMark: undefined,
 };
 
 export const mutations = {
   [UPDATE_FEATURE_MARK_CALLBACK]: set('addFeatureMarkCallback'),
+  [UPDATE_HIGHLIGHTED_FEATURE_MARK]: set('highlightedFeatureMark'),
   [UPDATE_MAP_CENTER]: setPath(['map', 'center']),
   [UPDATE_STORY]: set('story'),
   [UPDATE_STORY_NAME]: setPath(['story', 'name']),

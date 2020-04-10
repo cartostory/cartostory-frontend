@@ -3,7 +3,7 @@ import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap';
 import { Heading } from 'tiptap-extensions';
 
 import FeatureMark from '@/components/editor/FeatureMark';
-import { STORY_LINK_LAT_ATTR } from '@/config/config.js'
+import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js'
 import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations.js';
 
 export default {
@@ -20,6 +20,9 @@ export default {
     };
   },
   computed: {
+    highlightedFeatureMark() {
+      return this.$store.state.highlightedFeatureMark;
+    },
     storyName: {
       get() {
         return this.$store.state.story.name;
@@ -29,10 +32,40 @@ export default {
       },
     },
   },
+  watch: {
+    highlightedFeatureMark() {
+      this.scroll();
+    }
+  },
   mounted() {
     this.editor = this.$createEditor();
   },
   methods: {
+    scroll() {
+      const lat = this.highlightedFeatureMark[STORY_LINK_LAT_ATTR];
+      const lng = this.highlightedFeatureMark[STORY_LINK_LNG_ATTR];
+      const textMark = document.querySelector(`[${STORY_LINK_LAT_ATTR}='${lat}'], [${STORY_LINK_LNG_ATTR}='${lng}']`);
+
+      this.$scrollTo(textMark, undefined, {
+        container: document.querySelector('.editor'),
+        offset: -50,
+      });
+    },
+
+    /*
+     * Checks if selected text already has the feature mark on the map.
+     * It renders remove button if true or add button otherwise.
+     * @param {object} selected text attributes
+     * @returns {boolean}
+     */
+    isNewFeatureMarkButtonVisible(attrs) {
+      return attrs && attrs[STORY_LINK_LAT_ATTR];
+    },
+
+    handleAddFeatureMarkClick(fn) {
+      this.$emit('add-feature-mark', fn);
+    },
+
     $createEditor() {
       return new Editor({
         extensions: [
@@ -47,19 +80,6 @@ export default {
         }.bind(this),
       });
     },
-    /*
-     * Checks if selected text already has the feature mark on the map.
-     * It renders remove button if true or add button otherwise.
-     * @param {object} selected text attributes
-     * @returns {boolean}
-     */
-    isNewFeatureMarkButtonVisible(attrs) {
-      return attrs && attrs[STORY_LINK_LAT_ATTR];
-    },
-
-    handleAddFeatureMarkClick(fn) {
-      this.$emit('add-feature-mark', fn);
-    }
   },
 
   beforeDestroy() {

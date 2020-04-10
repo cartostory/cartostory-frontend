@@ -5,7 +5,7 @@ require('../../node_modules/leaflet/dist/leaflet.css');
 
 import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config.js'
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
-import { UPDATE_FEATURE_MARK_CALLBACK, UPDATE_TRACK } from '@/store/mutations.js';
+import { UPDATE_HIGHLIGHTED_FEATURE_MARK, UPDATE_FEATURE_MARK_CALLBACK, UPDATE_TRACK } from '@/store/mutations.js';
 import CsTrackUploadButton from '@/components/CsTrackUploadButton';
 
 export default {
@@ -46,6 +46,23 @@ export default {
      */
     handleTrackReady(track) {
       this.$refs.csmap.mapObject.fitBounds(track.getBounds());
+    },
+
+    /*
+     * Sets feature mark that should be highlighted and scrolled to in the text.
+     */
+    handleFeatureClick(event) {
+      const { lat, lng } = event.latlng;
+      const textMark = document.querySelector(`[data-cs-lat='${lat}'], [data-cs-lng='${lng}']`);
+
+      if (!textMark) {
+        return;
+      }
+
+      this.$store.commit(UPDATE_HIGHLIGHTED_FEATURE_MARK, {
+        [STORY_LINK_LAT_ATTR]: textMark.getAttribute([STORY_LINK_LAT_ATTR]),
+        [STORY_LINK_LNG_ATTR]: textMark.getAttribute([STORY_LINK_LNG_ATTR]),
+      });
     },
 
     /*
@@ -91,6 +108,7 @@ export default {
         <l-geo-json @ready="handleTrackReady($event)" v-if="track" :geojson="track" :options="trackOptions.style.plain" ref="cstrack" />
 
         <l-circle-marker
+          @click="handleFeatureClick"
           :color="markerOptions.style.plain.color"
           :fill-color="markerOptions.style.plain.color"
           :fill-opacity="markerOptions.style.plain.fillOpacity"
