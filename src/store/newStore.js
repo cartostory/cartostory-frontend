@@ -21,9 +21,6 @@ import {
 Vue.use(Vuex);
 
 const state = {
-  map: {
-    center: undefined,
-  },
   storyUrl: undefined,
   story: {
     name: undefined,
@@ -69,7 +66,7 @@ const actions = {
   },
 };
 
-const getters = {
+export const getters = {
   features: state => {
     let result = [];
     let content = undefined;

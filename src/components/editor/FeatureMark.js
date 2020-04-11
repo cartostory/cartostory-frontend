@@ -2,14 +2,13 @@ import { Mark } from 'tiptap';
 import { toggleMark } from 'tiptap-commands';
 
 import {
-  STORY_LINK_CLICK_EVENT,
   STORY_LINK_LAT_ATTR,
   STORY_LINK_LAT_ATTR_CAMEL,
   STORY_LINK_LNG_ATTR,
   STORY_LINK_LNG_ATTR_CAMEL
 } from '@/config/config.js';
 
-import { UPDATE_MAP_CENTER } from '@/store/mutations.js';
+import { UPDATE_HIGHLIGHTED_LAT_LNG } from '@/store/mutations.js';
 
 const TAG = 'a';
 
@@ -70,13 +69,20 @@ export default class FeatureMark extends Mark {
       methods: {
         handleClick() {
           const payload = {
-            lat: this[STORY_LINK_LAT_ATTR_CAMEL],
-            lng: this[STORY_LINK_LNG_ATTR_CAMEL],
+            [STORY_LINK_LAT_ATTR]: this[STORY_LINK_LAT_ATTR_CAMEL],
+            [STORY_LINK_LNG_ATTR]: this[STORY_LINK_LNG_ATTR_CAMEL],
           };
-          this.$store.commit(UPDATE_MAP_CENTER, payload);
+          this.$store.commit(UPDATE_HIGHLIGHTED_LAT_LNG, payload);
         }
       },
       computed: {
+        isHighlighted() {
+          if (!this.$store.state.highlightedLatLng) {
+            return false;
+          }
+          const { lat, lng } = this.$store.state.highlightedLatLng;
+          return lat === this[STORY_LINK_LAT_ATTR_CAMEL] && lng === this[STORY_LINK_LNG_ATTR_CAMEL];
+        },
         [STORY_LINK_LAT_ATTR_CAMEL]: {
           get() {
             return this.node.attrs[STORY_LINK_LAT_ATTR]
@@ -100,6 +106,7 @@ export default class FeatureMark extends Mark {
       },
       template: `
         <a
+          :class="{'is-highlighted': isHighlighted}"
           :${STORY_LINK_LNG_ATTR}="${STORY_LINK_LNG_ATTR_CAMEL}"
           :${STORY_LINK_LAT_ATTR}="${STORY_LINK_LAT_ATTR_CAMEL}"
           @click="handleClick()"

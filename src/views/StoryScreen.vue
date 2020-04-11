@@ -2,7 +2,7 @@
 import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
 require('../../node_modules/leaflet/dist/leaflet.css');
 
-import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config.js'
+import { ADD_FEATURE_MARK_EVENT, STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config.js'
 import { UPDATE_FEATURE_MARK_CALLBACK, UPDATE_STORY_NAME } from '@/store/mutations.js';
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
 import CsEditor from '@/components/CsEditor';
@@ -24,6 +24,7 @@ export default {
     return {
       storyName: undefined,
       ready: false,
+      ADD_FEATURE_MARK_EVENT,
       STORY_LINK_CLICK_EVENT,
       TRACK_FILE_UPLOAD_EVENT,
       features: [],
@@ -67,7 +68,7 @@ export default {
     <el-col class="story-form__story" :span="12">
       <cs-editor
         v-if="$store.state.story.text || ready"
-        @add-feature-mark="handleAddFeatureMarkClick($event)"
+        @[ADD_FEATURE_MARK_EVENT]="handleAddFeatureMarkClick($event)"
         style="flex: 1; overflow: auto;"
       ></cs-editor>
       <el-footer style="margin: auto;">

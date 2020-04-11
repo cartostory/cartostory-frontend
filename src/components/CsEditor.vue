@@ -3,7 +3,7 @@ import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap';
 import { Heading } from 'tiptap-extensions';
 
 import FeatureMark from '@/components/editor/FeatureMark';
-import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js'
+import { ADD_FEATURE_MARK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js'
 import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations.js';
 
 export default {
@@ -34,14 +34,17 @@ export default {
   },
   watch: {
     highlightedLatLng() {
-      this.scroll();
+      this.scrollToHighlightedLatLng();
     }
   },
   mounted() {
     this.editor = this.$createEditor();
   },
   methods: {
-    scroll() {
+    /*
+     * Scrolls to the highlighted feature mark.
+     */
+    scrollToHighlightedLatLng() {
       const { lat, lng } = this.highlightedLatLng;
       const textMark = document.querySelector(`[${STORY_LINK_LAT_ATTR}='${lat}'], [${STORY_LINK_LNG_ATTR}='${lng}']`);
 
@@ -62,7 +65,7 @@ export default {
     },
 
     handleAddFeatureMarkClick(fn) {
-      this.$emit('add-feature-mark', fn);
+      this.$emit(ADD_FEATURE_MARK_EVENT, fn);
     },
 
     $createEditor() {
@@ -240,5 +243,10 @@ export default {
     background: transparent;
     color: white;
   }
+}
+
+a[data-cs-lng].is-highlighted {
+  background: #F56C6C;
+  color: white;
 }
 </style>

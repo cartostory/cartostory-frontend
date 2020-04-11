@@ -1,22 +1,23 @@
 export const mapOptions = {
-  bounds: null,
+  bounds: undefined,
   center: [50, 19],
   baseLayer: 'https://api.mapbox.com/styles/v1/cartostory/cjugqcypf27581gnry4y59lxy/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
   hikingOverlay: 'http://tile.mtbmap.cz/overlay_hiking/{z}/{x}/{y}.png',
   labelsOverlay: 'https://api.mapbox.com/styles/v1/cartostory/cjugqfe8r1lhh1ftgrmr7v9zj/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
   zoom: 8,
-  edgeMarker: null,
+  edgeMarker: undefined,
 };
 
 export const markerOptions = {
   style: {
     common: {
       radius: 8,
-      weight: 1,
+      weight: 1.5,
     },
     highlighted: {
-      color: '#fffc31',
-      fillOpacity: 0.8,
+      color: '#F56C6C',
+      opacity: 1,
+      fillOpacity: 0.4,
     },
     inBbox: {
       color: '#42b983',

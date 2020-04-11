@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     ...mapState({
-      mapCenter: state => state.map.center,
+      highlightedLatLng: state => state.highlightedLatLng,
       track: state => state.story.track,
       highlightedLatLng :state => state.highlightedLatLng,
     }),
@@ -96,7 +96,7 @@ export default {
 <template>
   <div class="cs-map">
     <div id="cs-map-container">
-      <l-map @click="handleMapClick($event.latlng)" :center="mapCenter || mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
+      <l-map @click="handleMapClick($event.latlng)" :center="highlightedLatLng || mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
         <l-control class="leaflet-bar leaflet-control" position="topleft" >
           <cs-track-upload-button @[TRACK_FILE_UPLOAD_EVENT]="handleFileUpload($event)" />
         </l-control>
