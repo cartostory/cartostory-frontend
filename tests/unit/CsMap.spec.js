@@ -13,7 +13,9 @@ describe('CsMap', () => {
     const wrapper = mount(CsMap, {
       mocks: {
         $store: {
-          getters: {},
+          getters: {
+            featuresWithoutHighlighted: [],
+          },
           state: {
             map: {},
             story: {},
@@ -33,7 +35,9 @@ describe('CsMap', () => {
     const wrapper = mount(CsMap, {
       mocks: {
         $store: {
-          getters: {},
+          getters: {
+            featuresWithoutHighlighted: [],
+          },
           state: {
             addFeatureMarkCallback: jest.fn(),
             map: {},

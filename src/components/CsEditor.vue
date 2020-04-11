@@ -42,8 +42,7 @@ export default {
   },
   methods: {
     scroll() {
-      const lat = this.highlightedLatLng[STORY_LINK_LAT_ATTR];
-      const lng = this.highlightedLatLng[STORY_LINK_LNG_ATTR];
+      const { lat, lng } = this.highlightedLatLng;
       const textMark = document.querySelector(`[${STORY_LINK_LAT_ATTR}='${lat}'], [${STORY_LINK_LNG_ATTR}='${lng}']`);
 
       this.$scrollTo(textMark, undefined, {

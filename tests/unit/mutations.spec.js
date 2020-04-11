@@ -1,4 +1,5 @@
 import { mutations } from '@/store/newStore';
+import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import {
   UPDATE_FEATURE_MARK_CALLBACK,
   UPDATE_HIGHLIGHTED_LAT_LNG,
@@ -19,10 +20,8 @@ import { getPath, setPath } from '@/store/store.helpers';
  */
 const describeHelper = (description, mutation, path, payload) => {
   describe(mutation.toString(), () => {
-    it(description, () => {
+    test(description, () => {
       const state = {};
-      const setState = setPath(path);
-      setState(state, payload);
       mutations[mutation](state, payload);
 
       expect(getPath(state, path)).toEqual(payload);
@@ -31,7 +30,6 @@ const describeHelper = (description, mutation, path, payload) => {
 };
 
 describeHelper('it sets feature mark callback', UPDATE_FEATURE_MARK_CALLBACK, ['addFeatureMarkCallback'], function () {});
-describeHelper('it sets highlighted lat lng', UPDATE_HIGHLIGHTED_LAT_LNG, ['highlightedLatLng'], {lat: 0, lng: 0});
 describeHelper('it sets map center', UPDATE_MAP_CENTER, ['map', 'center'], {lat: 0, lng: 0});
 describeHelper('it sets story', UPDATE_STORY, ['story'], {name: 'name', story: 'story', track: 'track'});
 describeHelper('it sets story name', UPDATE_STORY_NAME, ['story', 'name'], 'story name');
@@ -39,3 +37,18 @@ describeHelper('it sets story text', UPDATE_STORY_TEXT, ['story', 'text'], 'stor
 describeHelper('it sets story url', UPDATE_STORY_URL, ['storyUrl'], 'url');
 describeHelper('it sets story track', UPDATE_TRACK, ['story', 'track'], 'track');
 
+describe(`${UPDATE_HIGHLIGHTED_LAT_LNG} mutation`, () => {
+  test('sets highlighted lat lng', () => {
+    const payload = {
+      [STORY_LINK_LAT_ATTR]: 0,
+      [STORY_LINK_LNG_ATTR]: 10,
+    };
+    const result = {
+      lat: 0,
+      lng: 10,
+    };
+    const state = {};
+    mutations[UPDATE_HIGHLIGHTED_LAT_LNG](state, payload);
+    expect(getPath(state, ['highlightedLatLng'])).toEqual(result);
+  });
+});

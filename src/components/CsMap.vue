@@ -1,6 +1,6 @@
 <script>
 import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
-import * as pu from 'prosemirror-utils';
+import { mapGetters, mapState } from 'vuex';
 require('../../node_modules/leaflet/dist/leaflet.css');
 
 import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config.js'
@@ -30,15 +30,15 @@ export default {
     };
   },
   computed: {
-    features() {
-      return this.$store.getters.features;
-    },
-    mapCenter() {
-      return this.$store.state.map.center;
-    },
-    track() {
-      return this.$store.state.story.track;
-    },
+    ...mapState({
+      mapCenter: state => state.map.center,
+      track: state => state.story.track,
+      highlightedLatLng :state => state.highlightedLatLng,
+    }),
+    ...mapGetters([
+      'features',
+      'featuresWithoutHighlighted',
+    ]),
   },
   methods: {
     /*
@@ -115,8 +115,20 @@ export default {
           :latLng="f"
           :radius="markerOptions.style.common.radius"
           :weight="markerOptions.style.common.weight"
-          v-for="f in features">
+          v-for="f in featuresWithoutHighlighted">
         </l-circle-marker>
+
+        <l-circle-marker
+          v-if="highlightedLatLng"
+          @click="handleFeatureClick"
+          :color="markerOptions.style.highlighted.color"
+          :fill-color="markerOptions.style.highlighted.color"
+          :fill-opacity="markerOptions.style.highlighted.fillOpacity"
+          :latLng="highlightedLatLng"
+          :radius="markerOptions.style.common.radius"
+          :weight="markerOptions.style.common.weight">
+        </l-circle-marker>
+
       </l-map>
     </div>
   </div>

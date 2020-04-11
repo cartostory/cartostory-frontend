@@ -37,7 +37,12 @@ const state = {
 
 export const mutations = {
   [UPDATE_FEATURE_MARK_CALLBACK]: set('addFeatureMarkCallback'),
-  [UPDATE_HIGHLIGHTED_LAT_LNG]: set('highlightedLatLng'),
+  [UPDATE_HIGHLIGHTED_LAT_LNG](state, latLng) {
+    state.highlightedLatLng = {
+      lat: Number.parseFloat(latLng[STORY_LINK_LAT_ATTR]),
+      lng: Number.parseFloat(latLng[STORY_LINK_LNG_ATTR]),
+    };
+  },
   [UPDATE_MAP_CENTER]: setPath(['map', 'center']),
   [UPDATE_STORY]: set('story'),
   [UPDATE_STORY_NAME]: setPath(['story', 'name']),
@@ -84,6 +89,15 @@ const getters = {
     }
 
     return result;
+  },
+
+  featuresWithoutHighlighted: (state, getters) => {
+    if (!state.highlightedLatLng) {
+      return getters.features;
+    }
+
+    const { lat, lng } = state.highlightedLatLng;
+    return getters.features.filter(feature => feature.lat !== lat && feature.lng !== lng);
   },
 };
 
