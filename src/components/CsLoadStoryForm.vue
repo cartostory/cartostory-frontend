@@ -1,5 +1,6 @@
 <script>
-import { UPDATE_STORY_URL } from '@/store/mutations';
+import { mapState } from 'vuex';
+import { UPDATE_ERRORS, UPDATE_STORY_URL } from '@/store/mutations';
 
 export default {
   name: 'CsLoadStoryForm',
@@ -9,9 +10,10 @@ export default {
     };
   },
   computed: {
-    availableStories() {
-      return this.$store.state.availableStories;
-    },
+    ...mapState({
+      availableStories: state => state.availableStories,
+      storyText: state => state.story.text,
+    }),
     disabledSubmit() {
       return !this.storyUrl;
     },
@@ -25,9 +27,16 @@ export default {
     },
   },
   methods: {
-    handleSubmit() {
-      this.$store.dispatch('loadStory');
-      this.$router.push('/');
+    async handleSubmit() {
+      try {
+        await this.$store.dispatch('loadStory');
+        this.$router.push('/');
+      } catch (e) {
+        this.$store.commit(UPDATE_ERRORS, {
+          title: 'Příběh se nepodařilo nahrát',
+          message: 'Zkontrolujte jeho adresu.',
+        });
+      }
     },
     handleStorySelect() {
       const story = this.availableStories.find(s => s.storyName === this.currentStory);

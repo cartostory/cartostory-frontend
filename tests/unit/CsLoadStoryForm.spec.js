@@ -93,7 +93,7 @@ describe('CsLoadStoryForm.vue', () => {
     expect(wrapper.vm.disabledSubmit).toBe(false);
   });
 
-  test('loads story on submit', async() => {
+  test.only('loads story on submit', async() => {
     const wrapper = mount(CsLoadStoryForm, {
       computed: {
         storyUrl: () => defaultUrl,
@@ -101,12 +101,13 @@ describe('CsLoadStoryForm.vue', () => {
       mocks: {
         $store: {
           state: {
+            storyUrl: defaultUrl,
             availableStories: [],
           },
           dispatch: jest.fn(),
         },
         $router: {
-          push: jest.fn().mockImplementation(() => Promise.resolve()),
+          push: jest.fn(),
         },
       },
       localVue,
@@ -114,6 +115,7 @@ describe('CsLoadStoryForm.vue', () => {
 
     await wrapper.vm.$nextTick();
     wrapper.get(Button).vm.$el.click();
+    await wrapper.vm.$nextTick();
     expect(wrapper.vm.$store.dispatch).toHaveBeenCalledTimes(1);
     expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith('loadStory');
     expect(wrapper.vm.$router.push).toHaveBeenCalledTimes(1);

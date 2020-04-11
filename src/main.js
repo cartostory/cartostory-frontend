@@ -24,7 +24,6 @@ import '@/assets/css/index.css';
 import App from './App.vue';
 import router from './router';
 import store from './store/newStore';
-import { STORY_LINK_DATA_ID } from './config/config';
 
 Vue.config.productionTip = false;
 Vue.use(Button);
@@ -35,7 +34,6 @@ Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);
 Vue.use(Main);
-Vue.use(Notification);
 Vue.use(Option);
 Vue.use(Row);
 Vue.use(Select);

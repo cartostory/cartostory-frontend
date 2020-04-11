@@ -23,10 +23,7 @@ import {
 Vue.use(Vuex);
 
 const state = {
-  errors: [{
-    title: 'title',
-    message: 'message',
-  }],
+  errors: [],
   storyUrl: undefined,
   story: {
     name: undefined,
@@ -71,13 +68,8 @@ const actions = {
     commit(UPDATE_STORY_TEXT, payload);
   },
   async loadStory({ commit, state }) {
-    try {
-      const result = await axios.get(state.storyUrl);
-      commit(UPDATE_STORY, result.data);
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log(e);
-    }
+    const result = await axios.get(state.storyUrl);
+    commit(UPDATE_STORY, result.data);
   },
 };
 

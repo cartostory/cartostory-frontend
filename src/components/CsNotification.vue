@@ -15,6 +15,7 @@ export default {
           },
           duration: 0,
         });
+        this.$store.commit(REMOVE_ERROR, e);
       });
       return this.$store.state.errors;
     },

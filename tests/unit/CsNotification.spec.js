@@ -8,6 +8,7 @@ describe('CsNotification.vue', () => {
   test('renders errors', () => {
     localVue.prototype.$notify = jest.fn();
     const $store = {
+      commit: jest.fn(),
       state: {
         errors: [
           {
@@ -29,6 +30,7 @@ describe('CsNotification.vue', () => {
     });
 
     expect(wrapper.vm.$notify).toBeCalledTimes(2);
+    expect(wrapper.vm.$store.commit).toHaveBeenCalledTimes(2);
     const args = wrapper.vm.$notify.mock.calls[1][0];
     expect(args).toHaveProperty('title');
     expect(args.title).toEqual('Title 2');
