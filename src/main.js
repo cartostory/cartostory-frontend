@@ -12,6 +12,7 @@ import {
   FormItem,
   Input,
   Main,
+  Notification,
   Option,
   Row,
   Select,
@@ -34,6 +35,7 @@ Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);
 Vue.use(Main);
+Vue.use(Notification);
 Vue.use(Option);
 Vue.use(Row);
 Vue.use(Select);
@@ -41,13 +43,7 @@ Vue.use(Select);
 Vue.use(VueLogger);
 Vue.use(VueScrollTo);
 Vue.use(Vuex);
-Vue.use(VueSanitize, {
-  allowedTags: ['a'],
-  allowedAttributes: {
-    // eslint-disable-next-line quote-props
-    'a': ['data-url', 'id', STORY_LINK_DATA_ID],
-  },
-});
+Vue.prototype.$notify = Notification;
 
 new Vue({
   router,

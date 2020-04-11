@@ -2,6 +2,7 @@
 import FileReader from 'vue-filereader';
 
 import { TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
+import { UPDATE_ERRORS } from '@/store/mutations';
 
 export default {
   name: 'CsTrackUploadButton',
@@ -13,7 +14,10 @@ export default {
       try {
         this.$emit(TRACK_FILE_UPLOAD_EVENT, fileObj && JSON.parse(fileObj.data));
       } catch(e) {
-
+        this.$store.commit(UPDATE_ERRORS, {
+          title: 'Selhalo nahrání trasy',
+          message: 'Trasu se nepodařilo nahrát. Soubor pravděpodobně není validní.',
+        });
       }
     },
   },

@@ -1,12 +1,18 @@
 <script>
+import CsNotification from '@/components/CsNotification.vue';
+
 export default {
   name: 'app',
+  components: {
+    CsNotification,
+  }
 };
 </script>
 
 <template>
   <el-container id="app">
     <router-view/>
+    <cs-notification/>
   </el-container>
 </template>
 

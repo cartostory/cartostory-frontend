@@ -8,6 +8,8 @@ import pickDeep from 'deepdash-es/pickDeep';
 import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js';
 import { set, setPath } from './store.helpers';
 import {
+  REMOVE_ERROR,
+  UPDATE_ERRORS,
   UPDATE_FEATURE_MARK_CALLBACK,
   UPDATE_HIGHLIGHTED_LAT_LNG,
   UPDATE_MAP_CENTER,
@@ -21,6 +23,10 @@ import {
 Vue.use(Vuex);
 
 const state = {
+  errors: [{
+    title: 'title',
+    message: 'message',
+  }],
   storyUrl: undefined,
   story: {
     name: undefined,
@@ -33,6 +39,15 @@ const state = {
 };
 
 export const mutations = {
+  [REMOVE_ERROR](state, error) {
+    const idx = state.errors.findIndex(e => e.title === error.title && e.message === error.message);
+    if (idx > -1) {
+      state.errors.splice(idx, 1);
+    }
+  },
+  [UPDATE_ERRORS](state, newErorr) {
+    state.errors = [...state.errors, newErorr];
+  },
   [UPDATE_FEATURE_MARK_CALLBACK]: set('addFeatureMarkCallback'),
   [UPDATE_HIGHLIGHTED_LAT_LNG](state, latLng) {
     state.highlightedLatLng = {
