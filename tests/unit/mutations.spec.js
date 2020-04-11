@@ -1,6 +1,7 @@
 import { mutations } from '@/store/newStore';
 import {
   UPDATE_FEATURE_MARK_CALLBACK,
+  UPDATE_HIGHLIGHTED_LAT_LNG,
   UPDATE_MAP_CENTER,
   UPDATE_STORY,
   UPDATE_STORY_NAME,
@@ -30,6 +31,7 @@ const describeHelper = (description, mutation, path, payload) => {
 };
 
 describeHelper('it sets feature mark callback', UPDATE_FEATURE_MARK_CALLBACK, ['addFeatureMarkCallback'], function () {});
+describeHelper('it sets highlighted lat lng', UPDATE_HIGHLIGHTED_LAT_LNG, ['highlightedLatLng'], {lat: 0, lng: 0});
 describeHelper('it sets map center', UPDATE_MAP_CENTER, ['map', 'center'], {lat: 0, lng: 0});
 describeHelper('it sets story', UPDATE_STORY, ['story'], {name: 'name', story: 'story', track: 'track'});
 describeHelper('it sets story name', UPDATE_STORY_NAME, ['story', 'name'], 'story name');

@@ -20,8 +20,8 @@ export default {
     };
   },
   computed: {
-    highlightedFeatureMark() {
-      return this.$store.state.highlightedFeatureMark;
+    highlightedLatLng() {
+      return this.$store.state.highlightedLatLng;
     },
     storyName: {
       get() {
@@ -33,7 +33,7 @@ export default {
     },
   },
   watch: {
-    highlightedFeatureMark() {
+    highlightedLatLng() {
       this.scroll();
     }
   },
@@ -42,8 +42,8 @@ export default {
   },
   methods: {
     scroll() {
-      const lat = this.highlightedFeatureMark[STORY_LINK_LAT_ATTR];
-      const lng = this.highlightedFeatureMark[STORY_LINK_LNG_ATTR];
+      const lat = this.highlightedLatLng[STORY_LINK_LAT_ATTR];
+      const lng = this.highlightedLatLng[STORY_LINK_LNG_ATTR];
       const textMark = document.querySelector(`[${STORY_LINK_LAT_ATTR}='${lat}'], [${STORY_LINK_LNG_ATTR}='${lng}']`);
 
       this.$scrollTo(textMark, undefined, {
