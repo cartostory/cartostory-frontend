@@ -1,92 +1,126 @@
 import ElementUI, { Button, FormItem } from 'element-ui';
-import VueRouter from 'vue-router';
 import Vuex from 'vuex';
-import { mount, createLocalVue } from '@vue/test-utils';
+import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
 
+import { UPDATE_STORY_URL } from '@/store/mutations';
 import CsLoadStoryForm from '@/components/CsLoadStoryForm.vue';
-import store from '@/store/store';
-import { defaultStoryName, defaultStoryUrls } from '../helpers/data';
-
-const defaultStore = store;
+import { defaultUrl } from '../helpers/data';
 
 const localVue = createLocalVue();
-const router = new VueRouter();
 localVue.use(ElementUI);
 localVue.use(Vuex);
-localVue.use(VueRouter);
 
 describe('CsLoadStoryForm.vue', () => {
   test('renders a form without story select when no stories are available', () => {
-    const store = new Vuex.Store({
-      state: {
-        availableStories: [],
-      },
-    });
     const wrapper = mount(CsLoadStoryForm, {
-      store,
+      computed: {
+        availableStories: () => [],
+        storyUrl: () => defaultUrl,
+      },
       localVue,
     });
 
-    expect(wrapper.findAll(FormItem).length).toEqual(5);
+    expect(wrapper.findAll(FormItem).length).toEqual(2);
   });
+
   test('renders a form with story select where at least one story is available', () => {
-    const store = new Vuex.Store({
-      state: {
-        availableStories: [{...defaultStoryUrls, storyName: defaultStoryName}],
-      },
-    });
-
     const wrapper = mount(CsLoadStoryForm, {
-      store,
+      computed: {
+        availableStories: () => [defaultUrl],
+        storyUrl: () => defaultUrl,
+      },
       localVue,
     });
 
-    expect(wrapper.findAll('.el-form-item').length).toEqual(6); // wrapper.findAll(FormItem) returns _FormItem is not defined
+    expect(wrapper.findAll('.el-form-item').length).toEqual(3); // wrapper.findAll(FormItem) returns _FormItem is not defined
   });
-  test('sets input values when a story is selected', async () => {
-    const store = new Vuex.Store({
-      state: {
-        availableStories: [{...defaultStoryUrls, storyName: defaultStoryName}],
-      },
-    });
 
+  test('sets dropdown value when a story is selected', async () => {
     const wrapper = mount(CsLoadStoryForm, {
-      store,
+      computed: {
+        availableStories: () => [defaultUrl],
+        storyUrl: () => defaultUrl,
+      },
       localVue,
     });
 
     const option = wrapper.get('.el-select-dropdown__item');
     option.vm.$el.dispatchEvent(new Event('click'));
     await wrapper.vm.$nextTick();
-    expect(wrapper.vm.featuresUrl).toEqual(defaultStoryUrls.featuresUrl);
-    expect(wrapper.vm.storyName).toEqual(defaultStoryName);
-    expect(wrapper.vm.storyUrl).toEqual(defaultStoryUrls.storyUrl);
-    expect(wrapper.vm.trackUrl).toEqual(defaultStoryUrls.trackUrl);
+    expect(wrapper.vm.storyUrl).toEqual(defaultUrl);
   });
-  test('loads the story from the given urls', async () => {
-    const store = new Vuex.Store(defaultStore);
+
+  test('sets story url to store', () => {
+    const mockStore = {
+      state: {
+        availableStories: [],
+        story: {
+          url: undefined,
+        },
+      },
+      commit: jest.fn(),
+      dispatch: jest.fn(),
+    };
+
     const wrapper = mount(CsLoadStoryForm, {
-      router,
-      store,
+      mocks: {
+        $store: mockStore,
+      },
       localVue,
     });
 
-    wrapper.findAll('input').at(0).setValue(defaultStoryName);
-    wrapper.findAll('input').at(1).setValue(defaultStoryUrls.trackUrl);
-    wrapper.findAll('input').at(2).setValue(defaultStoryUrls.storyUrl);
-    wrapper.findAll('input').at(3).setValue(defaultStoryUrls.featuresUrl);
+    wrapper.findAll('input').at(0).setValue(defaultUrl);
+    expect(mockStore.commit).toHaveBeenCalledWith(UPDATE_STORY_URL, defaultUrl);
+  });
+
+  test('sets submit button enabled when story url is filled', () => {
+    const wrapper = shallowMount(CsLoadStoryForm, {
+      computed: {
+        availableStories: () => [],
+        storyUrl: () => defaultUrl,
+      },
+      stubs: [
+        'el-button',
+        'el-col',
+        'el-form',
+        'el-form-item',
+        'el-input',
+        'el-main',
+        'el-row',
+      ],
+    });
+
+    expect(wrapper.vm.disabledSubmit).toBe(false);
+  });
+
+  test('loads story on submit', async() => {
+    const wrapper = mount(CsLoadStoryForm, {
+      computed: {
+        storyUrl: () => defaultUrl,
+        storyName: () => 'test',
+      },
+      mocks: {
+        $store: {
+          state: {
+            storyUrl: defaultUrl,
+            availableStories: [],
+          },
+          commit: jest.fn(),
+          dispatch: jest.fn(),
+        },
+        $router: {
+          push: jest.fn(),
+        },
+      },
+      localVue,
+    });
 
     await wrapper.vm.$nextTick();
     wrapper.get(Button).vm.$el.click();
-    await store.dispatch('loadStory');
-
-    expect(Array.isArray(store.state.features.data.features)).toBe(true);
-    expect(store.state.features.data.features).toHaveLength(12);
-    expect(typeof store.state.story.data.story).toBe('object');
-    expect(store.state.story.data.story).toHaveProperty('header');
-    expect(store.state.story.data.story).toHaveProperty('perex');
-    expect(store.state.story.data.story).toHaveProperty('sections');
-    expect(typeof store.state.track.data.track).toBe('object');
-    expect(store.state.track.data.track).toHaveProperty('features');
+    await wrapper.vm.$nextTick();
+    expect(wrapper.vm.$store.dispatch).toHaveBeenCalledTimes(1);
+    expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith('loadStory');
+    expect(wrapper.vm.$router.push).toHaveBeenCalledTimes(1);
+    expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/story/read/test');
   });
 });

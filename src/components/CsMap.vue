@@ -1,19 +1,19 @@
 <script>
-import {
-  LCircleMarker,
-  LGeoJson,
-  LMap,
-  LTileLayer,
-  LRectangle
-} from 'vue2-leaflet';
-import * as LEdgeMarker from 'leaflet-edge-marker';
-
+import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
+import { mapGetters, mapState } from 'vuex';
 require('../../node_modules/leaflet/dist/leaflet.css');
+
+import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config.js'
+import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
+import { UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_FEATURE_MARK_CALLBACK, UPDATE_TRACK } from '@/store/mutations.js';
+import CsTrackUploadButton from '@/components/CsTrackUploadButton';
 
 export default {
   name: 'CsMap',
   components: {
+    CsTrackUploadButton,
     LCircleMarker,
+    LControl,
     LGeoJson,
     LMap,
     LTileLayer,
@@ -21,167 +21,73 @@ export default {
   },
   data() {
     return {
-      map: {
-        bounds: null,
-        center: [50, 19],
-        baseLayer: 'https://api.mapbox.com/styles/v1/cartostory/cjugqcypf27581gnry4y59lxy/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
-        hikingOverlay: 'http://tile.mtbmap.cz/overlay_hiking/{z}/{x}/{y}.png',
-        labelsOverlay: 'https://api.mapbox.com/styles/v1/cartostory/cjugqfe8r1lhh1ftgrmr7v9zj/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FydG9zdG9yeSIsImEiOiJjanQycXVyZDcxeXZqM3lxeDNvcW81NWJpIn0.hfvoqNSy7dT0yviVhNcDMg',
-        zoom: 8,
-        edgeMarker: null,
-      },
-      markerOptions: {
-        style: {
-          common: {
-            radius: 8,
-            weight: 1,
-          },
-          highlighted: {
-            color: '#fffc31',
-            fillOpacity: 0.8,
-          },
-          inBbox: {
-            color: '#42b983',
-            fillOpacity: 0.5,
-          },
-          plain: {
-            color: '#3185fc',
-            fillOpacity: 0.5,
-          },
-          edge: {
-            icon: L.icon({
-              iconUrl: '../../node_modules/leaflet/dist/images/marker-icon.png',
-              iconRetinaUrl: 'marker-icon-2x.png',
-              shadowUrl:     'marker-shadow.png',
-              iconSize:    [25, 41],
-              iconAnchor:  [12, 41],
-              popupAnchor: [1, -34],
-              tooltipAnchor: [16, -28],
-              shadowSize:  [0, 0],
-            }),
-          },
-        },
-      },
-      bboxOptions: {
-        hovered: {
-          style: {
-            color: '#5a5a66',
-            fillColor: '#5a5a66',
-            dashArray: '5',
-            weight: 2
-          }
-        },
-        selected: {
-          style: {
-            color: '#42b983',
-            fillColor: '#42b983',
-            fillOpacity: 0,
-            dashArray: '5',
-            weight: 2
-          }
-        }
-      },
-      trackOptions: {
-        style: {
-          plain: {
-              color: '#5a5a66',
-              dashArray: '6',
-          },
-          inBbox: {
-            color: '#42b983',
-            dashArray: '6',
-          },
-        },
-      },
+      STORY_LINK_CLICK_EVENT,
+      TRACK_FILE_UPLOAD_EVENT,
+      addFeatureMark: undefined,
+      markerOptions,
+      mapOptions,
+      trackOptions,
     };
   },
-  methods: {
-    /**
-     * Set highlighted feature in a MAP context.
-     *
-     * @returns {void}
-     */
-    featureClicked(feature) {
-      this.$store.dispatch('story/resetHighlightedLink');
-      this.$store.dispatch('setHighlightedFeature', feature);
-      this.$store.dispatch('setShouldScrollToFeature', true);
-      this.map.center = this.$refs.csmap.mapObject.getBounds().getCenter();
-    },
-    flyTo(feature) {
-      const center = [feature.geometry.coordinates[1], feature.geometry.coordinates[0]];
-      this.$refs.csmap.mapObject.flyTo(center);
-    },
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.map.bounds = this.$refs.cstrack && this.$refs.cstrack.getBounds();
-      this.$refs.csmap && this.$refs.csmap.mapObject.fitBounds(this.map.bounds);
-    });
-  },
   computed: {
-    bbox() {
-      return this.$store.state.bbox;
-    },
-    bboxHovered() {
-      return this.$store.state.bboxHovered;
-    },
-    bboxHoveredDifferentFromCurrentBbox() {
-      return this.bbox !== this.bboxHovered;
-    },
-    features() {
-      if (!this.highlightedFeature && !this.featuresInsideBbox) {
-        return this.$store.state.features.data.features;
-      } else {
-        const highlightedId = [this.highlightedFeature && this.highlightedFeature.properties.id];
-        const idsInsideBbox = this.featuresInsideBbox && this.featuresInsideBbox.map(f => f.properties.id);
-        const ids = highlightedId.concat(idsInsideBbox);
-        return this.$store.state.features.data.features.filter(f => !ids.includes(f.properties.id));
-      }
-    },
-    featuresInsideBbox() {
-      return this.$store.getters['track/featuresInsideBbox'];
-    },
-    highlightedFeature() {
-      return this.$store.state.highlightedFeature;
-    },
-    track() {
-      return this.$store.state.track.data;
-    },
-    trackInsideBbox() {
-      return this.$store.getters['track/trackBboxRelation']('within');
-    },
-    trackOutsideBbox() {
-      return this.$store.getters['track/trackBboxRelation']('disjoint');
-    }
+    ...mapState({
+      editable: state => state.editable,
+      highlightedLatLng :state => state.highlightedLatLng,
+      track: state => state.story.track,
+    }),
+    ...mapGetters([
+      'features',
+      'featuresWithoutHighlighted',
+    ]),
   },
-  watch: {
-    highlightedFeature() {
-      this.flyTo(this.highlightedFeature);
+  methods: {
+    /*
+     * @param {L.geoJSON}
+     */
+    handleTrackReady(track) {
+      this.$refs.csmap.mapObject.fitBounds(track.getBounds());
     },
-    bbox() {
-      if (this.bbox) {
-        this.$refs.csmap.mapObject.flyToBounds(this.bbox);
-      }
-    },
-    bboxHovered() {
-      const icon = L.icon({
-        iconUrl: 'img/map-marker.svg',
-        iconRetinaUrl: 'marker-icon-2x.png',
-        shadowUrl:     'marker-shadow.png',
-        iconSize:    [25, 41],
-        iconAnchor:  [12, 41],
-        popupAnchor: [1, -34],
-        tooltipAnchor: [16, -28],
-        shadowSize:  [0, 0],
-      });
 
-      if (!this.bboxHovered) {
-        this.$refs.csmap.mapObject.removeLayer(this.map.edgeMarker);
-      } else {
-        const bboxCenter = L.latLngBounds(this.bboxHovered).getCenter();
-        this.map.edgeMarker = new LEdgeMarker(bboxCenter, { icon: icon });
-        this.$refs.csmap.mapObject.addLayer(this.map.edgeMarker);
+    /*
+     * Sets feature mark that should be highlighted and scrolled to in the text.
+     */
+    handleFeatureClick(event) {
+      const { lat, lng } = event.latlng;
+      const textMark = document.querySelector(`[data-cs-lat='${lat}'], [data-cs-lng='${lng}']`);
+
+      if (!textMark) {
+        return;
       }
+
+      this.$store.commit(UPDATE_HIGHLIGHTED_LAT_LNG, {
+        [STORY_LINK_LAT_ATTR]: textMark.getAttribute([STORY_LINK_LAT_ATTR]),
+        [STORY_LINK_LNG_ATTR]: textMark.getAttribute([STORY_LINK_LNG_ATTR]),
+      });
+    },
+
+    /*
+     * Links the position to the selected text.
+     * @param {object}
+     */
+    handleMapClick(latLng) {
+      const addFeatureMark = this.$store.state.addFeatureMarkCallback;
+      if (!addFeatureMark || typeof addFeatureMark !== 'function') {
+        return;
+      }
+
+      addFeatureMark({
+        [STORY_LINK_LAT_ATTR]: latLng.lat,
+        [STORY_LINK_LNG_ATTR]: latLng.lng,
+      });
+      // this.features = [...this.features, latLng];
+      this.$store.commit(UPDATE_FEATURE_MARK_CALLBACK, undefined);
+    },
+
+    /*
+     * @param {object} geojson data
+     */
+    handleFileUpload(data) {
+      this.$store.commit(UPDATE_TRACK, data);
     },
   },
 };
@@ -190,66 +96,44 @@ export default {
 <template>
   <div class="cs-map">
     <div id="cs-map-container">
-      <l-map :center="map.center" :zoom="map.zoom" ref="csmap">
-        <l-tile-layer :url="map.baseLayer" />
-        <l-tile-layer :url="map.hikingOverlay" layer-type="overlay" :opacity="0.7" />
-        <l-tile-layer :url="map.labelsOverlay" layer-type="overlay" />
-        <l-geo-json v-if="!trackOutsideBbox && !trackInsideBbox" :geojson="track.track" :options="trackOptions.style.plain" ref="cstrack" />
-        <l-geo-json v-if="trackInsideBbox" :geojson="trackInsideBbox" :options="trackOptions.style.inBbox" ref="cstrack" />
-        <l-geo-json v-if="trackOutsideBbox" :geojson="trackOutsideBbox" :options="trackOptions.style.plain" ref="cstrack" />
-        <l-rectangle v-if="bboxHovered && bboxHoveredDifferentFromCurrentBbox" :bounds="bboxHovered" :l-style="bboxOptions.hovered.style"></l-rectangle>
-        <l-rectangle v-if="bbox" :bounds="bbox" :l-style="bboxOptions.selected.style"></l-rectangle>
+      <l-map @click="handleMapClick($event.latlng)" :center="highlightedLatLng || mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
+        <l-control class="leaflet-bar leaflet-control" position="topleft" >
+          <cs-track-upload-button v-if="editable" @[TRACK_FILE_UPLOAD_EVENT]="handleFileUpload($event)" />
+        </l-control>
 
-        <!-- highlightedFeature -->
+        <l-tile-layer :url="mapOptions.baseLayer" />
+        <l-tile-layer :url="mapOptions.hikingOverlay" layer-type="overlay" :opacity="0.7" />
+        <l-tile-layer :url="mapOptions.labelsOverlay" layer-type="overlay" />
+
+        <l-geo-json @ready="handleTrackReady($event)" v-if="track" :geojson="track" :options="trackOptions.style.plain" ref="cstrack" />
+
         <l-circle-marker
-          v-if="highlightedFeature"
-          @click="featureClicked(highlightedFeature)"
+          @click="handleFeatureClick"
+          :color="markerOptions.style.plain.color"
+          :fill-color="markerOptions.style.plain.color"
+          :fill-opacity="markerOptions.style.plain.fillOpacity"
+          :latLng="f"
+          :radius="markerOptions.style.common.radius"
+          :weight="markerOptions.style.common.weight"
+          v-for="f in featuresWithoutHighlighted">
+        </l-circle-marker>
+
+        <l-circle-marker
+          v-if="highlightedLatLng"
+          @click="handleFeatureClick"
           :color="markerOptions.style.highlighted.color"
           :fill-color="markerOptions.style.highlighted.color"
           :fill-opacity="markerOptions.style.highlighted.fillOpacity"
-          :latLng="[highlightedFeature.geometry.coordinates[1], highlightedFeature.geometry.coordinates[0]]"
+          :latLng="highlightedLatLng"
           :radius="markerOptions.style.common.radius"
           :weight="markerOptions.style.common.weight">
         </l-circle-marker>
 
-        <!-- features -->
-        <l-circle-marker
-          @click="featureClicked(f)"
-          :color="markerOptions.style.plain.color"
-          :fill-color="markerOptions.style.plain.color"
-          :fill-opacity="markerOptions.style.plain.fillOpacity"
-          :key="f.properties.id"
-          :latLng="[f.geometry.coordinates[1], f.geometry.coordinates[0]]"
-          :radius="markerOptions.style.common.radius"
-          :weight="markerOptions.style.common.weight"
-          v-for="f in features">
-        </l-circle-marker>
-
-        <!-- featuresInsideBbox -->
-        <l-circle-marker
-          @click="featureClicked(f)"
-          :color="markerOptions.style.inBbox.color"
-          :fill-color="markerOptions.style.inBbox.color"
-          :fill-opacity="markerOptions.style.inBbox.fillOpacity"
-          :key="f.properties.id"
-          :latLng="[f.geometry.coordinates[1], f.geometry.coordinates[0]]"
-          :radius="markerOptions.style.common.radius"
-          :weight="markerOptions.style.common.weight"
-          v-for="f in featuresInsideBbox">
-        </l-circle-marker>
       </l-map>
     </div>
   </div>
 </template>
 
 <style>
-  .cs-map {
-    height: 100%;
-  }
 
-  #cs-map-container {
-    width: auto;
-    height: 100%;
-    position: relative;
-  }
 </style>

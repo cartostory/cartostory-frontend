@@ -1,19 +1,16 @@
-import { mutations } from '@/store/store';
+import { mutations } from '@/store/newStore';
+import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import {
-  RESET_HIGHLIGHTED_LINK,
-  SET_BBOX,
-  SET_BBOX_HOVERED,
-  SET_FEATURES_URL,
-  SET_HIGHLIGHTED_FEATURE,
-  SET_SHOULD_SCROLL_TO_FEATURE,
-  SET_STORY_NAME,
-  SET_STORY_URL,
-  SET_TRACK_URL,
+  UPDATE_FEATURE_MARK_CALLBACK,
+  UPDATE_HIGHLIGHTED_LAT_LNG,
+  UPDATE_MAP_CENTER,
+  UPDATE_STORY,
+  UPDATE_STORY_NAME,
+  UPDATE_STORY_TEXT,
+  UPDATE_STORY_URL,
+  UPDATE_TRACK,
 } from '@/store/mutations';
 import { getPath, setPath } from '@/store/store.helpers';
-
-const BBOX = [[0, 0], [10, 10]];
-const FEATURES_URL = 'https://gist.githubusercontent.com/zimmicz/ec2c456bef24e46554db30d4540d41f9/raw/11d3380df2575b108ab8e04b2e5618567aaf97cc/hochschwab-features.json';
 
 /*
  * @param {string}
@@ -23,10 +20,8 @@ const FEATURES_URL = 'https://gist.githubusercontent.com/zimmicz/ec2c456bef24e46
  */
 const describeHelper = (description, mutation, path, payload) => {
   describe(mutation.toString(), () => {
-    it(description, () => {
+    test(description, () => {
       const state = {};
-      const setState = setPath(path);
-      setState(state, payload);
       mutations[mutation](state, payload);
 
       expect(getPath(state, path)).toEqual(payload);
@@ -34,25 +29,26 @@ const describeHelper = (description, mutation, path, payload) => {
   });
 };
 
-describeHelper('it sets bbox', SET_BBOX, ['bbox'], BBOX);
-describeHelper('it sets bbox hovered', SET_BBOX_HOVERED, ['bboxHovered'], BBOX);
-describeHelper('it sets highlighted feature', SET_HIGHLIGHTED_FEATURE, ['highlightedFeature'], 'feature');
-describeHelper('it sets should scroll to feature', SET_SHOULD_SCROLL_TO_FEATURE, ['shouldScrollToFeature'], true);
-describeHelper('it sets features url', SET_FEATURES_URL, ['features', 'data', 'url'], FEATURES_URL);
-describeHelper('it sets story name', SET_STORY_NAME, ['story', 'data', 'name'], SET_STORY_NAME);
-describeHelper('it sets story url', SET_STORY_URL, ['story', 'data', 'url'], SET_STORY_URL);
-describeHelper('it sets story url', SET_TRACK_URL, ['track', 'data', 'url'], SET_TRACK_URL);
+describeHelper('it sets feature mark callback', UPDATE_FEATURE_MARK_CALLBACK, ['addFeatureMarkCallback'], function () {});
+describeHelper('it sets map center', UPDATE_MAP_CENTER, ['map', 'center'], {lat: 0, lng: 0});
+describeHelper('it sets story', UPDATE_STORY, ['story'], {name: 'name', story: 'story', track: 'track'});
+describeHelper('it sets story name', UPDATE_STORY_NAME, ['story', 'name'], 'story name');
+describeHelper('it sets story text', UPDATE_STORY_TEXT, ['story', 'text'], 'story text');
+describeHelper('it sets story url', UPDATE_STORY_URL, ['storyUrl'], 'url');
+describeHelper('it sets story track', UPDATE_TRACK, ['story', 'track'], 'track');
 
-describe('RESET_HIGHLIGHTED_LINK', () => {
-  it('it resets highlighted link', () => {
-    const link = document.createElement('a');
-    document.body.appendChild(link);
-    link.setAttribute('data-cs-id', 1);
-    link.classList = 'highlighted';
-    mutations[RESET_HIGHLIGHTED_LINK]();
-    const features = document.querySelectorAll('a').length;
-    expect(features).toEqual(1);
-    const highlightedFeatures = document.querySelectorAll(['data-cs-id']).length;
-    expect(highlightedFeatures).toEqual(0);
+describe(`${UPDATE_HIGHLIGHTED_LAT_LNG} mutation`, () => {
+  test('sets highlighted lat lng', () => {
+    const payload = {
+      [STORY_LINK_LAT_ATTR]: 0,
+      [STORY_LINK_LNG_ATTR]: 10,
+    };
+    const result = {
+      lat: 0,
+      lng: 10,
+    };
+    const state = {};
+    mutations[UPDATE_HIGHLIGHTED_LAT_LNG](state, payload);
+    expect(getPath(state, ['highlightedLatLng'])).toEqual(result);
   });
 });

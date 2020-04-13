@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
 
+import { STORY_LINK_DATA_ID } from '@/config/config';
 import featuresModule from './store.features';
 import storyModule from './store.story';
 import trackModule from './store.track';
@@ -47,9 +48,7 @@ const vuexLocal = new VuexPersistence({
       storage.setItem(key, JSON.stringify(currentStorage));
     }
   },
-  restoreState: (key, storage) => {
-    return JSON.parse(storage.getItem(key)) || [];
-  },
+  restoreState: (key, storage) => JSON.parse(storage.getItem(key)) || [],
 });
 
 const plugins = [
@@ -120,7 +119,7 @@ export const mutations = {
   [SET_STORY_URL]: setPath(['story', 'data', 'url']),
   [SET_TRACK_URL]: setPath(['track', 'data', 'url']),
   [RESET_HIGHLIGHTED_LINK]: () => {
-    document.querySelectorAll('[data-cs-id]').forEach((elm) => {
+    document.querySelectorAll(`[${STORY_LINK_DATA_ID}]`).forEach((elm) => {
       if (elm.classList) {
         elm.classList.remove('highlighted');
       }
@@ -132,7 +131,7 @@ export const mutations = {
     }
 
     const highlightedId = state.highlightedFeature.properties.id;
-    const highlightedElement = document.querySelectorAll(`[data-cs-id='${highlightedId}']`)[0];
+    const highlightedElement = document.querySelectorAll(`[${STORY_LINK_DATA_ID}='${highlightedId}']`)[0];
     if (state.highlightedFeature && highlightedElement) {
       highlightedElement.classList.add('highlighted');
     }
