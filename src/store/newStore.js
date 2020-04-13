@@ -12,6 +12,7 @@ import {
   UPDATE_ERRORS,
   UPDATE_FEATURE_MARK_CALLBACK,
   UPDATE_HIGHLIGHTED_LAT_LNG,
+  UPDATE_LOADING,
   UPDATE_MAP_CENTER,
   UPDATE_STORY,
   UPDATE_STORY_NAME,
@@ -24,6 +25,7 @@ Vue.use(Vuex);
 
 const state = {
   errors: [],
+  loading: false,
   storyUrl: undefined,
   story: {
     name: undefined,
@@ -36,6 +38,7 @@ const state = {
 };
 
 export const mutations = {
+  [UPDATE_LOADING]: set('loading'),
   [REMOVE_ERROR](state, error) {
     const idx = state.errors.findIndex(e => e.title === error.title && e.message === error.message);
     if (idx > -1) {
@@ -68,6 +71,7 @@ const actions = {
     commit(UPDATE_STORY_TEXT, payload);
   },
   async loadStory({ commit, state }) {
+    commit(UPDATE_LOADING, true);
     const result = await axios.get(state.storyUrl);
     commit(UPDATE_STORY, result.data);
   },

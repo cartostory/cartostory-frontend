@@ -183,7 +183,17 @@ export default {
 }
 
 .editor {
+  border: 1px dotted #F56C6C;
+  margin-bottom: 1rem;
   margin-left: 1rem;
+  margin-right: 1rem;
+  margin-top: 1rem;
+  padding-left: .5rem;
+  padding-right: .5rem;
+}
+
+.ProseMirror-focused {
+  outline: none;
 }
 
 .menububble {

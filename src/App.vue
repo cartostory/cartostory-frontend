@@ -5,6 +5,11 @@ export default {
   name: 'app',
   components: {
     CsNotification,
+  },
+  computed: {
+    loading() {
+      return this.$store.state.loading;
+    }
   }
 };
 </script>
@@ -13,6 +18,10 @@ export default {
   <el-container id="app">
     <router-view/>
     <cs-notification/>
+    <div
+      v-if="loading"
+      v-loading.fullscreen.lock="loading">
+    </div>
   </el-container>
 </template>
 

@@ -1,6 +1,6 @@
 <script>
 import { mapState } from 'vuex';
-import { UPDATE_ERRORS, UPDATE_STORY_URL } from '@/store/mutations';
+import { UPDATE_ERRORS, UPDATE_LOADING, UPDATE_STORY_URL } from '@/store/mutations';
 
 export default {
   name: 'CsLoadStoryForm',
@@ -36,6 +36,8 @@ export default {
           title: 'Příběh se nepodařilo nahrát',
           message: 'Zkontrolujte jeho adresu.',
         });
+      } finally {
+        this.$store.commit(UPDATE_LOADING, false);
       }
     },
     handleStorySelect() {
@@ -82,6 +84,10 @@ export default {
 </template>
 
 <style scoped>
+h1 {
+  text-align: center;
+}
+
 .el-form {
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
   padding: 2rem;

@@ -93,7 +93,7 @@ describe('CsLoadStoryForm.vue', () => {
     expect(wrapper.vm.disabledSubmit).toBe(false);
   });
 
-  test.only('loads story on submit', async() => {
+  test('loads story on submit', async() => {
     const wrapper = mount(CsLoadStoryForm, {
       computed: {
         storyUrl: () => defaultUrl,
@@ -104,6 +104,7 @@ describe('CsLoadStoryForm.vue', () => {
             storyUrl: defaultUrl,
             availableStories: [],
           },
+          commit: jest.fn(),
           dispatch: jest.fn(),
         },
         $router: {

@@ -11,6 +11,7 @@ import {
   Form,
   FormItem,
   Input,
+  Loading,
   Main,
   Notification,
   Option,
@@ -33,6 +34,7 @@ Vue.use(Footer);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);
+Vue.use(Loading.directive);
 Vue.use(Main);
 Vue.use(Option);
 Vue.use(Row);
