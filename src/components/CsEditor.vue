@@ -15,8 +15,9 @@ export default {
   },
   data() {
     return {
-      keepInBounds: true,
+      contentPlaceholder: 'Můžete začít psát...',
       editor: undefined,
+      keepInBounds: true,
     };
   },
   computed: {
@@ -76,7 +77,7 @@ export default {
             levels: [2, 3, 4], // leave <h1> for the story title
           }),
         ],
-        content: this.$store.state.story.text,
+        content: this.$store.state.story.text || this.contentPlaceholder,
         onUpdate: function(payload) {
           this.$store.commit(UPDATE_STORY_TEXT, payload);
         }.bind(this),
