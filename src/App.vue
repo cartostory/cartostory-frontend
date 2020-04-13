@@ -1,28 +1,27 @@
 <script>
+import CsNotification from '@/components/CsNotification.vue';
+
 export default {
   name: 'app',
-  mounted() {
-    if (!this.track.data.url || !this.story.data.url || !this.features.data.url) {
-      this.$router.push('/load');
-    }
+  components: {
+    CsNotification,
   },
   computed: {
-    features() {
-      return this.$store.state.features;
-    },
-    track() {
-      return this.$store.state.track;
-    },
-    story() {
-      return this.$store.state.story;
-    },
-  },
+    loading() {
+      return this.$store.state.loading;
+    }
+  }
 };
 </script>
 
 <template>
   <el-container id="app">
     <router-view/>
+    <cs-notification/>
+    <div
+      v-if="loading"
+      v-loading.fullscreen.lock="loading">
+    </div>
   </el-container>
 </template>
 
@@ -40,5 +39,4 @@ export default {
   #app {
     color: #2c3e50;
   }
-
 </style>

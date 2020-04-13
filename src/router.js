@@ -1,20 +1,58 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+
 import CsLoadStoryForm from './components/CsLoadStoryForm.vue';
-import CsScreen from './components/CsScreen.vue';
+import store from '@/store/newStore';
+import { UPDATE_EDITABLE, UPDATE_LOADING } from '@/store/mutations';
+import Landing from '@/views/Landing.vue';
+import StoryScreen from '@/views/StoryScreen.vue';
 
 Vue.use(Router);
 
-const routes = [
+export const routes = [
   {
     path: '/',
-    component: CsScreen,
+    component: Landing,
   },
-  { path: '/load', component: CsLoadStoryForm },
+  {
+    path: '/story/read/:title',
+    component: StoryScreen,
+    beforeEnter(to, from, next) {
+      store.commit(UPDATE_EDITABLE, false);
+      if (store.state.storyUrl) {
+        next();
+      } else {
+        next('/story/load');
+      }
+    },
+  },
+  {
+    path: '/story/load',
+    component: CsLoadStoryForm,
+  },
+  {
+    path: '/story/create',
+    component: StoryScreen,
+    beforeEnter(to, from, next) {
+      store.commit(UPDATE_EDITABLE, true);
+      next();
+    },
+  },
 ];
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
 });
+
+router.beforeEach((to, from, next) =>  {
+  store.commit(UPDATE_LOADING, true);
+  next();
+});
+
+router.afterEach(() =>  {
+  store.commit(UPDATE_LOADING, false);
+});
+
+export default router;
