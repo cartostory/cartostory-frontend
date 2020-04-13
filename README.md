@@ -32,3 +32,5 @@ yarn run test:unit
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+![CI](https://github.com/cartostory/cartostory-frontend/workflows/CI/badge.svg)

@@ -6,8 +6,6 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "gh-pages -d dist",
-    "predeploy": "yarn run build",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
@@ -48,7 +46,6 @@
     "babel-plugin-component": "^1.1.1",
     "eslint": "^6.1.0",
     "eslint-plugin-vue": "^5.0.0",
-    "gh-pages": "^2.2.0",
     "husky": "^4.2.3",
     "jest": "^25.2.3",
     "node-sass": "^4.9.0",
