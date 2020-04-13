@@ -9,6 +9,7 @@ import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js';
 import { set, setPath } from './store.helpers';
 import {
   REMOVE_ERROR,
+  UPDATE_EDITABLE,
   UPDATE_ERRORS,
   UPDATE_FEATURE_MARK_CALLBACK,
   UPDATE_HIGHLIGHTED_LAT_LNG,
@@ -24,6 +25,7 @@ import {
 Vue.use(Vuex);
 
 const state = {
+  editable: false,
   errors: [],
   loading: false,
   storyUrl: undefined,
@@ -38,13 +40,13 @@ const state = {
 };
 
 export const mutations = {
-  [UPDATE_LOADING]: set('loading'),
   [REMOVE_ERROR](state, error) {
     const idx = state.errors.findIndex(e => e.title === error.title && e.message === error.message);
     if (idx > -1) {
       state.errors.splice(idx, 1);
     }
   },
+  [UPDATE_EDITABLE]: set('editable'),
   [UPDATE_ERRORS](state, newErorr) {
     state.errors = [...state.errors, newErorr];
   },
@@ -55,6 +57,7 @@ export const mutations = {
       lng: Number.parseFloat(latLng[STORY_LINK_LNG_ATTR]),
     };
   },
+  [UPDATE_LOADING]: set('loading'),
   [UPDATE_MAP_CENTER]: setPath(['map', 'center']),
   [UPDATE_STORY]: set('story'),
   [UPDATE_STORY_NAME]: setPath(['story', 'name']),
@@ -109,7 +112,7 @@ export const getters = {
   },
 };
 
-export default ({
+export default new Vuex.Store({
   strict: true,
   getters,
   state,

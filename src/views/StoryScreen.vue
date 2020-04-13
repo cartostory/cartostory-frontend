@@ -36,6 +36,11 @@ export default {
       trackOptions,
     };
   },
+  computed: {
+    editable() {
+      return this.$store.state.editable;
+    },
+  },
   mounted() {
     this.ready = this.$router.currentRoute.path === '/story/create';
   },
@@ -71,7 +76,7 @@ export default {
         @[ADD_FEATURE_MARK_EVENT]="handleAddFeatureMarkClick($event)"
         style="flex: 1; overflow: auto;"
       ></cs-editor>
-      <el-footer style="margin: auto;">
+      <el-footer v-if="editable" style="margin: auto;">
         <el-button @click="handleSave" type="primary">Uložit</el-button>
       </el-footer>
     </el-col>

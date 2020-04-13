@@ -19,6 +19,7 @@
     "leaflet": "^1.4.0",
     "leaflet-edge-marker": "https://github.com/zimmicz/leaflet-edge-marker",
     "lodash.chunk": "^4.2.0",
+    "lodash.deburr": "^4.1.0",
     "normalize.css": "^8.0.1",
     "prosemirror-utils": "^0.9.6",
     "tiptap": "^1.26.6",

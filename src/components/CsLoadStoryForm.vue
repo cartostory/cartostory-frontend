@@ -1,5 +1,7 @@
 <script>
+import deburr from 'lodash.deburr';
 import { mapState } from 'vuex';
+
 import { UPDATE_ERRORS, UPDATE_LOADING, UPDATE_STORY_URL } from '@/store/mutations';
 
 export default {
@@ -12,6 +14,7 @@ export default {
   computed: {
     ...mapState({
       availableStories: state => state.availableStories,
+      storyName: state => state.story.name,
       storyText: state => state.story.text,
     }),
     disabledSubmit() {
@@ -30,7 +33,8 @@ export default {
     async handleSubmit() {
       try {
         await this.$store.dispatch('loadStory');
-        this.$router.push('/');
+        const title = deburr(this.storyName).toLowerCase();
+        this.$router.push(`/story/read/${title}`);
       } catch (e) {
         this.$store.commit(UPDATE_ERRORS, {
           title: 'Příběh se nepodařilo nahrát',
@@ -40,6 +44,7 @@ export default {
         this.$store.commit(UPDATE_LOADING, false);
       }
     },
+
     handleStorySelect() {
       const story = this.availableStories.find(s => s.storyName === this.currentStory);
 

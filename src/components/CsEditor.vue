@@ -1,6 +1,7 @@
 <script>
 import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap';
 import { Heading } from 'tiptap-extensions';
+import { mapState } from 'vuex';
 
 import FeatureMark from '@/components/editor/FeatureMark';
 import { ADD_FEATURE_MARK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js'
@@ -21,9 +22,10 @@ export default {
     };
   },
   computed: {
-    highlightedLatLng() {
-      return this.$store.state.highlightedLatLng;
-    },
+    ...mapState({
+      editable: state => state.editable,
+      highlightedLatLng: state => state.highlightedLatLng,
+    }),
     storyName: {
       get() {
         return this.$store.state.story.name;
@@ -71,6 +73,7 @@ export default {
 
     $createEditor() {
       return new Editor({
+        editable: this.editable,
         extensions: [
           new FeatureMark(),
           new Heading({
@@ -94,13 +97,15 @@ export default {
 <template>
   <el-col style="flex: 1 1 0%; overflow: hidden; display: flex; flex-wrap: wrap; flex-direction: column;">
 
-    <el-form style="flex: 0;">
+    <el-form v-if="editable">
       <el-form-item>
         <el-input class="story-name" v-model="storyName" placeholder="Název příběhu..."></el-input>
       </el-form-item>
     </el-form>
 
-    <editor-menu-bar style="background: white;" :editor="editor" v-slot="{ commands, isActive }">
+    <h1 class="is-title-1" v-if="!editable">{{ storyName }}</h1>
+
+    <editor-menu-bar v-if="editable" style="background: white;" :editor="editor" v-slot="{ commands, isActive }">
       <div class="editor-menu-bar">
         <el-button
           title="Nadpis 1. úrovně"
@@ -134,7 +139,7 @@ export default {
       </div>
     </editor-menu-bar>
 
-    <editor-menu-bubble :editor="editor" :keep-in-bounds="keepInBounds" v-slot="{ commands, getMarkAttrs, isActive, menu }">
+    <editor-menu-bubble v-if="editable" :editor="editor" :keep-in-bounds="keepInBounds" v-slot="{ commands, getMarkAttrs, isActive, menu }">
       <div
         class="menububble"
         :class="{ 'is-active': menu.isActive }"
@@ -159,7 +164,7 @@ export default {
       </div>
     </editor-menu-bubble>
 
-    <editor-content style="flex: 1; overflow: auto;" v-if="editor" class="editor" :editor="editor" />
+    <editor-content :class="{'editable': this.editable}" style="flex: 1; overflow: auto;" v-if="editor" class="editor" :editor="editor" />
   </el-col>
 </template>
 
@@ -168,12 +173,20 @@ export default {
   margin-left: 1rem;
 }
 
+.is-title-1 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.is-title-1,
 .el-form {
+  flex: 0;
   margin-top: 1rem;
   padding-left: 1rem;
   padding-right: 1rem;
 }
 
+.is-title-1,
 .story-name .el-input__inner {
   border: 0;
   border-radius: 0;
@@ -184,13 +197,17 @@ export default {
 }
 
 .editor {
-  border: 1px dotted #F56C6C;
   margin-bottom: 1rem;
   margin-left: 1rem;
   margin-right: 1rem;
-  margin-top: 1rem;
+  margin-top: 0rem;
   padding-left: .5rem;
   padding-right: .5rem;
+}
+
+.editor.editable {
+  border: 1px dotted #F56C6C;
+  margin-top: 1rem;
 }
 
 .ProseMirror-focused {

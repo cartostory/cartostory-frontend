@@ -97,6 +97,7 @@ describe('CsLoadStoryForm.vue', () => {
     const wrapper = mount(CsLoadStoryForm, {
       computed: {
         storyUrl: () => defaultUrl,
+        storyName: () => 'test',
       },
       mocks: {
         $store: {
@@ -120,6 +121,6 @@ describe('CsLoadStoryForm.vue', () => {
     expect(wrapper.vm.$store.dispatch).toHaveBeenCalledTimes(1);
     expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith('loadStory');
     expect(wrapper.vm.$router.push).toHaveBeenCalledTimes(1);
-    expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/');
+    expect(wrapper.vm.$router.push).toHaveBeenCalledWith('/story/read/test');
   });
 });

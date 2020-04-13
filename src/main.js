@@ -46,7 +46,7 @@ Vue.use(Vuex);
 Vue.prototype.$notify = Notification;
 
 new Vue({
+  store,
   router,
-  store: new Vuex.Store(store),
   render: h => h(App),
 }).$mount('#cartostory');

@@ -31,9 +31,9 @@ export default {
   },
   computed: {
     ...mapState({
-      highlightedLatLng: state => state.highlightedLatLng,
-      track: state => state.story.track,
+      editable: state => state.editable,
       highlightedLatLng :state => state.highlightedLatLng,
+      track: state => state.story.track,
     }),
     ...mapGetters([
       'features',
@@ -98,7 +98,7 @@ export default {
     <div id="cs-map-container">
       <l-map @click="handleMapClick($event.latlng)" :center="highlightedLatLng || mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
         <l-control class="leaflet-bar leaflet-control" position="topleft" >
-          <cs-track-upload-button @[TRACK_FILE_UPLOAD_EVENT]="handleFileUpload($event)" />
+          <cs-track-upload-button v-if="editable" @[TRACK_FILE_UPLOAD_EVENT]="handleFileUpload($event)" />
         </l-control>
 
         <l-tile-layer :url="mapOptions.baseLayer" />
