@@ -6,14 +6,14 @@ export default {
   computed: {
     errors() {
       this.$store.state.errors.forEach(e => {
-        this.$notify({
-          type: 'error',
-          title: e.title,
-          message: e.message,
-          onClose: () => {
+        this.$buefy.snackbar.open({
+          indefinite: true,
+          position: 'is-top-right',
+          type: 'is-danger',
+          message: `<strong>${e.title}</strong><br/><p>${e.message}</p>`,
+          onAction: () => {
             this.$store.commit(REMOVE_ERROR, e);
           },
-          duration: 0,
         });
         this.$store.commit(REMOVE_ERROR, e);
       });

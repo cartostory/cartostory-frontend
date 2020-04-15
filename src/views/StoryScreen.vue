@@ -65,48 +65,24 @@ export default {
 };
 </script>
 <template>
-  <el-container class="story-form">
-    <el-col :span="12">
+  <div class="container-fluid story-form">
+    <div style="height: 100vh;" class="columns has-margin-0">
       <cs-map></cs-map>
-    </el-col>
 
-    <el-col class="story-form__story" :span="12">
-      <cs-editor
-        v-if="$store.state.story.text || ready"
-        @[ADD_FEATURE_MARK_EVENT]="handleAddFeatureMarkClick($event)"
-        style="flex: 1; overflow: auto;"
-      ></cs-editor>
-      <el-footer v-if="editable" style="margin: auto;">
-        <el-button @click="handleSave" type="primary">Uložit</el-button>
-      </el-footer>
-    </el-col>
-  </el-container>
+      <div style="display:flex; flex-direction: column; width: 100%;">
+        <cs-editor
+          v-if="$store.state.story.text || ready"
+          @[ADD_FEATURE_MARK_EVENT]="handleAddFeatureMarkClick($event)">
+        </cs-editor>
+      </div>
+      </div>
+    </div>
 </template>
 
-<!-- don't scope to overwrite element ui -->
-<style lang="scss">
-.cs-map {
-  height: 100%;
-}
-
+<style lang="scss" scoped>
 a[data-cs-lat] {
   color: #F56C6C;
   cursor: pointer;
   text-decoration: underline;
 }
-
-#cs-map-container {
-  width: auto;
-  height: 100%;
-  position: relative;
-}
-
-.story-form__story {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  align-content: flex-start;
-  flex-direction: column;
-}
-
 </style>

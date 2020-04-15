@@ -1,4 +1,4 @@
-import ElementUI from 'element-ui';
+import Buefy from 'buefy';
 import FileReader from 'vue-filereader';
 import { createLocalVue, mount } from '@vue/test-utils';
 
@@ -7,7 +7,7 @@ import { TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
 import CsTrackUploadButton from '@/components/CsTrackUploadButton.vue';
 
 const localVue = createLocalVue();
-localVue.use(ElementUI);
+localVue.use(Buefy);
 
 describe('CsTrackUploadButton.vue', () => {
   test('emits upload event when json file parsed', async() => {

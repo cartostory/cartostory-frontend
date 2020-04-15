@@ -32,14 +32,13 @@ export default {
     >
     <template #reader="props">
 
-    <el-button
+    <b-button
       class="file-upload-button"
       @click="$refs.fileReader.click()"
       title="Nahrát soubor trasy"
-      size="mini"
-      type="plain"
-      icon="el-icon-upload"
-      ></el-button>
+      size="is-small"
+      icon-left="cloud-upload"
+      ></b-button>
 
       <input
         style="visibility: hidden"
@@ -52,14 +51,15 @@ export default {
   </file-reader>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .file-upload-button {
   border-radius: 0;
+  font-size: 16px;
   height: 30px;
   line-height: 30px;
   padding-left: 0px;
   padding-right: 0px;
-  padding-top: 0px;
+  padding-top: 5px;
   text-align: center;
   width: 30px;
 }
