@@ -1,52 +1,23 @@
+import Buefy from 'buefy'
 import Vue from 'vue';
 import Vuex from 'vuex';
 import VueLogger from 'vuejs-logger';
-import VueSanitize from 'vue-sanitize';
 import VueScrollTo from 'vue-scrollto';
-import {
-  Button,
-  Col,
-  Container,
-  Footer,
-  Form,
-  FormItem,
-  Input,
-  Loading,
-  Main,
-  Notification,
-  Option,
-  Row,
-  Select,
-} from 'element-ui';
 import 'normalize.css';
-import 'element-ui/lib/theme-chalk/index.css';
-import '@/assets/css/index.css';
+import './assets/scss/index.scss';
 
 import App from './App.vue';
 import router from './router';
 import store from './store/newStore';
 
 Vue.config.productionTip = false;
-Vue.use(Button);
-Vue.use(Col);
-Vue.use(Container);
-Vue.use(Footer);
-Vue.use(Form);
-Vue.use(FormItem);
-Vue.use(Input);
-Vue.use(Loading.directive);
-Vue.use(Main);
-Vue.use(Option);
-Vue.use(Row);
-Vue.use(Select);
-
+Vue.use(Buefy);
 Vue.use(VueLogger);
 Vue.use(VueScrollTo);
 Vue.use(Vuex);
-Vue.prototype.$notify = Notification;
 
 new Vue({
   store,
   router,
   render: h => h(App),
-}).$mount('#cartostory');
+}).$mount('#js-cartostory');

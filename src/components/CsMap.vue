@@ -94,46 +94,56 @@ export default {
 </script>
 
 <template>
-  <div class="cs-map">
-    <div id="cs-map-container">
-      <l-map @click="handleMapClick($event.latlng)" :center="highlightedLatLng || mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
-        <l-control class="leaflet-bar leaflet-control" position="topleft" >
-          <cs-track-upload-button v-if="editable" @[TRACK_FILE_UPLOAD_EVENT]="handleFileUpload($event)" />
-        </l-control>
+  <div class="column is-6 has-padding-0">
+    <div class="cs-map">
+      <div id="cs-map-container">
+        <l-map @click="handleMapClick($event.latlng)" :center="highlightedLatLng || mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
+          <l-control class="leaflet-bar leaflet-control" position="topleft" >
+            <cs-track-upload-button v-if="editable" @[TRACK_FILE_UPLOAD_EVENT]="handleFileUpload($event)" />
+          </l-control>
 
-        <l-tile-layer :url="mapOptions.baseLayer" />
-        <l-tile-layer :url="mapOptions.hikingOverlay" layer-type="overlay" :opacity="0.7" />
-        <l-tile-layer :url="mapOptions.labelsOverlay" layer-type="overlay" />
+            <l-tile-layer :url="mapOptions.baseLayer" />
+              <l-tile-layer :url="mapOptions.hikingOverlay" layer-type="overlay" :opacity="0.7" />
+                <l-tile-layer :url="mapOptions.labelsOverlay" layer-type="overlay" />
 
-        <l-geo-json @ready="handleTrackReady($event)" v-if="track" :geojson="track" :options="trackOptions.style.plain" ref="cstrack" />
+                  <l-geo-json @ready="handleTrackReady($event)" v-if="track" :geojson="track" :options="trackOptions.style.plain" ref="cstrack" />
 
-        <l-circle-marker
-          @click="handleFeatureClick"
-          :color="markerOptions.style.plain.color"
-          :fill-color="markerOptions.style.plain.color"
-          :fill-opacity="markerOptions.style.plain.fillOpacity"
-          :latLng="f"
-          :radius="markerOptions.style.common.radius"
-          :weight="markerOptions.style.common.weight"
-          v-for="f in featuresWithoutHighlighted">
-        </l-circle-marker>
+                    <l-circle-marker
+                      @click="handleFeatureClick"
+                      :color="markerOptions.style.plain.color"
+                      :fill-color="markerOptions.style.plain.color"
+                      :fill-opacity="markerOptions.style.plain.fillOpacity"
+                      :latLng="f"
+                      :radius="markerOptions.style.common.radius"
+                      :weight="markerOptions.style.common.weight"
+                      v-for="f in featuresWithoutHighlighted">
+                    </l-circle-marker>
 
-        <l-circle-marker
-          v-if="highlightedLatLng"
-          @click="handleFeatureClick"
-          :color="markerOptions.style.highlighted.color"
-          :fill-color="markerOptions.style.highlighted.color"
-          :fill-opacity="markerOptions.style.highlighted.fillOpacity"
-          :latLng="highlightedLatLng"
-          :radius="markerOptions.style.common.radius"
-          :weight="markerOptions.style.common.weight">
-        </l-circle-marker>
+                    <l-circle-marker
+                      v-if="highlightedLatLng"
+                      @click="handleFeatureClick"
+                      :color="markerOptions.style.highlighted.color"
+                      :fill-color="markerOptions.style.highlighted.color"
+                      :fill-opacity="markerOptions.style.highlighted.fillOpacity"
+                      :latLng="highlightedLatLng"
+                      :radius="markerOptions.style.common.radius"
+                      :weight="markerOptions.style.common.weight">
+                    </l-circle-marker>
 
-      </l-map>
+        </l-map>
+      </div>
     </div>
   </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
+.cs-map {
+  height: 100%;
+}
 
+#cs-map-container {
+  width: auto;
+  height: 100%;
+  position: relative;
+}
 </style>

@@ -1,12 +1,18 @@
+import Buefy from 'buefy'
 import { mount, createLocalVue } from '@vue/test-utils';
 
 import CsNotification from '@/components/CsNotification.vue';
 
 const localVue = createLocalVue();
+localVue.use(Buefy);
 
 describe('CsNotification.vue', () => {
-  test('renders errors', () => {
-    localVue.prototype.$notify = jest.fn();
+  test.only('renders errors', () => {
+    localVue.prototype.$buefy = {
+      snackbar: {
+        open: jest.fn(),
+      },
+    };
     const $store = {
       commit: jest.fn(),
       state: {
@@ -29,12 +35,10 @@ describe('CsNotification.vue', () => {
       },
     });
 
-    expect(wrapper.vm.$notify).toBeCalledTimes(2);
+    expect(wrapper.vm.$buefy.snackbar.open).toBeCalledTimes(2);
     expect(wrapper.vm.$store.commit).toHaveBeenCalledTimes(2);
-    const args = wrapper.vm.$notify.mock.calls[1][0];
-    expect(args).toHaveProperty('title');
-    expect(args.title).toEqual('Title 2');
+    const args = wrapper.vm.$buefy.snackbar.open.mock.calls[1][0];
     expect(args).toHaveProperty('message');
-    expect(args.message).toEqual('Message 2');
+    expect(args.message).toContain('Message 2');
   });
 });
