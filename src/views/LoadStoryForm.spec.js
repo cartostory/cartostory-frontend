@@ -1,17 +1,17 @@
-import Buefy from 'buefy'
+import Buefy from 'buefy';
 import flushPromises from 'flush-promises';
 import Vuex from 'vuex';
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
 
-import CsLoadStoryForm from '@/components/CsLoadStoryForm.vue';
+import CsLoadStoryForm from '@/views/LoadStoryForm.vue';
 import { UPDATE_STORY_URL } from '@/store/mutations';
-import { defaultUrl } from '../helpers/data';
+import { defaultUrl } from '../../tests/helpers/data';
 
 const localVue = createLocalVue();
 localVue.use(Buefy);
 localVue.use(Vuex);
 
-describe('CsLoadStoryForm.vue', () => {
+describe('LoadStoryForm.vue', () => {
   test('renders a form without story select when no stories are available', () => {
     const wrapper = shallowMount(CsLoadStoryForm, {
       computed: {
@@ -50,7 +50,7 @@ describe('CsLoadStoryForm.vue', () => {
         },
       },
       computed: {
-        availableStories: () => [{ name: 'test2', url: defaultUrl}],
+        availableStories: () => [{ name: 'test2', url: defaultUrl }],
       },
       localVue,
     });
@@ -101,7 +101,7 @@ describe('CsLoadStoryForm.vue', () => {
     expect(wrapper.vm.disabledSubmit).toBe(false);
   });
 
-  test('loads story on submit', async() => {
+  test('loads story on submit', async () => {
     const wrapper = mount(CsLoadStoryForm, {
       computed: {
         storyUrl: () => defaultUrl,

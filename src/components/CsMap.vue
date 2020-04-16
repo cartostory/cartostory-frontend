@@ -1,12 +1,12 @@
 <script>
 import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
 import { mapGetters, mapState } from 'vuex';
-require('../../node_modules/leaflet/dist/leaflet.css');
+import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
+import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map';
+import { UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_FEATURE_MARK_CALLBACK, UPDATE_TRACK } from '@/store/mutations';
+import CsTrackUploadButton from '@/components/CsTrackUploadButton.vue';
 
-import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config.js'
-import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map.js';
-import { UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_FEATURE_MARK_CALLBACK, UPDATE_TRACK } from '@/store/mutations.js';
-import CsTrackUploadButton from '@/components/CsTrackUploadButton';
+require('../../node_modules/leaflet/dist/leaflet.css');
 
 export default {
   name: 'CsMap',
@@ -32,7 +32,7 @@ export default {
   computed: {
     ...mapState({
       editable: state => state.editable,
-      highlightedLatLng :state => state.highlightedLatLng,
+      highlightedLatLng: state => state.highlightedLatLng,
       track: state => state.story.track,
     }),
     ...mapGetters([
@@ -116,7 +116,8 @@ export default {
                       :latLng="f"
                       :radius="markerOptions.style.common.radius"
                       :weight="markerOptions.style.common.weight"
-                      v-for="f in featuresWithoutHighlighted">
+                      :key="index"
+                      v-for="(f, index) in featuresWithoutHighlighted">
                     </l-circle-marker>
 
                     <l-circle-marker

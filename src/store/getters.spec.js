@@ -1,5 +1,5 @@
 import { getters } from '@/store/newStore';
-import { defaultText } from '../helpers/data';
+import { defaultText } from '../../tests/helpers/data';
 
 describe('vuex getters', () => {
   test('features getter', () => {

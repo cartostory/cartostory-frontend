@@ -4,8 +4,8 @@ import { Heading } from 'tiptap-extensions';
 import { mapState } from 'vuex';
 
 import FeatureMark from '@/components/editor/FeatureMark';
-import { ADD_FEATURE_MARK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js'
-import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations.js';
+import { ADD_FEATURE_MARK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
+import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
 
 export default {
   name: 'CsEditor',
@@ -38,7 +38,7 @@ export default {
   watch: {
     highlightedLatLng() {
       this.scrollToHighlightedLatLng();
-    }
+    },
   },
   mounted() {
     this.editor = this.$createEditor();
@@ -81,9 +81,9 @@ export default {
           }),
         ],
         content: this.$store.state.story.text || this.contentPlaceholder,
-        onUpdate: function(payload) {
+        onUpdate: (payload) => {
           this.$store.commit(UPDATE_STORY_TEXT, payload);
-        }.bind(this),
+        },
       });
     },
   },
@@ -91,7 +91,7 @@ export default {
   beforeDestroy() {
     this.editor.destroy();
   },
-}
+};
 </script>
 
 <template>
@@ -167,7 +167,7 @@ export default {
         </div>
     </editor-menu-bubble>
 
-    <editor-content :class="{'editable': this.editable}" style="flex: 1; overflow: auto;" v-if="editor" class="editor" :editor="editor" />
+    <editor-content :class="{'editable': this.editable}" style="flex: 1; overflow: auto;" class="editor" :editor="editor" />
 
     </div>
 
