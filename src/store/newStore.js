@@ -5,8 +5,7 @@ import chunk from 'lodash.chunk';
 import mapDeep from 'deepdash-es/mapDeep';
 import pickDeep from 'deepdash-es/pickDeep';
 
-import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js';
-import { set, setPath } from './store.helpers';
+import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import {
   REMOVE_ERROR,
   UPDATE_EDITABLE,
@@ -19,8 +18,10 @@ import {
   UPDATE_STORY_NAME,
   UPDATE_STORY_TEXT,
   UPDATE_STORY_URL,
-  UPDATE_TRACK
-} from '@/store/mutations.js';
+  UPDATE_TRACK,
+} from '@/store/mutations';
+import { set, setPath } from './store.helpers';
+
 
 Vue.use(Vuex);
 
@@ -81,18 +82,25 @@ const actions = {
 };
 
 export const getters = {
-  features: state => {
-    let result = [];
-    let content = undefined;
+  /* eslint-disable-next-line no-shadow */
+  content: (state) => {
+    let content;
 
     if (state.story.text && state.story.text.state) { // editing
-      content = state.story.text.state.doc.content;
+      ({ content } = state.story.text.state.doc);
     } else { // readonly
       content = state.story.text && state.story.text.content;
     }
 
-    if (content) {
-      const data = JSON.parse(JSON.stringify(content)); // get rid of vuex reactivity or deepdash would fail
+    return content && JSON.parse(JSON.stringify(content));
+  },
+
+  /* eslint-disable-next-line no-shadow */
+  features: (state, getters) => {
+    let result = [];
+    const data = getters.content;
+
+    if (data) {
       const features = mapDeep(pickDeep(data, [STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR]), v => v, {
         leavesOnly: true,
       }).filter(item => item !== null);
@@ -102,6 +110,7 @@ export const getters = {
     return result;
   },
 
+  /* eslint-disable-next-line no-shadow */
   featuresWithoutHighlighted: (state, getters) => {
     if (!state.highlightedLatLng) {
       return getters.features;
