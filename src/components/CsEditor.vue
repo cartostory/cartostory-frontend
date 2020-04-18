@@ -3,6 +3,7 @@ import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap';
 import { Heading } from 'tiptap-extensions';
 import { mapState } from 'vuex';
 
+import BboxMark from '@/components/editor/BboxMark';
 import FeatureMark from '@/components/editor/FeatureMark';
 import { ADD_FEATURE_MARK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
@@ -75,6 +76,7 @@ export default {
       return new Editor({
         editable: this.editable,
         extensions: [
+          new BboxMark(),
           new FeatureMark(),
           new Heading({
             levels: [2, 3, 4], // leave <h1> for the story title

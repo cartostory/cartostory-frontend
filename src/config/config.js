@@ -1,4 +1,6 @@
 export const SCROLL_CONTAINER_ID = 'story-scrolling-container';
+export const STORY_LINK_BBOX_ATTR = 'data-cs-bbox';
+export const STORY_LINK_BBOX_ATTR_CAMEL = toCamelCase(STORY_LINK_BBOX_ATTR);
 export const STORY_LINK_DATA_ID = 'data-cs-id';
 export const STORY_LINK_LAT_ATTR = 'data-cs-lat';
 export const STORY_LINK_LNG_ATTR = 'data-cs-lng';

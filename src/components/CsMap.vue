@@ -24,6 +24,7 @@ export default {
       STORY_LINK_CLICK_EVENT,
       TRACK_FILE_UPLOAD_EVENT,
       addFeatureMark: undefined,
+      bboxOptions,
       markerOptions,
       mapOptions,
       trackOptions,
@@ -36,6 +37,7 @@ export default {
       track: state => state.story.track,
     }),
     ...mapGetters([
+      'bboxes',
       'features',
       'featuresWithoutHighlighted',
     ]),
@@ -107,6 +109,8 @@ export default {
                 <l-tile-layer :url="mapOptions.labelsOverlay" layer-type="overlay" />
 
                   <l-geo-json @ready="handleTrackReady($event)" v-if="track" :geojson="track" :options="trackOptions.style.plain" ref="cstrack" />
+
+                  <l-rectangle v-for="bbox in bboxes" :key="bbox.id" :bounds="bbox.bounds" :l-style="bboxOptions.selected.style" />
 
                     <l-circle-marker
                       @click="handleFeatureClick"

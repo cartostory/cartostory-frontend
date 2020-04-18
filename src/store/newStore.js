@@ -5,12 +5,13 @@ import chunk from 'lodash.chunk';
 import mapDeep from 'deepdash-es/mapDeep';
 import pickDeep from 'deepdash-es/pickDeep';
 
-import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
+import { STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import {
   REMOVE_ERROR,
   UPDATE_EDITABLE,
   UPDATE_ERRORS,
   UPDATE_FEATURE_MARK_CALLBACK,
+  UPDATE_HIGHLIGHTED_BBOX,
   UPDATE_HIGHLIGHTED_LAT_LNG,
   UPDATE_LOADING,
   UPDATE_MAP_CENTER,
@@ -21,7 +22,6 @@ import {
   UPDATE_TRACK,
 } from '@/store/mutations';
 import { set, setPath } from './store.helpers';
-
 
 Vue.use(Vuex);
 
@@ -37,10 +37,12 @@ const state = {
   },
   addFeatureMarkCallback: undefined,
   availableStories: [],
+  highlightedBbox: undefined,
   highlightedLatLng: undefined,
 };
 
 export const mutations = {
+  /* eslint-disable-next-line no-shadow */
   [REMOVE_ERROR](state, error) {
     const idx = state.errors.findIndex(e => e.title === error.title && e.message === error.message);
     if (idx > -1) {
@@ -48,10 +50,24 @@ export const mutations = {
     }
   },
   [UPDATE_EDITABLE]: set('editable'),
+  /* eslint-disable-next-line no-shadow */
   [UPDATE_ERRORS](state, newErorr) {
     state.errors = [...state.errors, newErorr];
   },
   [UPDATE_FEATURE_MARK_CALLBACK]: set('addFeatureMarkCallback'),
+  [UPDATE_HIGHLIGHTED_BBOX](state, bbox) {
+    state.highlightedBbox = [
+      {
+        lat: bbox[0][0],
+        lng: bbox[0][1],
+      },
+      {
+        lat: bbox[1][0],
+        lng: bbox[1][1],
+      },
+    ];
+  },
+  /* eslint-disable-next-line no-shadow */
   [UPDATE_HIGHLIGHTED_LAT_LNG](state, latLng) {
     state.highlightedLatLng = {
       lat: Number.parseFloat(latLng[STORY_LINK_LAT_ATTR]),
@@ -74,6 +90,7 @@ const actions = {
   updateStoryText({ commit }, payload) {
     commit(UPDATE_STORY_TEXT, payload);
   },
+  /* eslint-disable-next-line no-shadow */
   async loadStory({ commit, state }) {
     commit(UPDATE_LOADING, true);
     const result = await axios.get(state.storyUrl);
@@ -93,6 +110,28 @@ export const getters = {
     }
 
     return content && JSON.parse(JSON.stringify(content));
+  },
+
+  /* eslint-disable-next-line no-shadow */
+  bboxes: (state, getters) => {
+    let result = [];
+    const data = getters.content;
+
+    if (data) {
+      const bboxes = pickDeep(data, STORY_LINK_BBOX_ATTR);
+      result = mapDeep(bboxes, v => v, { leavesOnly: true })
+        .filter(item => item !== null)
+        .map(item => JSON.parse(item))
+        .map((item, id) => ({
+          id,
+          bounds: [
+            [item[0][0], item[0][1]],
+            [item[1][0], item[1][1]],
+          ],
+        }));
+    }
+
+    return result;
   },
 
   /* eslint-disable-next-line no-shadow */

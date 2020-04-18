@@ -11,6 +11,20 @@ describe('vuex getters', () => {
     expect(result).toEqual(JSON.parse(JSON.stringify(defaultText.text.content)));
   });
 
+  test('bboxes getter', () => {
+    const content = JSON.parse(JSON.stringify(defaultText.text.content));
+    const state = {
+      story: defaultText,
+    };
+    const bboxes = getters.bboxes(state, { content });
+    expect(bboxes).toEqual([
+      {
+        id: 0,
+        bounds: [[1, 2], [3, 4]],
+      },
+    ]);
+  });
+
   test('features getter', () => {
     const content = JSON.parse(JSON.stringify(defaultText.text.content));
     const state = {
