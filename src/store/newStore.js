@@ -72,10 +72,14 @@ export const mutations = {
   },
   /* eslint-disable-next-line no-shadow */
   [UPDATE_HIGHLIGHTED_LAT_LNG](state, latLng) {
-    state.highlightedLatLng = {
-      lat: Number.parseFloat(latLng[STORY_LINK_LAT_ATTR]),
-      lng: Number.parseFloat(latLng[STORY_LINK_LNG_ATTR]),
-    };
+    if (!latLng) {
+      state.highlightedLatLng = undefined;
+    } else {
+      state.highlightedLatLng = {
+        lat: Number.parseFloat(latLng[STORY_LINK_LAT_ATTR]),
+        lng: Number.parseFloat(latLng[STORY_LINK_LNG_ATTR]),
+      };
+    }
   },
   [UPDATE_LOADING]: set('loading'),
   [UPDATE_MAP_CENTER]: setPath(['map', 'center']),
@@ -154,6 +158,7 @@ export const getters = {
 
   /* eslint-disable-next-line no-shadow */
   featuresWithoutHighlighted: (state, getters) => {
+    console.log(state.highlightedLatLng);
     if (!state.highlightedLatLng) {
       return getters.features;
     }

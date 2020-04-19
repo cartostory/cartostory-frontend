@@ -145,13 +145,13 @@ export default {
             <cs-track-upload-button v-if="editable" @[TRACK_FILE_UPLOAD_EVENT]="handleFileUpload($event)" />
           </l-control>
 
-            <l-tile-layer :url="mapOptions.baseLayer" />
-              <l-tile-layer :url="mapOptions.hikingOverlay" layer-type="overlay" :opacity="0.7" />
-                <l-tile-layer :url="mapOptions.labelsOverlay" layer-type="overlay" />
+          <l-tile-layer :url="mapOptions.baseLayer" />
+          <l-tile-layer :url="mapOptions.hikingOverlay" layer-type="overlay" :opacity="0.7" />
+          <l-tile-layer :url="mapOptions.labelsOverlay" layer-type="overlay" />
 
-                  <l-geo-json @ready="handleTrackReady($event)" v-if="track" :geojson="track" :options="trackOptions.style.plain" ref="cstrack" />
+          <l-geo-json @ready="handleTrackReady($event)" v-if="track" :geojson="track" :options="trackOptions.style.plain" ref="cstrack" />
 
-                  <l-rectangle v-for="bbox in bboxes" :key="bbox.id" :bounds="bbox.bounds" :l-style="bboxOptions.selected.style" />
+          <l-rectangle v-for="bbox in bboxes" :key="bbox.id" :bounds="bbox.bounds" :l-style="bboxOptions.selected.style" />
 
                     <l-circle-marker
                       @click="handleFeatureClick"

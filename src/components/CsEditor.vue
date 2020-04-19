@@ -6,7 +6,7 @@ import { mapState } from 'vuex';
 import BboxMark from '@/components/editor/BboxMark';
 import FeatureMark from '@/components/editor/FeatureMark';
 import { ADD_BOUNDING_BOX_EVENT, ADD_FEATURE_MARK_EVENT, STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
-import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
+import { UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
 
 export default {
   name: 'CsEditor',
@@ -49,6 +49,9 @@ export default {
      * Scrolls to the highlighted feature mark.
      */
     scrollToHighlightedLatLng() {
+      if (!this.highlightedLatLng) {
+        return;
+      }
       const { lat, lng } = this.highlightedLatLng;
       const textMark = document.querySelector(`[${STORY_LINK_LAT_ATTR}='${lat}'], [${STORY_LINK_LNG_ATTR}='${lng}']`);
 
@@ -74,6 +77,11 @@ export default {
 
     handleAddFeatureMarkClick(fn) {
       this.$emit(ADD_FEATURE_MARK_EVENT, fn);
+    },
+
+    handleRemoveFeatureMarkClick(fn) {
+      this.$store.commit(UPDATE_HIGHLIGHTED_LAT_LNG, undefined);
+      fn();
     },
 
     handleAddBoundingBoxClick(fn) {
@@ -174,7 +182,7 @@ export default {
             v-if="isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
             class="menububble__button"
             :class="{ 'is-active': isActive.featureMark() }"
-            @click="commands.featureMark()"
+            @click="handleRemoveFeatureMarkClick(commands.featureMark)"
             icon-left="map-marker-minus"></b-button>
 
           <b-button
