@@ -1,5 +1,8 @@
 <script>
 import { EditorMenuBar } from 'tiptap';
+import { mapState } from 'vuex';
+
+import StoryJson from '@/components/StoryJson.vue';
 
 export default {
   name: 'MenuBar',
@@ -7,14 +10,32 @@ export default {
     EditorMenuBar,
   },
   props: ['editor'],
+  computed: {
+    ...mapState({
+      name: state => state.story.name,
+      text: state => state.story.text,
+      track: state => state.story.track,
+    }),
+    isDisabled() {
+      return !(this.name && this.text && this.track);
+    },
+  },
   methods: {
     handleSave() {
       const result = {
-        name: this.$store.state.story.name,
-        text: this.$store.state.story.text,
-        track: this.$store.state.story.track,
+        name: this.name,
+        text: this.text,
+        track: this.track,
       };
-      console.log('handleSave', result);
+      const string = JSON.stringify(result);
+      this.$buefy.modal.open({
+        component: StoryJson,
+        parent: this,
+        customClass: 'modal-result',
+        props: {
+          content: string,
+        },
+      });
     },
   },
 };
@@ -53,8 +74,9 @@ export default {
       </b-button>
 
       <b-button
+        :disabled="isDisabled"
         style="margin-left: auto;"
-        title="Uložit příběh"
+        :title="isDisabled ? 'Příběh zatím nelze uložit. Nahrajte prosím trasu, příběh pojmenujte a přidejte popis.' : 'Uložit příběh'"
         size="is-small"
         class="menubar__button"
         type="is-primary"
@@ -64,6 +86,8 @@ export default {
   </editor-menu-bar>
 </template>
 
-<style>
-
+<style lang="scss">
+.modal-result {
+  z-index: 10000;
+}
 </style>
