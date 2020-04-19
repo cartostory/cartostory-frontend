@@ -3,9 +3,10 @@ import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap';
 import { Heading } from 'tiptap-extensions';
 import { mapState } from 'vuex';
 
+import BboxMark from '@/components/editor/BboxMark';
 import FeatureMark from '@/components/editor/FeatureMark';
-import { ADD_FEATURE_MARK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config.js'
-import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations.js';
+import { ADD_BOUNDING_BOX_EVENT, ADD_FEATURE_MARK_EVENT, STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
+import { UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
 
 export default {
   name: 'CsEditor',
@@ -38,7 +39,7 @@ export default {
   watch: {
     highlightedLatLng() {
       this.scrollToHighlightedLatLng();
-    }
+    },
   },
   mounted() {
     this.editor = this.$createEditor();
@@ -48,6 +49,9 @@ export default {
      * Scrolls to the highlighted feature mark.
      */
     scrollToHighlightedLatLng() {
+      if (!this.highlightedLatLng) {
+        return;
+      }
       const { lat, lng } = this.highlightedLatLng;
       const textMark = document.querySelector(`[${STORY_LINK_LAT_ATTR}='${lat}'], [${STORY_LINK_LNG_ATTR}='${lng}']`);
 
@@ -67,23 +71,37 @@ export default {
       return attrs && attrs[STORY_LINK_LAT_ATTR];
     },
 
+    isNewBboxMarkVisible(attrs) {
+      return attrs && attrs[STORY_LINK_BBOX_ATTR];
+    },
+
     handleAddFeatureMarkClick(fn) {
       this.$emit(ADD_FEATURE_MARK_EVENT, fn);
+    },
+
+    handleRemoveFeatureMarkClick(fn) {
+      this.$store.commit(UPDATE_HIGHLIGHTED_LAT_LNG, undefined);
+      fn();
+    },
+
+    handleAddBoundingBoxClick(fn) {
+      this.$emit(ADD_BOUNDING_BOX_EVENT, fn);
     },
 
     $createEditor() {
       return new Editor({
         editable: this.editable,
         extensions: [
+          new BboxMark(),
           new FeatureMark(),
           new Heading({
             levels: [2, 3, 4], // leave <h1> for the story title
           }),
         ],
         content: this.$store.state.story.text || this.contentPlaceholder,
-        onUpdate: function(payload) {
+        onUpdate: (payload) => {
           this.$store.commit(UPDATE_STORY_TEXT, payload);
-        }.bind(this),
+        },
       });
     },
   },
@@ -91,7 +109,7 @@ export default {
   beforeDestroy() {
     this.editor.destroy();
   },
-}
+};
 </script>
 
 <template>
@@ -152,22 +170,39 @@ export default {
           class="menububble"
           :class="{ 'is-active': menu.isActive }"
           :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`">
+
           <b-button
             v-if="!isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
-            class="menububble__button"
+            class="menububble__button menububble__button__mark"
             :class="{ 'is-active': isActive.featureMark() }"
             @click="handleAddFeatureMarkClick(commands.featureMark)"
             icon-left="map-marker-plus"></b-button>
+
           <b-button
             v-if="isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
             class="menububble__button"
             :class="{ 'is-active': isActive.featureMark() }"
-            @click="commands.featureMark()"
+            @click="handleRemoveFeatureMarkClick(commands.featureMark)"
             icon-left="map-marker-minus"></b-button>
+
+          <b-button
+            v-if="!isNewBboxMarkVisible(getMarkAttrs('bboxMark'))"
+            class="menububble__button menububble__button__bbox"
+            :class="{ 'is-active': isActive.bboxMark() }"
+            @click="handleAddBoundingBoxClick(commands.bboxMark)"
+            icon-left="fullscreen"></b-button>
+
+          <b-button
+            v-if="isNewBboxMarkVisible(getMarkAttrs('bboxMark'))"
+            class="menububble__button menububble__button__bbox"
+            :class="{ 'is-active': isActive.bboxMark() }"
+            @click="commands.bboxMark()"
+            icon-left="fullscreen-exit">
+          </b-button>
         </div>
     </editor-menu-bubble>
 
-    <editor-content :class="{'editable': this.editable}" style="flex: 1; overflow: auto;" v-if="editor" class="editor" :editor="editor" />
+    <editor-content :class="{'editable': this.editable}" style="flex: 1; overflow: auto;" class="editor" :editor="editor" />
 
     </div>
 
@@ -254,11 +289,19 @@ export default {
       background-color: rgba(255, 255, 255, 0.2) !important;
     }
 
-    &:focus::after {
-      content: 'Klikněte do mapy';
+    &__mark:focus::after,
+    &__bbox:focus::after {
       font-size: 8px;
       line-height: 14px;
       padding-left: 7px;
+    }
+
+    &__mark:focus::after {
+      content: 'Klikněte do mapy';
+    }
+
+    &__bbox:focus::after {
+      content: 'Táhnutím v mapě označte oblast';
     }
 
     &:last-child {

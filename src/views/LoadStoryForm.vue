@@ -5,7 +5,7 @@ import { mapState } from 'vuex';
 import { UPDATE_ERRORS, UPDATE_LOADING, UPDATE_STORY_URL } from '@/store/mutations';
 
 export default {
-  name: 'CsLoadStoryForm',
+  name: 'LoadStoryForm',
   data() {
     return {
       currentStory: undefined,

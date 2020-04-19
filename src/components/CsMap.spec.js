@@ -12,6 +12,7 @@ describe('CsMap', () => {
       mocks: {
         $store: {
           getters: {
+            bboxes: [],
             featuresWithoutHighlighted: [],
           },
           state: {
@@ -34,6 +35,7 @@ describe('CsMap', () => {
       mocks: {
         $store: {
           getters: {
+            bboxes: [],
             featuresWithoutHighlighted: [],
           },
           state: {
