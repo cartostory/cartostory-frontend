@@ -1,19 +1,18 @@
-import ElementUI from 'element-ui';
-import { createLocalVue, mount } from '@vue/test-utils';
+import { createLocalVue, shallowMount } from '@vue/test-utils';
 
 import CsMap from '@/components/CsMap.vue';
 import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import { UPDATE_FEATURE_MARK_CALLBACK, UPDATE_TRACK } from '@/store/mutations';
 
 const localVue = createLocalVue();
-localVue.use(ElementUI);
 
 describe('CsMap', () => {
   test('sets track to store', () => {
-    const wrapper = mount(CsMap, {
+    const wrapper = shallowMount(CsMap, {
       mocks: {
         $store: {
           getters: {
+            bboxes: [],
             featuresWithoutHighlighted: [],
           },
           state: {
@@ -32,10 +31,11 @@ describe('CsMap', () => {
   });
 
   test('adds feature on map click', () => {
-    const wrapper = mount(CsMap, {
+    const wrapper = shallowMount(CsMap, {
       mocks: {
         $store: {
           getters: {
+            bboxes: [],
             featuresWithoutHighlighted: [],
           },
           state: {

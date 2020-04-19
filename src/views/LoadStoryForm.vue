@@ -5,7 +5,7 @@ import { mapState } from 'vuex';
 import { UPDATE_ERRORS, UPDATE_LOADING, UPDATE_STORY_URL } from '@/store/mutations';
 
 export default {
-  name: 'CsLoadStoryForm',
+  name: 'LoadStoryForm',
   data() {
     return {
       currentStory: undefined,
@@ -45,8 +45,8 @@ export default {
       }
     },
 
-    handleStorySelect() {
-      const story = this.availableStories.find(s => s.storyName === this.currentStory);
+    handleStorySelect(storyName) {
+      const story = this.availableStories.find(s => s.name === storyName);
 
       if (story) {
         this.storyUrl = story.storyUrl;
@@ -57,44 +57,34 @@ export default {
 </script>
 
 <template>
-  <el-main>
-    <el-row>
-      <el-col :span="10" :offset="7">
-        <h1>Cartostory</h1>
-        <el-form label-width="120px">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-6 is-offset-3">
+        <h1 class="title is-1 has-text-weight-normal has-text-centered has-mt-2">Cartostory</h1>
 
-          <el-form-item v-if="availableStories.length > 0" label="Načíst příběh">
-            <el-select placeholder="Příběh" v-model="currentStory" @change="handleStorySelect">
-              <el-option
+        <div class="card has-padding-1">
+          <div class="card-content">
+          <b-field v-if="availableStories.length > 0" label="Nahrát příběh">
+            <b-select placeholder="Příběh" expanded @input="handleStorySelect">
+              <option
                 v-for="story in availableStories"
-                :key="story.storyName"
-                :label="story.storyName"
-                :value="story.storyName"
-                ></el-option>
-            </el-select>
-          </el-form-item>
+                :key="story.name"
+                :value="story.name">{{story.name}}
+              </option>
+            </b-select>
+          </b-field>
 
-          <el-form-item label="URL příběhu">
-            <el-input v-model="storyUrl" type="text"></el-input>
-          </el-form-item>
+          <b-field label="URL příběhu">
+            <b-input v-model="storyUrl" type="text" expanded></b-input>
+          </b-field>
 
-          <el-form-item>
-            <el-button :disabled="disabledSubmit" type="primary" @click="handleSubmit">Načíst</el-button>
-          </el-form-item>
-
-        </el-form>
-      </el-col>
-    </el-row>
-  </el-main>
+          <b-button :disabled="disabledSubmit" type="is-primary" @click="handleSubmit">Načíst</b-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
-<style scoped>
-h1 {
-  text-align: center;
-}
-
-.el-form {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
-  padding: 2rem;
-}
+<style lang="scss" scoped>
 </style>

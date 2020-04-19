@@ -1,18 +1,19 @@
-import ElementUI, { Button, FormItem } from 'element-ui';
+import Buefy from 'buefy';
+import flushPromises from 'flush-promises';
 import Vuex from 'vuex';
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
 
+import CsLoadStoryForm from '@/views/LoadStoryForm.vue';
 import { UPDATE_STORY_URL } from '@/store/mutations';
-import CsLoadStoryForm from '@/components/CsLoadStoryForm.vue';
-import { defaultUrl } from '../helpers/data';
+import { defaultUrl } from '../../tests/helpers/data';
 
 const localVue = createLocalVue();
-localVue.use(ElementUI);
+localVue.use(Buefy);
 localVue.use(Vuex);
 
-describe('CsLoadStoryForm.vue', () => {
+describe('LoadStoryForm.vue', () => {
   test('renders a form without story select when no stories are available', () => {
-    const wrapper = mount(CsLoadStoryForm, {
+    const wrapper = shallowMount(CsLoadStoryForm, {
       computed: {
         availableStories: () => [],
         storyUrl: () => defaultUrl,
@@ -20,11 +21,11 @@ describe('CsLoadStoryForm.vue', () => {
       localVue,
     });
 
-    expect(wrapper.findAll(FormItem).length).toEqual(2);
+    expect(wrapper.findAll('b-input-stub').length).toEqual(1);
   });
 
   test('renders a form with story select where at least one story is available', () => {
-    const wrapper = mount(CsLoadStoryForm, {
+    const wrapper = shallowMount(CsLoadStoryForm, {
       computed: {
         availableStories: () => [defaultUrl],
         storyUrl: () => defaultUrl,
@@ -32,31 +33,39 @@ describe('CsLoadStoryForm.vue', () => {
       localVue,
     });
 
-    expect(wrapper.findAll('.el-form-item').length).toEqual(3); // wrapper.findAll(FormItem) returns _FormItem is not defined
+    expect(wrapper.findAll('b-select-stub').length).toEqual(1);
   });
 
-  test('sets dropdown value when a story is selected', async () => {
+  test('sets dropdown value when a story is selected', () => {
+    const methods = {
+      handleStorySelect: jest.fn(),
+    };
     const wrapper = mount(CsLoadStoryForm, {
+      methods,
+      mocks: {
+        $store: {
+          commit: jest.fn(),
+          state: {
+          },
+        },
+      },
       computed: {
-        availableStories: () => [defaultUrl],
-        storyUrl: () => defaultUrl,
+        availableStories: () => [{ name: 'test2', url: defaultUrl }],
       },
       localVue,
     });
 
-    const option = wrapper.get('.el-select-dropdown__item');
-    option.vm.$el.dispatchEvent(new Event('click'));
-    await wrapper.vm.$nextTick();
-    expect(wrapper.vm.storyUrl).toEqual(defaultUrl);
+    const options = wrapper.find('select').findAll('option');
+    options.at(1).setSelected();
+    expect(methods.handleStorySelect).toHaveBeenCalledTimes(1);
+    expect(methods.handleStorySelect).toHaveBeenCalledWith('test2');
   });
 
-  test('sets story url to store', () => {
+  test('sets story url to store', async () => {
     const mockStore = {
       state: {
         availableStories: [],
-        story: {
-          url: undefined,
-        },
+        storyUrl: undefined,
       },
       commit: jest.fn(),
       dispatch: jest.fn(),
@@ -69,7 +78,10 @@ describe('CsLoadStoryForm.vue', () => {
       localVue,
     });
 
-    wrapper.findAll('input').at(0).setValue(defaultUrl);
+    const input = wrapper.get('input');
+    input.setValue(defaultUrl);
+    await flushPromises();
+    expect(mockStore.commit).toHaveBeenCalledTimes(1);
     expect(mockStore.commit).toHaveBeenCalledWith(UPDATE_STORY_URL, defaultUrl);
   });
 
@@ -80,20 +92,16 @@ describe('CsLoadStoryForm.vue', () => {
         storyUrl: () => defaultUrl,
       },
       stubs: [
-        'el-button',
-        'el-col',
-        'el-form',
-        'el-form-item',
-        'el-input',
-        'el-main',
-        'el-row',
+        'b-button',
+        'b-field',
+        'b-input',
       ],
     });
 
     expect(wrapper.vm.disabledSubmit).toBe(false);
   });
 
-  test('loads story on submit', async() => {
+  test('loads story on submit', async () => {
     const wrapper = mount(CsLoadStoryForm, {
       computed: {
         storyUrl: () => defaultUrl,
@@ -116,7 +124,7 @@ describe('CsLoadStoryForm.vue', () => {
     });
 
     await wrapper.vm.$nextTick();
-    wrapper.get(Button).vm.$el.click();
+    wrapper.get('button').vm.$el.click();
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.$store.dispatch).toHaveBeenCalledTimes(1);
     expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith('loadStory');

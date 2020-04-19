@@ -1,0 +1,27 @@
+@import "./variables.scss";
+@import "./helpers.scss";
+@import "../../../node_modules/bulma/bulma.sass";
+@import "../../../node_modules/buefy/src/scss/buefy.scss";
+
+html,
+body,
+#js-app {
+    height: 100%;
+    overflow-y: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+a[data-cs-lng] {
+    color: $primary;
+    text-decoration: underline;
+
+    &.is-highlighted {
+        background: $primary;
+        color: $text;
+    }
+}
+
+.snackbar {
+    line-height: 1.5;
+}
