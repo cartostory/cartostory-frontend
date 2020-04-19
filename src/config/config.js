@@ -7,6 +7,7 @@ export const STORY_LINK_LNG_ATTR = 'data-cs-lng';
 export const STORY_LINK_LAT_ATTR_CAMEL = toCamelCase(STORY_LINK_LAT_ATTR);
 export const STORY_LINK_LNG_ATTR_CAMEL = toCamelCase(STORY_LINK_LNG_ATTR);
 export const STORY_LINK_CLICK_EVENT = 'mark-click';
+export const ADD_BOUNDING_BOX_EVENT = 'add-bounding-box';
 export const ADD_FEATURE_MARK_EVENT = 'add-feature-mark';
 export const TRACK_FILE_UPLOAD_EVENT = 'track-file-upload';
 

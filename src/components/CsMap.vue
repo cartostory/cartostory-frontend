@@ -3,10 +3,11 @@ import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 
 import { mapGetters, mapState } from 'vuex';
 import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map';
-import { UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_FEATURE_MARK_CALLBACK, UPDATE_TRACK } from '@/store/mutations';
+import { UPDATE_BOUNDING_BOX_CALLBACK, UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_FEATURE_MARK_CALLBACK, UPDATE_TRACK } from '@/store/mutations';
 import CsTrackUploadButton from '@/components/CsTrackUploadButton.vue';
 
 require('../../node_modules/leaflet/dist/leaflet.css');
+require('leaflet-draw');
 
 export default {
   name: 'CsMap',
@@ -25,13 +26,17 @@ export default {
       TRACK_FILE_UPLOAD_EVENT,
       addFeatureMark: undefined,
       bboxOptions,
+      drawControl: undefined,
       markerOptions,
       mapOptions,
       trackOptions,
+      bboxBounds: [undefined, undefined],
     };
   },
   computed: {
     ...mapState({
+      addBoundingBoxCallback: state => state.addBoundingBoxCallback,
+      addFeatureMarkCallback: state => state.addFeatureMarkCallback,
       editable: state => state.editable,
       highlightedLatLng: state => state.highlightedLatLng,
       track: state => state.story.track,
@@ -72,17 +77,35 @@ export default {
      * @param {object}
      */
     handleMapClick(latLng) {
-      const addFeatureMark = this.$store.state.addFeatureMarkCallback;
-      if (!addFeatureMark || typeof addFeatureMark !== 'function') {
+      if (!this.addFeatureMarkCallback || typeof this.addFeatureMarkCallback !== 'function') {
         return;
       }
 
-      addFeatureMark({
+      this.addFeatureMarkCallback({
         [STORY_LINK_LAT_ATTR]: latLng.lat,
         [STORY_LINK_LNG_ATTR]: latLng.lng,
       });
-      // this.features = [...this.features, latLng];
       this.$store.commit(UPDATE_FEATURE_MARK_CALLBACK, undefined);
+    },
+
+    /*
+     * Links the bounding box to the selected text.
+     */
+    handleMapMouseDown() {
+      if (!this.addBoundingBoxCallback) {
+        return;
+      }
+
+      const map = this.$refs.csmap.mapObject;
+      window.L.drawLocal.draw.handlers.rectangle.tooltip.start = '';
+      window.L.drawLocal.draw.handlers.simpleshape.tooltip.end = '';
+      new window.L.Draw.Rectangle(map, {
+        showArea: false,
+        shapeOptions: this.bboxOptions.plain.style,
+      }).enable();
+
+      map.off(window.L.Draw.Event.CREATED);
+      map.on(window.L.Draw.Event.CREATED, this.$handleCreateRectangle);
     },
 
     /*
@@ -90,6 +113,19 @@ export default {
      */
     handleFileUpload(data) {
       this.$store.commit(UPDATE_TRACK, data);
+    },
+
+    $handleCreateRectangle(event) {
+      const bounds = event.layer.getBounds();
+      const northWest = bounds.getNorthWest();
+      const southEast = bounds.getSouthEast();
+      const bbox = [
+        [northWest.lat, northWest.lng],
+        [southEast.lat, southEast.lng],
+      ];
+
+      this.addBoundingBoxCallback(bbox);
+      this.$store.commit(UPDATE_BOUNDING_BOX_CALLBACK, undefined);
     },
   },
 };
@@ -99,7 +135,12 @@ export default {
   <div class="column is-6 has-padding-0">
     <div class="cs-map">
       <div id="cs-map-container">
-        <l-map @click="handleMapClick($event.latlng)" :center="highlightedLatLng || mapOptions.center" :zoom="mapOptions.zoom" ref="csmap">
+        <l-map
+          @click="handleMapClick($event.latlng)"
+          @mousedown="handleMapMouseDown($event.latlng)"
+          :center="highlightedLatLng || mapOptions.center"
+          :zoom="mapOptions.zoom"
+          ref="csmap">
           <l-control class="leaflet-bar leaflet-control" position="topleft" >
             <cs-track-upload-button v-if="editable" @[TRACK_FILE_UPLOAD_EVENT]="handleFileUpload($event)" />
           </l-control>

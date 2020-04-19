@@ -35,8 +35,9 @@ export default class BboxMark extends Mark {
 
   commands({ type }) {
     return (attrs) => {
+      const bounds = attrs && [[attrs[0][0], attrs[0][1]], [attrs[1][0], attrs[1][1]]];
       return toggleMark(type, {
-        [STORY_LINK_BBOX_ATTR]: attrs && attrs[STORY_LINK_BBOX_ATTR],
+        [STORY_LINK_BBOX_ATTR]: JSON.stringify(bounds),
       });
     };
   }

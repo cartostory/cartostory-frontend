@@ -5,7 +5,7 @@ import { mapState } from 'vuex';
 
 import BboxMark from '@/components/editor/BboxMark';
 import FeatureMark from '@/components/editor/FeatureMark';
-import { ADD_FEATURE_MARK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
+import { ADD_BOUNDING_BOX_EVENT, ADD_FEATURE_MARK_EVENT, STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
 
 export default {
@@ -68,8 +68,16 @@ export default {
       return attrs && attrs[STORY_LINK_LAT_ATTR];
     },
 
+    isNewBboxMarkVisible(attrs) {
+      return attrs && attrs[STORY_LINK_BBOX_ATTR];
+    },
+
     handleAddFeatureMarkClick(fn) {
       this.$emit(ADD_FEATURE_MARK_EVENT, fn);
+    },
+
+    handleAddBoundingBoxClick(fn) {
+      this.$emit(ADD_BOUNDING_BOX_EVENT, fn);
     },
 
     $createEditor() {
@@ -154,18 +162,35 @@ export default {
           class="menububble"
           :class="{ 'is-active': menu.isActive }"
           :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`">
+
           <b-button
             v-if="!isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
-            class="menububble__button"
+            class="menububble__button menububble__button__mark"
             :class="{ 'is-active': isActive.featureMark() }"
             @click="handleAddFeatureMarkClick(commands.featureMark)"
             icon-left="map-marker-plus"></b-button>
+
           <b-button
             v-if="isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
             class="menububble__button"
             :class="{ 'is-active': isActive.featureMark() }"
             @click="commands.featureMark()"
             icon-left="map-marker-minus"></b-button>
+
+          <b-button
+            v-if="!isNewBboxMarkVisible(getMarkAttrs('bboxMark'))"
+            class="menububble__button menububble__button__bbox"
+            :class="{ 'is-active': isActive.bboxMark() }"
+            @click="handleAddBoundingBoxClick(commands.bboxMark)"
+            icon-left="fullscreen"></b-button>
+
+          <b-button
+            v-if="isNewBboxMarkVisible(getMarkAttrs('bboxMark'))"
+            class="menububble__button menububble__button__bbox"
+            :class="{ 'is-active': isActive.bboxMark() }"
+            @click="commands.bboxMark()"
+            icon-left="fullscreen-exit">
+          </b-button>
         </div>
     </editor-menu-bubble>
 
@@ -256,11 +281,19 @@ export default {
       background-color: rgba(255, 255, 255, 0.2) !important;
     }
 
-    &:focus::after {
-      content: 'Klikněte do mapy';
+    &__mark:focus::after,
+    &__bbox:focus::after {
       font-size: 8px;
       line-height: 14px;
       padding-left: 7px;
+    }
+
+    &__mark:focus::after {
+      content: 'Klikněte do mapy';
+    }
+
+    &__bbox:focus::after {
+      content: 'Táhnutím v mapě označte oblast';
     }
 
     &:last-child {

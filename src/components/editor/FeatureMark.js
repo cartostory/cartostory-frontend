@@ -78,6 +78,7 @@ export default class FeatureMark extends Mark {
           if (!this.$store.state.highlightedLatLng) {
             return false;
           }
+
           const { lat, lng } = this.$store.state.highlightedLatLng;
           return lat === this[STORY_LINK_LAT_ATTR_CAMEL] && lng === this[STORY_LINK_LNG_ATTR_CAMEL];
         },
