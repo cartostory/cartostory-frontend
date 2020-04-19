@@ -1,7 +1,9 @@
-import { EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap';
+import { EditorContent } from 'tiptap';
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 
 import CsEditor from '@/components/CsEditor.vue';
+import MenuBar from '@/components/editor/MenuBar.vue';
+import MenuBubble from '@/components/editor/MenuBubble.vue';
 
 const localVue = createLocalVue();
 
@@ -21,13 +23,13 @@ describe('CsEditor.vue', () => {
       localVue,
     });
 
-    const editorMenuBar = wrapper.find(EditorMenuBar);
-    const editorMenuBubble = wrapper.find(EditorMenuBubble);
+    const editorMenuBar = wrapper.find(MenuBar);
+    const editorMenuBubble = wrapper.find(MenuBubble);
     const editorContent = wrapper.find(EditorContent);
 
-    expect(editorMenuBar.is(EditorMenuBar)).toBe(true);
+    expect(editorMenuBar.is(MenuBar)).toBe(true);
     expect(editorContent.is(EditorContent)).toBe(true);
-    expect(editorMenuBubble.is(EditorMenuBubble)).toBe(true);
+    expect(editorMenuBubble.is(MenuBubble)).toBe(true);
   });
 
   test('should have only editor', () => {
@@ -45,8 +47,8 @@ describe('CsEditor.vue', () => {
       localVue,
     });
 
-    const editorMenuBar = wrapper.find(EditorMenuBar);
-    const editorMenuBubble = wrapper.find(EditorMenuBubble);
+    const editorMenuBar = wrapper.find(MenuBar);
+    const editorMenuBubble = wrapper.find(MenuBubble);
     const editorContent = wrapper.find(EditorContent);
 
     expect(editorMenuBar.exists()).toBe(false);
