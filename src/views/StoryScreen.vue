@@ -52,15 +52,6 @@ export default {
     handleAddBoundingBoxClick(fn) {
       this.$store.commit(UPDATE_BOUNDING_BOX_CALLBACK, fn);
     },
-
-    handleSave() {
-      const result = {
-        name: this.$store.state.story.name,
-        text: this.$store.state.story.text,
-        track: this.$store.state.story.track,
-      };
-      console.log('handleSave', result);
-    },
   },
 };
 </script>

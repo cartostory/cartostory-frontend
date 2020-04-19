@@ -1,19 +1,21 @@
 <script>
-import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap';
+import { Editor, EditorContent } from 'tiptap';
 import { Heading } from 'tiptap-extensions';
 import { mapState } from 'vuex';
 
 import BboxMark from '@/components/editor/BboxMark';
 import FeatureMark from '@/components/editor/FeatureMark';
-import { ADD_BOUNDING_BOX_EVENT, ADD_FEATURE_MARK_EVENT, STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
-import { UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
+import MenuBar from '@/components/editor/MenuBar.vue';
+import MenuBubble from '@/components/editor/MenuBubble.vue';
+import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
+import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
 
 export default {
   name: 'CsEditor',
   components: {
     EditorContent,
-    EditorMenuBar,
-    EditorMenuBubble,
+    MenuBubble,
+    MenuBar,
   },
   data() {
     return {
@@ -52,6 +54,7 @@ export default {
       if (!this.highlightedLatLng) {
         return;
       }
+
       const { lat, lng } = this.highlightedLatLng;
       const textMark = document.querySelector(`[${STORY_LINK_LAT_ATTR}='${lat}'], [${STORY_LINK_LNG_ATTR}='${lng}']`);
 
@@ -59,33 +62,6 @@ export default {
         container: document.querySelector('.editor'),
         offset: -50,
       });
-    },
-
-    /*
-     * Checks if selected text already has the feature mark on the map.
-     * It renders remove button if true or add button otherwise.
-     * @param {object} selected text attributes
-     * @returns {boolean}
-     */
-    isNewFeatureMarkButtonVisible(attrs) {
-      return attrs && attrs[STORY_LINK_LAT_ATTR];
-    },
-
-    isNewBboxMarkVisible(attrs) {
-      return attrs && attrs[STORY_LINK_BBOX_ATTR];
-    },
-
-    handleAddFeatureMarkClick(fn) {
-      this.$emit(ADD_FEATURE_MARK_EVENT, fn);
-    },
-
-    handleRemoveFeatureMarkClick(fn) {
-      this.$store.commit(UPDATE_HIGHLIGHTED_LAT_LNG, undefined);
-      fn();
-    },
-
-    handleAddBoundingBoxClick(fn) {
-      this.$emit(ADD_BOUNDING_BOX_EVENT, fn);
     },
 
     $createEditor() {
@@ -122,87 +98,10 @@ export default {
       </form>
       <h1 class="story-title-input has-mt-1" v-if="!editable">{{ storyName }}</h1>
 
-      <editor-menu-bar
-        class="has-mt-1"
-        v-if="editable"
-        style="background: white;"
-        :editor="editor"
-        v-slot="{ commands, isActive }">
-        <div class="editor-menu-bar buttons">
-          <b-button
-            title="Nadpis 1. úrovně"
-            size="is-small"
-            class="menubar__button"
-            :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-            @click="commands.heading({ level: 2 })">
-            H1
-          </b-button>
-          <b-button
-            title="Nadpis 2. úrovně"
-            size="is-small"
-            class="menubar__button"
-            :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-            @click="commands.heading({ level: 3 })">
-            H2
-          </b-button>
-          <b-button
-            title="Nadpis 3. úrovně"
-            size="is-small"
-            class="menubar__button"
-            :class="{ 'is-active': isActive.heading({ level: 4 }) }"
-            @click="commands.heading({ level: 4 })">
-            H3
-          </b-button>
+      <menu-bar :editor="editor" v-if="editable" />
+      <menu-bubble :editor="editor" v-if="editable" />
 
-          <b-button
-            style="margin-left: auto;"
-            title="Uložit příběh"
-            size="is-small"
-            class="menubar__button"
-            type="is-primary"
-            @click="">Uložit
-          </b-button>
-        </div>
-      </editor-menu-bar>
-
-      <editor-menu-bubble v-if="editable" :editor="editor" :keep-in-bounds="keepInBounds" v-slot="{ commands, getMarkAttrs, isActive, menu }">
-        <div
-          class="menububble"
-          :class="{ 'is-active': menu.isActive }"
-          :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`">
-
-          <b-button
-            v-if="!isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
-            class="menububble__button menububble__button__mark"
-            :class="{ 'is-active': isActive.featureMark() }"
-            @click="handleAddFeatureMarkClick(commands.featureMark)"
-            icon-left="map-marker-plus"></b-button>
-
-          <b-button
-            v-if="isNewFeatureMarkButtonVisible(getMarkAttrs('featureMark'))"
-            class="menububble__button"
-            :class="{ 'is-active': isActive.featureMark() }"
-            @click="handleRemoveFeatureMarkClick(commands.featureMark)"
-            icon-left="map-marker-minus"></b-button>
-
-          <b-button
-            v-if="!isNewBboxMarkVisible(getMarkAttrs('bboxMark'))"
-            class="menububble__button menububble__button__bbox"
-            :class="{ 'is-active': isActive.bboxMark() }"
-            @click="handleAddBoundingBoxClick(commands.bboxMark)"
-            icon-left="fullscreen"></b-button>
-
-          <b-button
-            v-if="isNewBboxMarkVisible(getMarkAttrs('bboxMark'))"
-            class="menububble__button menububble__button__bbox"
-            :class="{ 'is-active': isActive.bboxMark() }"
-            @click="commands.bboxMark()"
-            icon-left="fullscreen-exit">
-          </b-button>
-        </div>
-    </editor-menu-bubble>
-
-    <editor-content :class="{'editable': this.editable}" style="flex: 1; overflow: auto;" class="editor" :editor="editor" />
+      <editor-content :class="{'editable': this.editable}" style="flex: 1; overflow: auto;" class="editor" :editor="editor" />
 
     </div>
 
@@ -253,72 +152,11 @@ export default {
   margin-bottom: 1rem;
 }
 
-.ProseMirror-focused {
-  outline: none;
+.ProseMirror {
+  min-height: 100%;
 }
 
-.menububble {
-  position: absolute;
-  display: flex;
-  z-index: 20;
-  background: $primary;
-  border-radius: 5px;
-  padding: 0.3rem;
-  margin-bottom: 0.5rem;
-  transform: translateX(-50%);
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s, visibility 0.2s;
-
-  &.is-active {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  &__button {
-    display: inline-flex;
-    background-color: transparent;
-    border: 0;
-    color: white !important;
-    border-radius: 3px;
-    cursor: pointer;
-
-    &:hover,
-    &:focus,
-    &.is-active {
-      background-color: rgba(255, 255, 255, 0.2) !important;
-    }
-
-    &__mark:focus::after,
-    &__bbox:focus::after {
-      font-size: 8px;
-      line-height: 14px;
-      padding-left: 7px;
-    }
-
-    &__mark:focus::after {
-      content: 'Klikněte do mapy';
-    }
-
-    &__bbox:focus::after {
-      content: 'Táhnutím v mapě označte oblast';
-    }
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-
-  &__form {
-    display: flex;
-    align-items: center;
-  }
-
-  &__input {
-    font: inherit;
-    border: none;
-    background: transparent;
-    color: white;
-  }
+.ProseMirror-focused {
+  outline: none;
 }
 </style>

@@ -1,39 +1,44 @@
 <script>
 export default {
   name: 'Landing',
-}
+};
 </script>
 
 <template>
-  <div class="container">
-    <div class="columns">
-      <div class="column is-6 is-offset-3">
+<section class="hero is-fullheight">
+  <div class="hero-body">
+    <div class="container">
+      <div class="columns">
+        <div class="column is-6 is-offset-3">
 
-        <div class="columns">
-          <div class="column">
-            <h1 class="title is-1 has-text-weight-normal has-text-centered has-mt-2 has-mb-1">Cartostory</h1>
-          </div>
-        </div>
-
-        <div class="columns">
-
-          <div class="column is-6 section-left has-pb-0">
-            <h2 class="title is-2 has-text-weight-normal has-text-centered has-mb-2">Napsat příběh</h2>
-            <p>Chcete napsat svůj vlastní příběh? Z&nbsp;prázdnin, dovolené nebo jen zajímavého sobotního
-              výletu?</p>
-            <b-button @click="$router.push('/story/create')">Chci psát</b-button>
+          <div class="columns">
+            <div class="column">
+              <h1 class="title is-1 has-text-weight-normal has-text-centered has-mb-1">Cartostory</h1>
+            </div>
           </div>
 
-          <div class="column is-6 section-right has-pb-0">
-            <h2 class="title is-2 has-text-weight-normal has-text-centered has-mb-2">Číst příběh</h2>
-            <p>Váš kamarád nebo příbuzný napsal příběh a poslal vám jeho adresu? Můžete si ho přečíst.</p>
-            <b-button @click="$router.push('/story/load')">Chci číst</b-button>
-          </div>
+          <div class="columns">
 
+            <div class="column is-6 section-left has-pb-0">
+              <h2 class="title is-2 has-text-weight-normal has-text-centered has-mb-2">Napsat příběh</h2>
+              <p>Chcete napsat svůj vlastní příběh? Z&nbsp;prázdnin, dovolené nebo jen zajímavého sobotního
+                výletu?</p>
+              <b-button @click="$router.push('/story/create')">Chci psát</b-button>
+            </div>
+
+            <div class="column is-6 section-right has-pb-0">
+              <h2 class="title is-2 has-text-weight-normal has-text-centered has-mb-2">Číst příběh</h2>
+              <p>Váš kamarád nebo příbuzný napsal příběh a poslal vám jeho adresu? Můžete si ho přečíst.</p>
+              <b-button @click="$router.push('/story/load')">Chci číst</b-button>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>
   </div>
+</section>
+
 </template>
 
 <style lang="scss" scoped>
@@ -62,5 +67,4 @@ p {
 .section-right p {
   flex: 1 0 auto;
 }
-
 </style>

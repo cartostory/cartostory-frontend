@@ -158,7 +158,6 @@ export const getters = {
 
   /* eslint-disable-next-line no-shadow */
   featuresWithoutHighlighted: (state, getters) => {
-    console.log(state.highlightedLatLng);
     if (!state.highlightedLatLng) {
       return getters.features;
     }
