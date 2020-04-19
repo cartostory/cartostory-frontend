@@ -28,7 +28,7 @@ export const markerOptions = {
       fillOpacity: 0.5,
     },
     edge: {
-      icon: L.icon({
+      icon: {
         iconUrl: '../../node_modules/leaflet/dist/images/marker-icon.png',
         iconRetinaUrl: 'marker-icon-2x.png',
         shadowUrl: 'marker-shadow.png',
@@ -37,7 +37,7 @@ export const markerOptions = {
         popupAnchor: [1, -34],
         tooltipAnchor: [16, -28],
         shadowSize: [0, 0],
-      }),
+      },
     },
   },
 };
