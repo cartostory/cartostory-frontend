@@ -1,12 +1,6 @@
 <script>
-import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
-
-import { ADD_BOUNDING_BOX_EVENT, ADD_FEATURE_MARK_EVENT, STORY_LINK_CLICK_EVENT, TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
-import { markerOptions, mapOptions, trackOptions } from '@/config/map';
 import CsEditor from '@/components/CsEditor.vue';
 import CsMap from '@/components/CsMap.vue';
-
-require('../../node_modules/leaflet/dist/leaflet.css');
 
 export default {
   name: 'story-screen',
@@ -16,19 +10,7 @@ export default {
   },
   data() {
     return {
-      storyName: undefined,
       ready: false,
-      ADD_BOUNDING_BOX_EVENT,
-      ADD_FEATURE_MARK_EVENT,
-      STORY_LINK_CLICK_EVENT,
-      TRACK_FILE_UPLOAD_EVENT,
-      features: [],
-      track: undefined,
-      trackBounds: undefined,
-      addFeatureMark: undefined,
-      markerOptions,
-      mapOptions,
-      trackOptions,
     };
   },
   computed: {

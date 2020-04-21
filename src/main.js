@@ -10,6 +10,8 @@ import App from './App.vue';
 import router from './router';
 import store from './store/newStore';
 
+require('../node_modules/leaflet/dist/leaflet.css');
+
 Vue.config.productionTip = false;
 Vue.use(Buefy);
 Vue.use(VueLogger);
