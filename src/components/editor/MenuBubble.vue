@@ -3,11 +3,12 @@ import { EditorMenuBubble } from 'tiptap';
 import { mapState } from 'vuex';
 
 import { ADD_BOUNDING_BOX_EVENT, STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR } from '@/config/config';
-import { UPDATE_FEATURE_BEING_ADDED, UPDATE_HIGHLIGHTED_LAT_LNG } from '@/store/mutations';
+import { UPDATE_BBOX_BEING_ADDED, UPDATE_FEATURE_BEING_ADDED, UPDATE_HIGHLIGHTED_LAT_LNG } from '@/store/mutations';
 
 export default {
   data() {
     return {
+      bboxAddedCallback: undefined,
       featureMarkAddedCallback: undefined,
     };
   },
@@ -18,10 +19,18 @@ export default {
   },
   computed: {
     ...mapState({
+      bboxBeingAdded: state => state.bboxBeingAdded,
       featureBeingAdded: state => state.featureBeingAdded,
     }),
   },
   watch: {
+    bboxBeingAdded(bbox) {
+      if (bbox && bbox.active && bbox.bounds && this.bboxAddedCallback) {
+        this.bboxAddedCallback(bbox.bounds);
+        this.bboxAddedCallback = undefined;
+        this.$store.commit(UPDATE_BBOX_BEING_ADDED, { active: false, position: undefined });
+      }
+    },
     featureBeingAdded(feature) {
       if (feature && feature.active && feature.position && this.featureMarkAddedCallback) {
         this.featureMarkAddedCallback(feature.position);
@@ -56,7 +65,9 @@ export default {
     },
 
     handleAddBoundingBoxClick(fn) {
-      this.$parent.$emit(ADD_BOUNDING_BOX_EVENT, fn);
+      this.bboxAddedCallback = fn;
+      this.$store.commit(UPDATE_BBOX_BEING_ADDED, { active: true, bounds: undefined });
+      // this.$parent.$emit(ADD_BOUNDING_BOX_EVENT, fn);
     },
   },
 };

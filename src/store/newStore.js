@@ -8,6 +8,7 @@ import pickDeep from 'deepdash-es/pickDeep';
 import { STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import {
   REMOVE_ERROR,
+  UPDATE_BBOX_BEING_ADDED,
   UPDATE_BOUNDING_BOX_CALLBACK,
   UPDATE_EDITABLE,
   UPDATE_ERRORS,
@@ -29,6 +30,10 @@ Vue.use(Vuex);
 const state = {
   editable: false,
   errors: [],
+  bboxBeingAdded: {
+    active: false,
+    bounds: undefined,
+  },
   featureBeingAdded: {
     active: false,
     position: undefined,
@@ -54,13 +59,15 @@ export const mutations = {
       state.errors.splice(idx, 1);
     }
   },
-  [UPDATE_FEATURE_BEING_ADDED]: set('featureBeingAdded'),
   [UPDATE_BOUNDING_BOX_CALLBACK]: set('addBoundingBoxCallback'),
+  [UPDATE_BBOX_BEING_ADDED]: set('bboxBeingAdded'),
+  [UPDATE_FEATURE_BEING_ADDED]: set('featureBeingAdded'),
   [UPDATE_EDITABLE]: set('editable'),
   /* eslint-disable-next-line no-shadow */
   [UPDATE_ERRORS](state, newErorr) {
     state.errors = [...state.errors, newErorr];
   },
+  /* eslint-disable-next-line no-shadow */
   [UPDATE_HIGHLIGHTED_BBOX](state, bbox) {
     state.highlightedBbox = [
       {

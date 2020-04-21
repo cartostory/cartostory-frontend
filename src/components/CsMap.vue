@@ -3,7 +3,7 @@ import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 
 import { mapGetters, mapState } from 'vuex';
 import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map';
-import { UPDATE_BOUNDING_BOX_CALLBACK, UPDATE_FEATURE_BEING_ADDED, UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_TRACK } from '@/store/mutations';
+import { UPDATE_BBOX_BEING_ADDED, UPDATE_FEATURE_BEING_ADDED, UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_TRACK } from '@/store/mutations';
 import CsTrackUploadButton from '@/components/CsTrackUploadButton.vue';
 
 require('../../node_modules/leaflet/dist/leaflet.css');
@@ -36,7 +36,7 @@ export default {
   computed: {
     ...mapState({
       addBoundingBoxCallback: state => state.addBoundingBoxCallback,
-      addFeatureMarkCallback: state => state.addFeatureMarkCallback,
+      bboxBeingAdded: state => state.bboxBeingAdded,
       editable: state => state.editable,
       featureBeingAdded: state => state.featureBeingAdded,
       highlightedLatLng: state => state.highlightedLatLng,
@@ -94,7 +94,7 @@ export default {
      * Links the bounding box to the selected text.
      */
     handleMapMouseDown() {
-      if (!this.addBoundingBoxCallback) {
+      if (!this.bboxBeingAdded.active) {
         return;
       }
 
@@ -126,8 +126,7 @@ export default {
         [southEast.lat, southEast.lng],
       ];
 
-      this.addBoundingBoxCallback(bbox);
-      this.$store.commit(UPDATE_BOUNDING_BOX_CALLBACK, undefined);
+      this.$store.commit(UPDATE_BBOX_BEING_ADDED, { active: true, bounds: bbox });
     },
   },
 };
