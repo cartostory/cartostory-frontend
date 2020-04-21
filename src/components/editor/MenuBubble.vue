@@ -67,7 +67,6 @@ export default {
     handleAddBoundingBoxClick(fn) {
       this.bboxAddedCallback = fn;
       this.$store.commit(UPDATE_BBOX_BEING_ADDED, { active: true, bounds: undefined });
-      // this.$parent.$emit(ADD_BOUNDING_BOX_EVENT, fn);
     },
   },
 };
