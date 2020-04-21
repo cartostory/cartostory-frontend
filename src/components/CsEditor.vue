@@ -115,18 +115,25 @@ export default {
 .editor {
   h2, h3, h4 {
     @extend .title;
+    color: $text;
   }
 
   h2 {
     @extend .is-2;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
   }
 
   h3 {
     @extend .is-3;
+    margin-bottom: .7rem;
+    margin-top: .7rem;
   }
 
   h4 {
     @extend .is-4;
+    margin-bottom: .4rem;
+    margin-top: .4rem;
   }
 }
 
