@@ -1,10 +1,14 @@
 $body-line-height: 2.5;
 $body-size: 15px;
 $primary: #F56C6C;
-$size-1: 2.2rem;
-$size-2: 1.7rem;
+$size-1: 2.4rem;
+$size-2: 1.9rem;
+$size-3: 1.7rem;
 $text: #606266;
 
 /* snackbar */
 $snackbar-background-color: white;
 $snackbar-color: $text;
+
+/* modal */
+$modal-z: 1000;

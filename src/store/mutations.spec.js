@@ -1,7 +1,8 @@
 import { mutations } from '@/store/newStore';
 import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import {
-  UPDATE_FEATURE_MARK_CALLBACK,
+  UPDATE_BBOX_BEING_ADDED,
+  UPDATE_FEATURE_BEING_ADDED,
   UPDATE_HIGHLIGHTED_BBOX,
   UPDATE_HIGHLIGHTED_LAT_LNG,
   UPDATE_MAP_CENTER,
@@ -30,7 +31,29 @@ const describeHelper = (description, mutation, path, payload, result) => {
   });
 };
 
-describeHelper('it sets feature mark callback', UPDATE_FEATURE_MARK_CALLBACK, ['addFeatureMarkCallback'], () => {});
+describeHelper(
+  'it sets feature mark being added',
+  UPDATE_FEATURE_BEING_ADDED,
+  ['featureBeingAdded'],
+  {
+    active: true,
+    position: {
+      [STORY_LINK_LAT_ATTR]: 0,
+      [STORY_LINK_LNG_ATTR]: 10,
+    },
+  },
+);
+
+describeHelper(
+  'it sets bbox being added',
+  UPDATE_BBOX_BEING_ADDED,
+  ['bboxBeingAdded'],
+  {
+    active: true,
+    bounds: [[10, 10], [0, 0]],
+  },
+);
+
 describeHelper(
   'it sets bbox mark callback',
   UPDATE_HIGHLIGHTED_BBOX,

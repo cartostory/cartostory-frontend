@@ -2,7 +2,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils';
 
 import CsMap from '@/components/CsMap.vue';
 import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
-import { UPDATE_FEATURE_MARK_CALLBACK, UPDATE_TRACK } from '@/store/mutations';
+import { UPDATE_FEATURE_BEING_ADDED, UPDATE_TRACK } from '@/store/mutations';
 
 const localVue = createLocalVue();
 
@@ -39,7 +39,10 @@ describe('CsMap', () => {
             featuresWithoutHighlighted: [],
           },
           state: {
-            addFeatureMarkCallback: jest.fn(),
+            featureBeingAdded: {
+              active: true,
+              position: undefined,
+            },
             map: {},
             story: {},
           },
@@ -48,10 +51,17 @@ describe('CsMap', () => {
       },
       localVue,
     });
-    wrapper.vm.handleMapClick({lat: 0, lng: 10});
-    expect(wrapper.vm.$store.state.addFeatureMarkCallback).toHaveBeenCalledTimes(1);
-    expect(wrapper.vm.$store.state.addFeatureMarkCallback).toHaveBeenCalledWith({[STORY_LINK_LAT_ATTR]: 0, [STORY_LINK_LNG_ATTR]: 10});
+
+    const result = {
+      active: true,
+      position: {
+        [STORY_LINK_LAT_ATTR]: 0,
+        [STORY_LINK_LNG_ATTR]: 10,
+      },
+    };
+
+    wrapper.vm.handleMapClick({ lat: 0, lng: 10 });
     expect(wrapper.vm.$store.commit).toHaveBeenCalledTimes(1);
-    expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(UPDATE_FEATURE_MARK_CALLBACK, undefined);
+    expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(UPDATE_FEATURE_BEING_ADDED, result);
   });
 });

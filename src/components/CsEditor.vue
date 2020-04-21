@@ -110,6 +110,25 @@ export default {
 
 <style lang="scss">
 @import "../assets/scss/variables.scss";
+@import "../../node_modules/bulma/bulma.sass";
+
+.editor {
+  h2, h3, h4 {
+    @extend .title;
+  }
+
+  h2 {
+    @extend .is-2;
+  }
+
+  h3 {
+    @extend .is-3;
+  }
+
+  h4 {
+    @extend .is-4;
+  }
+}
 
 .story-text {
   display: flex;

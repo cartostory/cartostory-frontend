@@ -24,7 +24,7 @@ export default {
     handleSave() {
       const result = {
         name: this.name,
-        text: this.text,
+        text: this.text.getJSON(),
         track: this.track,
       };
       const string = JSON.stringify(result);
@@ -86,8 +86,5 @@ export default {
   </editor-menu-bar>
 </template>
 
-<style lang="scss">
-.modal-result {
-  z-index: 10000;
-}
+<style lang="scss" scoped>
 </style>
