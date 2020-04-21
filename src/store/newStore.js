@@ -8,10 +8,11 @@ import pickDeep from 'deepdash-es/pickDeep';
 import { STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import {
   REMOVE_ERROR,
+  UPDATE_BBOX_BEING_ADDED,
   UPDATE_BOUNDING_BOX_CALLBACK,
   UPDATE_EDITABLE,
   UPDATE_ERRORS,
-  UPDATE_FEATURE_MARK_CALLBACK,
+  UPDATE_FEATURE_BEING_ADDED,
   UPDATE_HIGHLIGHTED_BBOX,
   UPDATE_HIGHLIGHTED_LAT_LNG,
   UPDATE_LOADING,
@@ -29,6 +30,14 @@ Vue.use(Vuex);
 const state = {
   editable: false,
   errors: [],
+  bboxBeingAdded: {
+    active: false,
+    bounds: undefined,
+  },
+  featureBeingAdded: {
+    active: false,
+    position: undefined,
+  },
   loading: false,
   storyUrl: undefined,
   story: {
@@ -37,7 +46,6 @@ const state = {
     track: undefined,
   },
   addBoundingBoxCallback: undefined,
-  addFeatureMarkCallback: undefined,
   availableStories: [],
   highlightedBbox: undefined,
   highlightedLatLng: undefined,
@@ -52,12 +60,14 @@ export const mutations = {
     }
   },
   [UPDATE_BOUNDING_BOX_CALLBACK]: set('addBoundingBoxCallback'),
+  [UPDATE_BBOX_BEING_ADDED]: set('bboxBeingAdded'),
+  [UPDATE_FEATURE_BEING_ADDED]: set('featureBeingAdded'),
   [UPDATE_EDITABLE]: set('editable'),
   /* eslint-disable-next-line no-shadow */
   [UPDATE_ERRORS](state, newErorr) {
     state.errors = [...state.errors, newErorr];
   },
-  [UPDATE_FEATURE_MARK_CALLBACK]: set('addFeatureMarkCallback'),
+  /* eslint-disable-next-line no-shadow */
   [UPDATE_HIGHLIGHTED_BBOX](state, bbox) {
     state.highlightedBbox = [
       {
