@@ -1,0 +1,15 @@
+{
+  "imports": {
+    "@turf/points-within-polygon": "./@turf/points-within-polygon.js",
+    "@turf/turf": "./@turf/turf.js",
+    "buefy": "./buefy.js",
+    "deepdash-es": "./deepdash-es.js",
+    "tiptap": "./tiptap.js",
+    "tiptap-extensions": "./tiptap-extensions.js",
+    "vue": "./vue.js",
+    "vue-router": "./vue-router.js",
+    "vue2-leaflet": "./vue2-leaflet.js",
+    "vuex": "./vuex.js",
+    "vuex-persist": "./vuex-persist.js"
+  }
+}
