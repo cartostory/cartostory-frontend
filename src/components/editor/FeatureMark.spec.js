@@ -2,7 +2,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils';
 
 import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import FeatureMark from '@/components/editor/FeatureMark';
-import { UPDATE_HIGHLIGHTED_LAT_LNG } from '@/store/mutations';
+import { UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_SHOULD_TEXT_SCROLL } from '@/store/mutations';
 
 const localVue = createLocalVue();
 const options = {
@@ -34,8 +34,9 @@ describe('FeatureMark.js', () => {
     const wrapper = shallowMount(cmp, options);
 
     wrapper.find(`a[${STORY_LINK_LAT_ATTR}]`).trigger('click');
-    expect(wrapper.vm.$store.commit).toHaveBeenCalledTimes(1);
-    expect(wrapper.vm.$store.commit.mock.calls[0][0]).toEqual(UPDATE_HIGHLIGHTED_LAT_LNG);
+    expect(wrapper.vm.$store.commit).toHaveBeenCalledTimes(2);
+    expect(wrapper.vm.$store.commit.mock.calls[0][0]).toEqual(UPDATE_SHOULD_TEXT_SCROLL);
+    expect(wrapper.vm.$store.commit.mock.calls[1][0]).toEqual(UPDATE_HIGHLIGHTED_LAT_LNG);
   });
 
   test('is highlighted when its attributes match the stored value', () => {
