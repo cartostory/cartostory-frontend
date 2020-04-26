@@ -1,6 +1,6 @@
 <script>
 import { Editor, EditorContent } from 'tiptap';
-import { Heading } from 'tiptap-extensions';
+import { Heading, Image } from 'tiptap-extensions';
 import { mapState } from 'vuex';
 
 import BboxMark from '@/components/editor/BboxMark';
@@ -74,6 +74,7 @@ export default {
           new Heading({
             levels: [2, 3, 4], // leave <h1> for the story title
           }),
+          new Image(),
         ],
         content: this.$store.state.story.text || this.contentPlaceholder,
         onUpdate: (payload) => {
