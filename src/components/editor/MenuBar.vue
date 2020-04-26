@@ -21,6 +21,18 @@ export default {
     },
   },
   methods: {
+    /*
+     * Lets user paste image url and inserts the image into the story.
+     * @param {Function} tiptap image command
+     */
+    showImagePrompt(command) {
+      // eslint-disable-next-line no-alert
+      const src = prompt('Enter the url of your image here');
+      if (src) {
+        command({ src });
+      }
+    },
+
     handleSave() {
       const result = {
         name: this.name,
@@ -56,6 +68,7 @@ export default {
         @click="commands.heading({ level: 2 })">
         H1
       </b-button>
+
       <b-button
         title="Nadpis 2. úrovně"
         size="is-small"
@@ -64,6 +77,7 @@ export default {
         @click="commands.heading({ level: 3 })">
         H2
       </b-button>
+
       <b-button
         title="Nadpis 3. úrovně"
         size="is-small"
@@ -71,6 +85,15 @@ export default {
         :class="{ 'is-active': isActive.heading({ level: 4 }) }"
         @click="commands.heading({ level: 4 })">
         H3
+      </b-button>
+
+      <b-button
+        title="Obrázek"
+        size="is-small"
+        class="menubar__button"
+        :class="{ 'is-active': isActive.image() }"
+        @click="showImagePrompt(commands.image)">
+        <b-icon size="is-small" icon="image-filter-hdr" custom-class="image-icon"></b-icon>
       </b-button>
 
       <b-button
