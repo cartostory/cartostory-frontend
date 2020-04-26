@@ -1,6 +1,6 @@
 <script>
 export default {
-  name: 'StoryJson',
+  name: 'CsStoryJson',
   props: {
     content: {
       required: true,
@@ -35,7 +35,7 @@ export default {
 }
 
 textarea {
-  height: 80%;
+  height: 65%;
   overflow: auto;
   width: 100%;
 }

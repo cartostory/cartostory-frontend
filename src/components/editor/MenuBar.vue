@@ -2,7 +2,7 @@
 import { EditorMenuBar } from 'tiptap';
 import { mapState } from 'vuex';
 
-import StoryJson from '@/components/StoryJson.vue';
+import CsStoryJson from '@/components/CsStoryJson.vue';
 
 export default {
   name: 'MenuBar',
@@ -41,7 +41,7 @@ export default {
       };
       const string = JSON.stringify(result);
       this.$buefy.modal.open({
-        component: StoryJson,
+        component: CsStoryJson,
         parent: this,
         customClass: 'modal-result',
         props: {
