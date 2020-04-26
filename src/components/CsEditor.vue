@@ -28,6 +28,7 @@ export default {
     ...mapState({
       editable: state => state.editable,
       highlightedLatLng: state => state.highlightedLatLng,
+      shouldTextScroll: state => state.shouldTextScroll,
     }),
     storyName: {
       get() {
@@ -51,7 +52,7 @@ export default {
      * Scrolls to the highlighted feature mark.
      */
     scrollToHighlightedLatLng() {
-      if (!this.highlightedLatLng) {
+      if (!this.highlightedLatLng || !this.shouldTextScroll) {
         return;
       }
 
