@@ -6,6 +6,7 @@ import {
   UPDATE_HIGHLIGHTED_BBOX,
   UPDATE_HIGHLIGHTED_LAT_LNG,
   UPDATE_MAP_CENTER,
+  UPDATE_SHOULD_TEXT_SCROLL,
   UPDATE_STORY,
   UPDATE_STORY_NAME,
   UPDATE_STORY_TEXT,
@@ -62,6 +63,7 @@ describeHelper(
   [{ lat: 1, lng: 2 }, { lat: 3, lng: 4 }],
 );
 describeHelper('it sets map center', UPDATE_MAP_CENTER, ['map', 'center'], { lat: 0, lng: 0 });
+describeHelper('it sets whether text should scroll or not', UPDATE_SHOULD_TEXT_SCROLL, ['shouldTextScroll'], false);
 describeHelper('it sets story', UPDATE_STORY, ['story'], { name: 'name', story: 'story', track: 'track' });
 describeHelper('it sets story name', UPDATE_STORY_NAME, ['story', 'name'], 'story name');
 describeHelper('it sets story text', UPDATE_STORY_TEXT, ['story', 'text'], 'story text');

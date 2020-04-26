@@ -8,7 +8,7 @@ import {
   STORY_LINK_LNG_ATTR,
   STORY_LINK_LNG_ATTR_CAMEL,
 } from '@/config/config';
-import { UPDATE_HIGHLIGHTED_LAT_LNG } from '@/store/mutations';
+import { UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_SHOULD_TEXT_SCROLL } from '@/store/mutations';
 
 const TAG = 'a';
 
@@ -70,6 +70,7 @@ export default class FeatureMark extends Mark {
             [STORY_LINK_LAT_ATTR]: this[STORY_LINK_LAT_ATTR_CAMEL],
             [STORY_LINK_LNG_ATTR]: this[STORY_LINK_LNG_ATTR_CAMEL],
           };
+          this.$store.commit(UPDATE_SHOULD_TEXT_SCROLL, false);
           this.$store.commit(UPDATE_HIGHLIGHTED_LAT_LNG, payload);
         },
       },

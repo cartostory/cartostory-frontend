@@ -9,7 +9,6 @@ import { STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '
 import {
   REMOVE_ERROR,
   UPDATE_BBOX_BEING_ADDED,
-  UPDATE_BOUNDING_BOX_CALLBACK,
   UPDATE_EDITABLE,
   UPDATE_ERRORS,
   UPDATE_FEATURE_BEING_ADDED,
@@ -17,6 +16,7 @@ import {
   UPDATE_HIGHLIGHTED_LAT_LNG,
   UPDATE_LOADING,
   UPDATE_MAP_CENTER,
+  UPDATE_SHOULD_TEXT_SCROLL,
   UPDATE_STORY,
   UPDATE_STORY_NAME,
   UPDATE_STORY_TEXT,
@@ -45,10 +45,10 @@ const state = {
     text: undefined,
     track: undefined,
   },
-  addBoundingBoxCallback: undefined,
   availableStories: [],
   highlightedBbox: undefined,
   highlightedLatLng: undefined,
+  shouldTextScroll: undefined,
 };
 
 export const mutations = {
@@ -59,7 +59,6 @@ export const mutations = {
       state.errors.splice(idx, 1);
     }
   },
-  [UPDATE_BOUNDING_BOX_CALLBACK]: set('addBoundingBoxCallback'),
   [UPDATE_BBOX_BEING_ADDED]: set('bboxBeingAdded'),
   [UPDATE_FEATURE_BEING_ADDED]: set('featureBeingAdded'),
   [UPDATE_EDITABLE]: set('editable'),
@@ -93,6 +92,7 @@ export const mutations = {
   },
   [UPDATE_LOADING]: set('loading'),
   [UPDATE_MAP_CENTER]: setPath(['map', 'center']),
+  [UPDATE_SHOULD_TEXT_SCROLL]: set('shouldTextScroll'),
   [UPDATE_STORY]: set('story'),
   [UPDATE_STORY_NAME]: setPath(['story', 'name']),
   [UPDATE_STORY_TEXT]: setPath(['story', 'text']),
