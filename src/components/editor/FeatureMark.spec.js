@@ -1,8 +1,8 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 
-import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
-import FeatureMark from '@/components/editor/FeatureMark';
-import { UPDATE_HIGHLIGHTED_LAT_LNG } from '@/store/mutations';
+import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '../../config/config.js';
+import FeatureMark from './FeatureMark.js';
+import { UPDATE_HIGHLIGHTED_LAT_LNG } from '../../store/mutations.js';
 
 const localVue = createLocalVue();
 const options = {

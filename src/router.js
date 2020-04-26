@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import { UPDATE_EDITABLE, UPDATE_LOADING } from '@/store/mutations';
-import store from '@/store/newStore';
-import Landing from '@/views/Landing.vue';
-import StoryScreen from '@/views/StoryScreen.vue';
+import { UPDATE_EDITABLE, UPDATE_LOADING } from './store/mutations.js';
+import store from './store/newStore.js';
+import Landing from './views/Landing.vue';
+import StoryScreen from './views/StoryScreen.vue';
 import LoadStoryForm from './views/LoadStoryForm.vue';
 
 Vue.use(Router);

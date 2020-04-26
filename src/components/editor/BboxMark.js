@@ -2,8 +2,8 @@
 import { Mark } from 'tiptap';
 import { toggleMark } from 'tiptap-commands';
 
-import { STORY_LINK_BBOX_ATTR, STORY_LINK_BBOX_ATTR_CAMEL } from '@/config/config';
-import { UPDATE_HIGHLIGHTED_BBOX } from '@/store/mutations';
+import { STORY_LINK_BBOX_ATTR, STORY_LINK_BBOX_ATTR_CAMEL } from '../../config/config.js';
+import { UPDATE_HIGHLIGHTED_BBOX } from '../../store/mutations.js';
 
 const TAG = 'a';
 

@@ -1,9 +1,10 @@
 <script>
 import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
 import { mapGetters, mapState } from 'vuex';
-import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
-import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map';
-import { UPDATE_BBOX_BEING_ADDED, UPDATE_FEATURE_BEING_ADDED, UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_TRACK } from '@/store/mutations';
+import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '../config/config.js';
+import { bboxOptions, markerOptions, mapOptions, trackOptions } from '../config/config/map.js';
+import { UPDATE_BBOX_BEING_ADDED, UPDATE_FEATURE_BEING_ADDED, UPDATE_HIGHLIGHTED_LAT_LNG,
+  UPDATE_TRACK } from '../store/mutations.js';
 import CsTrackUploadButton from '@/components/CsTrackUploadButton.vue';
 
 require('../../node_modules/leaflet/dist/leaflet.css');

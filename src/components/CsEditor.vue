@@ -7,8 +7,8 @@ import BboxMark from '@/components/editor/BboxMark';
 import FeatureMark from '@/components/editor/FeatureMark';
 import MenuBar from '@/components/editor/MenuBar.vue';
 import MenuBubble from '@/components/editor/MenuBubble.vue';
-import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
-import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
+import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '../config/config.js';
+import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '../store/mutations.js';
 
 export default {
   name: 'CsEditor',

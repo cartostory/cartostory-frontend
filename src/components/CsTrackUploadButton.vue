@@ -1,8 +1,8 @@
 <script>
 import FileReader from 'vue-filereader';
 
-import { TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
-import { UPDATE_ERRORS } from '@/store/mutations';
+import { TRACK_FILE_UPLOAD_EVENT } from '../config/config.js';
+import { UPDATE_ERRORS } from '../store/mutations.js';
 
 export default {
   name: 'CsTrackUploadButton',

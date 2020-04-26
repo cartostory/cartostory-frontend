@@ -1,5 +1,5 @@
-import { mutations } from '@/store/newStore';
-import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
+import { mutations } from '../../src/store/newStore.js';
+import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '../config/config.js';
 import {
   UPDATE_BBOX_BEING_ADDED,
   UPDATE_FEATURE_BEING_ADDED,
@@ -11,8 +11,8 @@ import {
   UPDATE_STORY_TEXT,
   UPDATE_STORY_URL,
   UPDATE_TRACK,
-} from '@/store/mutations';
-import { getPath } from '@/store/store.helpers';
+} from './mutations.js';
+import { getPath } from './store.helpers.js';
 
 /*
  * @param {string}

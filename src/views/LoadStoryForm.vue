@@ -2,7 +2,7 @@
 import deburr from 'lodash.deburr';
 import { mapState } from 'vuex';
 
-import { UPDATE_ERRORS, UPDATE_LOADING, UPDATE_STORY_URL } from '@/store/mutations';
+import { UPDATE_ERRORS, UPDATE_LOADING, UPDATE_STORY_URL } from '../store/mutations.js';
 
 export default {
   name: 'LoadStoryForm',

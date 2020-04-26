@@ -3,9 +3,9 @@ import flushPromises from 'flush-promises';
 import Vuex from 'vuex';
 import { mount, shallowMount, createLocalVue } from '@vue/test-utils';
 
-import CsLoadStoryForm from '@/views/LoadStoryForm.vue';
-import { UPDATE_STORY_URL } from '@/store/mutations';
-import { defaultUrl } from '../../tests/helpers/data';
+import CsLoadStoryForm from './LoadStoryForm.vue';
+import { UPDATE_STORY_URL } from '../store/mutations.js';
+import { defaultUrl } from '../../tests/helpers/data.js';
 
 const localVue = createLocalVue();
 localVue.use(Buefy);

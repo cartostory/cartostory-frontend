@@ -1,8 +1,8 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils';
 
 import CsMap from '@/components/CsMap.vue';
-import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
-import { UPDATE_FEATURE_BEING_ADDED, UPDATE_TRACK } from '@/store/mutations';
+import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '../config/config.js';
+import { UPDATE_FEATURE_BEING_ADDED, UPDATE_TRACK } from '../store/mutations.js';
 
 const localVue = createLocalVue();
 

@@ -7,8 +7,8 @@ import {
   STORY_LINK_LAT_ATTR_CAMEL,
   STORY_LINK_LNG_ATTR,
   STORY_LINK_LNG_ATTR_CAMEL,
-} from '@/config/config';
-import { UPDATE_HIGHLIGHTED_LAT_LNG } from '@/store/mutations';
+} from '../../config/config.js';
+import { UPDATE_HIGHLIGHTED_LAT_LNG } from '../../store/mutations.js';
 
 const TAG = 'a';
 

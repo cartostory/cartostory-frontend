@@ -2,11 +2,11 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import VuexPersistence from 'vuex-persist';
 
-import { STORY_LINK_DATA_ID } from '@/config/config';
-import featuresModule from './store.features';
-import storyModule from './store.story';
-import trackModule from './store.track';
-import { set, setPath } from './store.helpers';
+import { STORY_LINK_DATA_ID } from '../config/config.js';
+import featuresModule from './store.features.js';
+import storyModule from './store.story.js';
+import trackModule from './store.track.js';
+import { set, setPath } from './store.helpers.js';
 import {
   RESET_HIGHLIGHTED_LINK,
   SET_BBOX,

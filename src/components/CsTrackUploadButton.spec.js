@@ -2,8 +2,8 @@ import Buefy from 'buefy';
 import FileReader from 'vue-filereader';
 import { createLocalVue, mount } from '@vue/test-utils';
 
-import { UPDATE_ERRORS } from '@/store/mutations';
-import { TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
+import { UPDATE_ERRORS } from '../store/mutations.js';
+import { TRACK_FILE_UPLOAD_EVENT } from '../config/config.js';
 import CsTrackUploadButton from '@/components/CsTrackUploadButton.vue';
 
 const localVue = createLocalVue();

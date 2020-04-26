@@ -2,8 +2,8 @@
 import { EditorMenuBubble } from 'tiptap';
 import { mapState } from 'vuex';
 
-import { ADD_BOUNDING_BOX_EVENT, STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR } from '@/config/config';
-import { UPDATE_BBOX_BEING_ADDED, UPDATE_FEATURE_BEING_ADDED, UPDATE_HIGHLIGHTED_LAT_LNG } from '@/store/mutations';
+import { ADD_BOUNDING_BOX_EVENT, STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR } from '../../config/config.js';
+import { UPDATE_BBOX_BEING_ADDED, UPDATE_FEATURE_BEING_ADDED, UPDATE_HIGHLIGHTED_LAT_LNG } from '../../store/mutations.js';
 
 export default {
   data() {

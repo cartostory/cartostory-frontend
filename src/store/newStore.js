@@ -2,10 +2,9 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 import chunk from 'lodash.chunk';
-import mapDeep from 'deepdash-es/mapDeep';
-import pickDeep from 'deepdash-es/pickDeep';
+import { mapDeep, pickDeep } from '/web_modules/deepdash-es.js';
 
-import { STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
+import { STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '../config/config.js';
 import {
   REMOVE_ERROR,
   UPDATE_BBOX_BEING_ADDED,
@@ -22,7 +21,7 @@ import {
   UPDATE_STORY_TEXT,
   UPDATE_STORY_URL,
   UPDATE_TRACK,
-} from '@/store/mutations';
+} from './mutations.js';
 import { set, setPath } from './store.helpers';
 
 Vue.use(Vuex);
