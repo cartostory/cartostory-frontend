@@ -64,4 +64,42 @@ describe('CsMap', () => {
     expect(wrapper.vm.$store.commit).toHaveBeenCalledTimes(1);
     expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(UPDATE_FEATURE_BEING_ADDED, result);
   });
+
+  test.only('renders map center', () => {
+    const highlightedBbox = {
+      $refs: {},
+      $store: {
+        state: {},
+      },
+      highlightedBbox: [
+        { lat: 10, lng: 10 },
+        { lat: 0, lng: 0 },
+      ],
+    };
+
+    const highlightedFeature = {
+      $refs: {},
+      $store: {
+        state: {},
+      },
+      highlightedLatLng: { lat: 50, lng: 50 },
+    };
+
+    const nothingHighlighted = {
+      $refs: {
+        csmap: {
+          mapObject: {
+            getCenter: jest.fn().mockReturnValue({ lat: 10, lng: 10 }),
+          },
+        },
+      },
+      $store: {
+        state: {},
+      },
+    };
+
+    expect(CsMap.computed.mapCenter.call(highlightedBbox)).toEqual({ lat: 5, lng: 5 });
+    expect(CsMap.computed.mapCenter.call(highlightedFeature)).toEqual({ lat: 50, lng: 50 });
+    expect(CsMap.computed.mapCenter.call(nothingHighlighted)).toEqual({ lat: 10, lng: 10 });
+  });
 });

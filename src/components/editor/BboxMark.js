@@ -3,7 +3,7 @@ import { Mark } from 'tiptap';
 import { toggleMark } from 'tiptap-commands';
 
 import { STORY_LINK_BBOX_ATTR, STORY_LINK_BBOX_ATTR_CAMEL } from '@/config/config';
-import { UPDATE_HIGHLIGHTED_BBOX } from '@/store/mutations';
+import { UPDATE_HIGHLIGHTED_BBOX, UPDATE_HIGHLIGHTED_LAT_LNG } from '@/store/mutations';
 
 const TAG = 'a';
 
@@ -57,6 +57,7 @@ export default class BboxMark extends Mark {
       methods: {
         handleClick() {
           const payload = JSON.parse(this[STORY_LINK_BBOX_ATTR_CAMEL]);
+          this.$store.commit(UPDATE_HIGHLIGHTED_LAT_LNG, undefined);
           this.$store.commit(UPDATE_HIGHLIGHTED_BBOX, payload);
         },
       },

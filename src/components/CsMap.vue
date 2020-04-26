@@ -3,7 +3,7 @@ import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 
 import { mapGetters, mapState } from 'vuex';
 import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map';
-import { UPDATE_BBOX_BEING_ADDED, UPDATE_FEATURE_BEING_ADDED, UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_SHOULD_TEXT_SCROLL, UPDATE_TRACK } from '@/store/mutations';
+import { UPDATE_BBOX_BEING_ADDED, UPDATE_FEATURE_BEING_ADDED, UPDATE_HIGHLIGHTED_BBOX, UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_SHOULD_TEXT_SCROLL, UPDATE_TRACK } from '@/store/mutations';
 import CsTrackUploadButton from '@/components/CsTrackUploadButton.vue';
 
 require('../../node_modules/leaflet/dist/leaflet.css');
@@ -24,22 +24,21 @@ export default {
     return {
       STORY_LINK_CLICK_EVENT,
       TRACK_FILE_UPLOAD_EVENT,
-      addFeatureMark: undefined,
       bboxOptions,
       drawControl: undefined,
       markerOptions,
       mapOptions,
       trackOptions,
-      bboxBounds: [undefined, undefined],
     };
   },
   computed: {
     mapCenter() {
+      const bboxCenter = this.highlightedBbox && window.L.latLngBounds(this.highlightedBbox).getCenter();
       const currentMapCenter = this.$refs.csmap && this.$refs.csmap.mapObject.getCenter();
       const highlightedFeatureMapCenter = !this.$store.state.shouldTextScroll && this.highlightedLatLng;
-      return highlightedFeatureMapCenter || currentMapCenter;
+      return bboxCenter || highlightedFeatureMapCenter || currentMapCenter;
     },
-    ...mapState(['bboxBeingAdded', 'editable', 'featureBeingAdded', 'highlightedLatLng']),
+    ...mapState(['bboxBeingAdded', 'editable', 'featureBeingAdded', 'highlightedBbox', 'highlightedLatLng']),
     ...mapState({
       track: state => state.story.track,
     }),
@@ -57,8 +56,23 @@ export default {
       this.$refs.csmap.mapObject.fitBounds(track.getBounds());
     },
 
+    /*
+     * Sets highlighted bbox.
+     * @param {MouseEvent}
+     * @param {Object} clicked bounding box
+     */
     handleBboxClick(event, bbox) {
-      console.log(event, bbox);
+      const { bounds } = bbox;
+      const querySelector = `[data-cs-bbox='[[${bounds[0][0]},${bounds[0][1]}],[${bounds[1][0]},${bounds[1][1]}]]']`;
+      const textMark = document.querySelector(querySelector);
+
+      if (!textMark) {
+        return;
+      }
+
+      this.$store.commit(UPDATE_HIGHLIGHTED_LAT_LNG, undefined);
+      this.$store.commit(UPDATE_HIGHLIGHTED_BBOX, bounds);
+      this.$store.commit(UPDATE_SHOULD_TEXT_SCROLL, true);
     },
 
     /*
@@ -76,11 +90,12 @@ export default {
         [STORY_LINK_LAT_ATTR]: textMark.getAttribute([STORY_LINK_LAT_ATTR]),
         [STORY_LINK_LNG_ATTR]: textMark.getAttribute([STORY_LINK_LNG_ATTR]),
       });
+      this.$store.commit(UPDATE_HIGHLIGHTED_BBOX, undefined);
       this.$store.commit(UPDATE_SHOULD_TEXT_SCROLL, true);
     },
 
     /*
-     * Links the position to the selected text.
+     * Links the position to the selected text when the feature mark addition is active.
      * @param {object}
      */
     handleMapClick(latLng) {
@@ -97,7 +112,7 @@ export default {
     },
 
     /*
-     * Links the bounding box to the selected text.
+     * Links the bounding box to the selected text when the bbox mark addition is active.
      */
     handleMapMouseDown() {
       if (!this.bboxBeingAdded.active) {
@@ -143,6 +158,7 @@ export default {
     <div class="cs-map">
       <div id="cs-map-container">
         <l-map
+          :bounds="highlightedBbox"
           @click="handleMapClick($event.latlng)"
           @mousedown="handleMapMouseDown($event.latlng)"
           :center="mapCenter"

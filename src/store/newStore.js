@@ -68,16 +68,22 @@ export const mutations = {
   },
   /* eslint-disable-next-line no-shadow */
   [UPDATE_HIGHLIGHTED_BBOX](state, bbox) {
-    state.highlightedBbox = [
-      {
-        lat: bbox[0][0],
-        lng: bbox[0][1],
-      },
-      {
-        lat: bbox[1][0],
-        lng: bbox[1][1],
-      },
-    ];
+    let payload;
+
+    if (bbox) {
+      payload = [
+        {
+          lat: bbox[0][0],
+          lng: bbox[0][1],
+        },
+        {
+          lat: bbox[1][0],
+          lng: bbox[1][1],
+        },
+      ];
+    }
+
+    state.highlightedBbox = payload;
   },
   /* eslint-disable-next-line no-shadow */
   [UPDATE_HIGHLIGHTED_LAT_LNG](state, latLng) {
