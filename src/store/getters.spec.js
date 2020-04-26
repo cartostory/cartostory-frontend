@@ -19,8 +19,9 @@ describe('vuex getters', () => {
     const bboxes = getters.bboxes(state, { content });
     expect(bboxes).toEqual([
       {
-        id: 0,
+        id: 'bbox-0',
         bounds: [[1, 2], [3, 4]],
+        highlighted: false,
       },
     ]);
   });
@@ -32,25 +33,11 @@ describe('vuex getters', () => {
     };
 
     const result = getters.features(state, { content });
-    expect(result).toEqual([{ lat: 0, lng: 10 }]);
+    expect(result).toEqual([{ lat: 0, lng: 10, highlighted: false }]);
   });
 
-  test('featuresWithoutHighlighted is the same as features when no highlightedLatLng exists', () => {
-    const localGetters = {
-      features: [{ lat: 0, lng: 10 }],
-    };
-    const state = {
-      story: defaultText,
-    };
-
-    const result = getters.featuresWithoutHighlighted(state, localGetters);
-    expect(result).toEqual(localGetters.features);
-  });
-
-  test('featuresWithoutHighlighted does not contain highlighted feature', () => {
-    const localGetters = {
-      features: [{ lat: 0, lng: 10 }],
-    };
+  test('feature is marked as highlighted', () => {
+    const content = JSON.parse(JSON.stringify(defaultText.text.content));
     const state = {
       highlightedLatLng: {
         lat: 0,
@@ -59,7 +46,7 @@ describe('vuex getters', () => {
       story: defaultText,
     };
 
-    const result = getters.featuresWithoutHighlighted(state, localGetters);
-    expect(result).toEqual([]);
+    const result = getters.features(state, { content });
+    expect(result).toEqual([{ lat: 0, lng: 10, highlighted: true }]);
   });
 });

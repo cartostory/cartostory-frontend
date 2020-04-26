@@ -139,13 +139,26 @@ export const getters = {
       result = mapDeep(bboxes, v => v, { leavesOnly: true })
         .filter(item => item !== null)
         .map(item => JSON.parse(item))
-        .map((item, id) => ({
-          id,
-          bounds: [
-            [item[0][0], item[0][1]],
-            [item[1][0], item[1][1]],
-          ],
-        }));
+        .map((item, id) => {
+          const [upperLeft, lowerRight] = item;
+          let highlighted = false;
+
+          if (state.highlightedBbox) {
+            const { lat: upperLeftLat, lng: upperLeftLng } = state.highlightedBbox[0];
+            const { lat: lowerRightLat, lng: lowerRightLng } = state.highlightedBbox[1];
+            const highlightedBbox = [upperLeftLat, upperLeftLng, lowerRightLat, lowerRightLng];
+            highlighted = [...upperLeft, ...lowerRight].every((val, idx) => val === highlightedBbox[idx]);
+          }
+
+          return {
+            id: `bbox-${id}`,
+            bounds: [
+              [item[0][0], item[0][1]],
+              [item[1][0], item[1][1]],
+            ],
+            highlighted,
+          };
+        });
     }
 
     return result;
@@ -160,20 +173,19 @@ export const getters = {
       const features = mapDeep(pickDeep(data, [STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR]), v => v, {
         leavesOnly: true,
       }).filter(item => item !== null);
-      result = chunk(features, 2).map(item => ({ lat: item[0], lng: item[1] }));
+      result = chunk(features, 2)
+        .map((item) => {
+          const lat = state.highlightedLatLng && state.highlightedLatLng.lat;
+          const lng = state.highlightedLatLng && state.highlightedLatLng.lng;
+          return {
+            lat: item[0],
+            lng: item[1],
+            highlighted: item[0] === lat && item[1] === lng,
+          };
+        });
     }
 
     return result;
-  },
-
-  /* eslint-disable-next-line no-shadow */
-  featuresWithoutHighlighted: (state, getters) => {
-    if (!state.highlightedLatLng) {
-      return getters.features;
-    }
-
-    const { lat, lng } = state.highlightedLatLng;
-    return getters.features.filter(feature => feature.lat !== lat && feature.lng !== lng);
   },
 };
 

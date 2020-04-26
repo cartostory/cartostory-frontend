@@ -36,9 +36,4 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-a[data-cs-lat] {
-  color: #F56C6C;
-  cursor: pointer;
-  text-decoration: underline;
-}
 </style>

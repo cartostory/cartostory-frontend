@@ -114,6 +114,19 @@ export default {
 @import "../assets/scss/variables.scss";
 @import "../../node_modules/bulma/bulma.sass";
 
+a[data-cs-lat],
+a[data-cs-bbox] {
+  color: $primary;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+a[data-cs-bbox] {
+  border: 1px dashed $bbox-mark-border-color;
+  padding: 1px;
+  text-decoration: none;
+}
+
 .editor {
   h2, h3, h4 {
     @extend .title;

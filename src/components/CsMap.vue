@@ -57,6 +57,10 @@ export default {
       this.$refs.csmap.mapObject.fitBounds(track.getBounds());
     },
 
+    handleBboxClick(event, bbox) {
+      console.log(event, bbox);
+    },
+
     /*
      * Sets feature mark that should be highlighted and scrolled to in the text.
      */
@@ -149,36 +153,29 @@ export default {
           </l-control>
 
           <l-tile-layer :url="mapOptions.baseLayer" />
-          <l-tile-layer :url="mapOptions.hikingOverlay" layer-type="overlay" :opacity="0.7" />
+          <l-tile-layer :url="mapOptions.hikingOverlay" layer-type="overlay" :opacity="0.4" />
           <l-tile-layer :url="mapOptions.labelsOverlay" layer-type="overlay" />
 
           <l-geo-json @ready="handleTrackReady($event)" v-if="track" :geojson="track" :options="trackOptions.style.plain" ref="cstrack" />
 
-          <l-rectangle v-for="bbox in bboxes" :key="bbox.id" :bounds="bbox.bounds" :l-style="bboxOptions.selected.style" />
+          <l-rectangle
+            @click="handleBboxClick($event, bbox)"
+            v-for="bbox in bboxes"
+            :key="bbox.id"
+            :bounds="bbox.bounds"
+            :l-style="bbox.highlighted ? bboxOptions.selected.style : bboxOptions.plain.style" />
 
-                    <l-circle-marker
-                      @click="handleFeatureClick"
-                      :color="markerOptions.style.plain.color"
-                      :fill-color="markerOptions.style.plain.color"
-                      :fill-opacity="markerOptions.style.plain.fillOpacity"
-                      :latLng="f"
-                      :radius="markerOptions.style.common.radius"
-                      :weight="markerOptions.style.common.weight"
-                      :key="index"
-                      v-for="(f, index) in featuresWithoutHighlighted">
-                    </l-circle-marker>
-
-                    <l-circle-marker
-                      v-if="highlightedLatLng"
-                      @click="handleFeatureClick"
-                      :color="markerOptions.style.highlighted.color"
-                      :fill-color="markerOptions.style.highlighted.color"
-                      :fill-opacity="markerOptions.style.highlighted.fillOpacity"
-                      :latLng="highlightedLatLng"
-                      :radius="markerOptions.style.common.radius"
-                      :weight="markerOptions.style.common.weight">
-                    </l-circle-marker>
-
+          <l-circle-marker
+            @click="handleFeatureClick"
+            :color="f.highlighted ? markerOptions.style.highlighted.color : markerOptions.style.plain.color"
+            :fill-color="f.highlighted ? markerOptions.style.highlighted.color : markerOptions.style.plain.color"
+            :fill-opacity="f.highlighted ? markerOptions.style.highlighted.fillOpacity : markerOptions.style.plain.fillOpacity"
+            :latLng="f"
+            :radius="markerOptions.style.common.radius"
+            :weight="markerOptions.style.common.weight"
+            :key="index"
+            v-for="(f, index) in features">
+          </l-circle-marker>
         </l-map>
       </div>
     </div>

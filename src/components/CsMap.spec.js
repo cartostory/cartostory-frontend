@@ -13,7 +13,7 @@ describe('CsMap', () => {
         $store: {
           getters: {
             bboxes: [],
-            featuresWithoutHighlighted: [],
+            features: [],
           },
           state: {
             map: {},
@@ -36,7 +36,7 @@ describe('CsMap', () => {
         $store: {
           getters: {
             bboxes: [],
-            featuresWithoutHighlighted: [],
+            features: [],
           },
           state: {
             featureBeingAdded: {
