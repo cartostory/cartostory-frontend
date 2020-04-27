@@ -59,8 +59,18 @@ export default {
       this.scrollToHighlighted();
     },
   },
+  beforeMount() {
+    document.documentElement.classList.add('is-clipped');
+  },
+  beforeDestroy() {
+    document.documentElement.classList.remove('is-clipped');
+  },
   mounted() {
     this.editor = this.$createEditor();
+
+    if (this.text) { // when reading the story, load text from store
+      this.editor.setContent(this.text);
+    }
   },
   methods: {
     /*
@@ -165,15 +175,15 @@ export default {
         @changed="handleContentUpdate"
         @click.native="handleContentUpdate" :editor="editor" v-if="editable" />
 
-      <editor-content :class="{'editable': this.editable}" style="flex: 1; overflow: auto;" class="editor" :editor="editor" />
+      <editor-content :class="{'editable': this.editable}" style="flex: 1; overflow: auto;" class="editor has-mt-1 has-mb-1" :editor="editor" />
 
     </div>
 
   </div>
 </template>
 
+<!-- can't be scoped or title styles would not work -->
 <style lang="scss">
-@import "../assets/scss/variables.scss";
 @import "../../node_modules/bulma/bulma.sass";
 
 a[data-cs-lat],

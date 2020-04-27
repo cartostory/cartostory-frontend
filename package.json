@@ -51,7 +51,7 @@
     "husky": "^4.2.3",
     "jest": "^25.2.3",
     "node-sass": "^4.9.0",
-    "sass-loader": "^7.1.0",
+    "sass-loader": "^8.0.2",
     "vue-jest": "^3.0.5",
     "vue-template-compiler": "^2.5.21"
   },

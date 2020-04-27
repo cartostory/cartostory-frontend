@@ -114,8 +114,6 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-@import "../../assets/scss/variables.scss";
-
 .menububble {
   position: absolute;
   display: flex;
