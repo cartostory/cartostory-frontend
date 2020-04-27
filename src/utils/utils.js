@@ -1,19 +1,23 @@
 /* eslint-disable import/prefer-default-export */
 import { STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 
+export function getBboxString(bbox) {
+  let result;
+
+  if ('lat' in bbox[0]) {
+    result = `[[${bbox[0].lat},${bbox[0].lng}],[${bbox[1].lat},${bbox[1].lng}]]`;
+  } else {
+    result = `[[${bbox[0][0]},${bbox[0][1]}],[${bbox[1][0]},${bbox[1][1]}]]`;
+  }
+
+  return result;
+}
+
 /*
  * @param {Object} bbox
  */
 export function getBboxSelector(bbox) {
-  let querySelector;
-
-  if ('lat' in bbox[0]) {
-    querySelector = `[[${bbox[0].lat},${bbox[0].lng}],[${bbox[1].lat},${bbox[1].lng}]]`;
-  } else {
-    querySelector = `[[${bbox[0][0]},${bbox[0][1]}],[${bbox[1][0]},${bbox[1][1]}]]`;
-  }
-
-  return `[${STORY_LINK_BBOX_ATTR}='${querySelector}']`;
+  return `[${STORY_LINK_BBOX_ATTR}='${getBboxString(bbox)}']`;
 }
 
 /*

@@ -4,6 +4,7 @@ import { toggleMark } from 'tiptap-commands';
 
 import { STORY_LINK_BBOX_ATTR, STORY_LINK_BBOX_ATTR_CAMEL } from '@/config/config';
 import { UPDATE_HIGHLIGHTED_BBOX, UPDATE_HIGHLIGHTED_LAT_LNG } from '@/store/mutations';
+import { getBboxString } from '@/utils/utils';
 
 const TAG = 'a';
 
@@ -66,8 +67,11 @@ export default class BboxMark extends Mark {
           if (!this.$store.state.highlightedBbox) {
             return false;
           }
-          const { lat, lng } = this.$store.state.highlightedBbox;
-          return true;
+
+          const bbox = this[STORY_LINK_BBOX_ATTR_CAMEL];
+          const highlightedBbox = getBboxString(this.$store.state.highlightedBbox);
+
+          return highlightedBbox === bbox;
         },
         [STORY_LINK_BBOX_ATTR_CAMEL]: {
           get() {
@@ -82,6 +86,7 @@ export default class BboxMark extends Mark {
       },
       template: `
         <a
+          title="Kliknutím vycentrujete mapu"
           :class="{'is-highlighted': isHighlighted}"
           :${STORY_LINK_BBOX_ATTR}="${STORY_LINK_BBOX_ATTR_CAMEL}"
           @click="handleClick()"
