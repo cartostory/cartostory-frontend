@@ -1,7 +1,7 @@
 <script>
 import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
 import { mapGetters, mapState } from 'vuex';
-import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
+import { STORY_LINK_BBOX_ATTR, STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map';
 import { UPDATE_BBOX_BEING_ADDED, UPDATE_FEATURE_BEING_ADDED, UPDATE_HIGHLIGHTED_BBOX, UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_SHOULD_TEXT_SCROLL, UPDATE_TRACK } from '@/store/mutations';
 import CsTrackUploadButton from '@/components/CsTrackUploadButton.vue';
@@ -63,7 +63,7 @@ export default {
      */
     handleBboxClick(event, bbox) {
       const { bounds } = bbox;
-      const querySelector = `[data-cs-bbox='[[${bounds[0][0]},${bounds[0][1]}],[${bounds[1][0]},${bounds[1][1]}]]']`;
+      const querySelector = `[${STORY_LINK_BBOX_ATTR}='[[${bounds[0][0]},${bounds[0][1]}],[${bounds[1][0]},${bounds[1][1]}]]']`;
       const textMark = document.querySelector(querySelector);
 
       if (!textMark) {
@@ -80,7 +80,7 @@ export default {
      */
     handleFeatureClick(event) {
       const { lat, lng } = event.latlng;
-      const textMark = document.querySelector(`[data-cs-lat='${lat}'], [data-cs-lng='${lng}']`);
+      const textMark = document.querySelector(`[${STORY_LINK_LAT_ATTR}='${lat}'], [${STORY_LINK_LNG_ATTR}='${lng}']`);
 
       if (!textMark) {
         return;
