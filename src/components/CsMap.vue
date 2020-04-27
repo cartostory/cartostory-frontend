@@ -1,10 +1,11 @@
 <script>
 import { LCircleMarker, LControl, LGeoJson, LMap, LTileLayer, LRectangle } from 'vue2-leaflet';
 import { mapGetters, mapState } from 'vuex';
-import { STORY_LINK_BBOX_ATTR, STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
+import { STORY_LINK_CLICK_EVENT, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR, TRACK_FILE_UPLOAD_EVENT } from '@/config/config';
 import { bboxOptions, markerOptions, mapOptions, trackOptions } from '@/config/map';
 import { UPDATE_BBOX_BEING_ADDED, UPDATE_FEATURE_BEING_ADDED, UPDATE_HIGHLIGHTED_BBOX, UPDATE_HIGHLIGHTED_LAT_LNG, UPDATE_SHOULD_TEXT_SCROLL, UPDATE_TRACK } from '@/store/mutations';
 import CsTrackUploadButton from '@/components/CsTrackUploadButton.vue';
+import { getBboxSelector, getLatLngSelector } from '@/utils/utils';
 
 require('../../node_modules/leaflet/dist/leaflet.css');
 require('leaflet-draw');
@@ -38,15 +39,11 @@ export default {
       const highlightedFeatureMapCenter = !this.$store.state.shouldTextScroll && this.highlightedLatLng;
       return bboxCenter || highlightedFeatureMapCenter || currentMapCenter;
     },
+    ...mapGetters(['bboxes', 'features', 'featuresWithoutHighlighted']),
     ...mapState(['bboxBeingAdded', 'editable', 'featureBeingAdded', 'highlightedBbox', 'highlightedLatLng']),
     ...mapState({
       track: state => state.story.track,
     }),
-    ...mapGetters([
-      'bboxes',
-      'features',
-      'featuresWithoutHighlighted',
-    ]),
   },
   methods: {
     /*
@@ -62,8 +59,7 @@ export default {
      * @param {Object} clicked bounding box
      */
     handleBboxClick(event, bbox) {
-      const { bounds } = bbox;
-      const querySelector = `[${STORY_LINK_BBOX_ATTR}='[[${bounds[0][0]},${bounds[0][1]}],[${bounds[1][0]},${bounds[1][1]}]]']`;
+      const querySelector = getBboxSelector(bbox.bounds);
       const textMark = document.querySelector(querySelector);
 
       if (!textMark) {
@@ -71,7 +67,7 @@ export default {
       }
 
       this.$store.commit(UPDATE_HIGHLIGHTED_LAT_LNG, undefined);
-      this.$store.commit(UPDATE_HIGHLIGHTED_BBOX, bounds);
+      this.$store.commit(UPDATE_HIGHLIGHTED_BBOX, bbox.bounds);
       this.$store.commit(UPDATE_SHOULD_TEXT_SCROLL, true);
     },
 
@@ -79,8 +75,8 @@ export default {
      * Sets feature mark that should be highlighted and scrolled to in the text.
      */
     handleFeatureClick(event) {
-      const { lat, lng } = event.latlng;
-      const textMark = document.querySelector(`[${STORY_LINK_LAT_ATTR}='${lat}'], [${STORY_LINK_LNG_ATTR}='${lng}']`);
+      const querySelector = getLatLngSelector(event.latlng);
+      const textMark = document.querySelector(querySelector);
 
       if (!textMark) {
         return;

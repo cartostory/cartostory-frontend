@@ -7,8 +7,8 @@ import BboxMark from '@/components/editor/BboxMark';
 import FeatureMark from '@/components/editor/FeatureMark';
 import MenuBar from '@/components/editor/MenuBar.vue';
 import MenuBubble from '@/components/editor/MenuBubble.vue';
-import { STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
+import { getBboxSelector, getLatLngSelector } from '@/utils/utils';
 
 export default {
   name: 'CsEditor',
@@ -79,13 +79,11 @@ export default {
       }
 
       if (this.highlightedLatLng) {
-        const { lat, lng } = this.highlightedLatLng;
-        querySelector = `[${STORY_LINK_LAT_ATTR}='${lat}'], [${STORY_LINK_LNG_ATTR}='${lng}']`;
+        querySelector = getLatLngSelector(this.highlightedLatLng);
       }
 
       if (this.highlightedBbox) {
-        const bbox = this.highlightedBbox;
-        querySelector = `[${STORY_LINK_BBOX_ATTR}='[[${bbox[0].lat},${bbox[0].lng}],[${bbox[1].lat},${bbox[1].lng}]]']`;
+        querySelector = getBboxSelector(this.highlightedBbox);
       }
 
       // eslint-disable-next-line consistent-return
