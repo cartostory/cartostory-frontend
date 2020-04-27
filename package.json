@@ -22,6 +22,7 @@
     "normalize.css": "^8.0.1",
     "prosemirror-utils": "^0.9.6",
     "tiptap": "^1.26.6",
+    "tiptap-commands": "^1.13.1",
     "tiptap-extensions": "^1.28.6",
     "vue": "^2.6.6",
     "vue-filereader": "^0.1.1",
