@@ -65,16 +65,19 @@ describe('CsMap', () => {
     expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(UPDATE_FEATURE_BEING_ADDED, result);
   });
 
-  test.only('renders map center', () => {
+  test('renders map center', () => {
+    const bounds = [
+      { lat: 10, lng: 10 },
+      { lat: 0, lng: 0 },
+    ];
     const highlightedBbox = {
       $refs: {},
       $store: {
         state: {},
       },
-      highlightedBbox: [
-        { lat: 10, lng: 10 },
-        { lat: 0, lng: 0 },
-      ],
+      recenterMap: true,
+      mapBounds: window.L.latLngBounds(bounds),
+      highlightedBbox: bounds,
     };
 
     const highlightedFeature = {
@@ -83,6 +86,7 @@ describe('CsMap', () => {
         state: {},
       },
       highlightedLatLng: { lat: 50, lng: 50 },
+      recenterMap: true,
     };
 
     const nothingHighlighted = {
@@ -96,6 +100,7 @@ describe('CsMap', () => {
       $store: {
         state: {},
       },
+      recenterMap: true,
     };
 
     expect(CsMap.computed.mapCenter.call(highlightedBbox)).toEqual({ lat: 5, lng: 5 });

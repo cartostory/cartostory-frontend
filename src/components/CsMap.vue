@@ -33,15 +33,27 @@ export default {
     };
   },
   computed: {
+    mapBounds() {
+      const bbox = this.highlightedBbox;
+      return this.recenterMap && bbox && window.L.latLngBounds(bbox);
+    },
     mapCenter() {
-      const bboxCenter = this.highlightedBbox && window.L.latLngBounds(this.highlightedBbox).getCenter();
+      const bboxCenter = this.mapBounds && this.mapBounds.getCenter();
       const currentMapCenter = this.$refs.csmap && this.$refs.csmap.mapObject.getCenter();
-      const highlightedFeatureMapCenter = !this.$store.state.shouldTextScroll && this.highlightedLatLng;
+      const highlightedFeatureMapCenter = this.recenterMap && this.highlightedLatLng;
       return bboxCenter || highlightedFeatureMapCenter || currentMapCenter;
     },
     ...mapGetters(['bboxes', 'features', 'featuresWithoutHighlighted']),
-    ...mapState(['bboxBeingAdded', 'editable', 'featureBeingAdded', 'highlightedBbox', 'highlightedLatLng']),
+    ...mapState([
+      'bboxBeingAdded',
+      'editable',
+      'featureBeingAdded',
+      'highlightedBbox',
+      'highlightedLatLng',
+      'shouldTextScroll',
+    ]),
     ...mapState({
+      recenterMap: state => !state.shouldTextScroll,
       track: state => state.story.track,
     }),
   },
@@ -154,7 +166,7 @@ export default {
     <div class="cs-map">
       <div id="cs-map-container">
         <l-map
-          :bounds="highlightedBbox"
+          :bounds="mapBounds"
           @click="handleMapClick($event.latlng)"
           @mousedown="handleMapMouseDown($event.latlng)"
           :center="mapCenter"
