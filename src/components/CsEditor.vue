@@ -7,8 +7,8 @@ import BboxMark from '@/components/editor/BboxMark';
 import FeatureMark from '@/components/editor/FeatureMark';
 import MenuBar from '@/components/editor/MenuBar.vue';
 import MenuBubble from '@/components/editor/MenuBubble.vue';
-import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
+import { getBboxSelector, getLatLngSelector } from '@/utils/utils';
 
 export default {
   name: 'CsEditor',
@@ -25,11 +25,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      editable: state => state.editable,
-      highlightedLatLng: state => state.highlightedLatLng,
-      shouldTextScroll: state => state.shouldTextScroll,
-    }),
+    ...mapState(['editable', 'highlightedBbox', 'highlightedLatLng', 'shouldTextScroll']),
     storyName: {
       get() {
         return this.$store.state.story.name;
@@ -40,8 +36,19 @@ export default {
     },
   },
   watch: {
-    highlightedLatLng() {
-      this.scrollToHighlightedLatLng();
+    highlightedLatLng(latLng) {
+      if (!latLng) {
+        return;
+      }
+
+      this.scrollToHighlighted();
+    },
+    highlightedBbox(bbox) {
+      if (!bbox) {
+        return;
+      }
+
+      this.scrollToHighlighted();
     },
   },
   mounted() {
@@ -49,20 +56,38 @@ export default {
   },
   methods: {
     /*
-     * Scrolls to the highlighted feature mark.
+     * Scrolls to the highlighted feature mark or bbox.
      */
-    scrollToHighlightedLatLng() {
-      if (!this.highlightedLatLng || !this.shouldTextScroll) {
+    scrollToHighlighted() {
+      const highlighted = this.$getHighlightedNode();
+
+      if (!highlighted) {
         return;
       }
 
-      const { lat, lng } = this.highlightedLatLng;
-      const textMark = document.querySelector(`[${STORY_LINK_LAT_ATTR}='${lat}'], [${STORY_LINK_LNG_ATTR}='${lng}']`);
-
-      this.$scrollTo(textMark, undefined, {
+      this.$scrollTo(highlighted, undefined, {
         container: document.querySelector('.editor'),
         offset: -50,
       });
+    },
+
+    $getHighlightedNode() {
+      let querySelector;
+
+      if (!this.shouldTextScroll) {
+        return;
+      }
+
+      if (this.highlightedLatLng) {
+        querySelector = getLatLngSelector(this.highlightedLatLng);
+      }
+
+      if (this.highlightedBbox) {
+        querySelector = getBboxSelector(this.highlightedBbox);
+      }
+
+      // eslint-disable-next-line consistent-return
+      return document.querySelector(querySelector);
     },
 
     $createEditor() {
@@ -113,6 +138,19 @@ export default {
 <style lang="scss">
 @import "../assets/scss/variables.scss";
 @import "../../node_modules/bulma/bulma.sass";
+
+a[data-cs-lat],
+a[data-cs-bbox] {
+  color: $primary;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+a[data-cs-bbox] {
+  border: 1px dashed $bbox-mark-border-color;
+  padding: 1px;
+  text-decoration: none;
+}
 
 .editor {
   h2, h3, h4 {

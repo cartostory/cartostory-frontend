@@ -18,7 +18,7 @@ export const routes = [
     path: '/story/read/:title',
     component: StoryScreen,
     beforeEnter(to, from, next) {
-      store.commit(UPDATE_EDITABLE, false);
+      store.commit(UPDATE_EDITABLE, true);
       if (store.state.storyUrl) {
         next();
       } else {
