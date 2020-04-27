@@ -108,6 +108,7 @@ export default class FeatureMark extends Mark {
       template: `
         <a
           title="Kliknutím vycentrujete mapu"
+          :class="{'is-highlighted': isHighlighted}"
           :${STORY_LINK_LNG_ATTR}="${STORY_LINK_LNG_ATTR_CAMEL}"
           :${STORY_LINK_LAT_ATTR}="${STORY_LINK_LAT_ATTR_CAMEL}"
           @click="handleClick()"

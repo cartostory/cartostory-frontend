@@ -1,4 +1,5 @@
 <script>
+import cloneDeep from 'lodash.clonedeep';
 import { Editor, EditorContent } from 'tiptap';
 import { Heading, Image } from 'tiptap-extensions';
 import { mapState } from 'vuex';
@@ -7,6 +8,8 @@ import BboxMark from '@/components/editor/BboxMark';
 import FeatureMark from '@/components/editor/FeatureMark';
 import MenuBar from '@/components/editor/MenuBar.vue';
 import MenuBubble from '@/components/editor/MenuBubble.vue';
+import CsStoryJson from '@/components/CsStoryJson.vue';
+import { SAVE_EVENT } from '@/config/config';
 import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
 import { getBboxSelector, getLatLngSelector } from '@/utils/utils';
 
@@ -19,13 +22,18 @@ export default {
   },
   data() {
     return {
-      contentPlaceholder: 'Můžete začít psát...',
+      content: 'Můžete začít psát...',
       editor: undefined,
       keepInBounds: true,
+      SAVE_EVENT,
     };
   },
   computed: {
     ...mapState(['editable', 'highlightedBbox', 'highlightedLatLng', 'shouldTextScroll']),
+    ...mapState({
+      text: state => state.story.text,
+      track: state => state.story.track,
+    }),
     storyName: {
       get() {
         return this.$store.state.story.name;
@@ -55,6 +63,34 @@ export default {
     this.editor = this.$createEditor();
   },
   methods: {
+    /*
+     * Sends content to store only when needed:
+     * - when feature mark or bbox is added
+     * - when story is to be saved
+     */
+    handleContentUpdate() {
+      this.$store.commit(UPDATE_STORY_TEXT, cloneDeep(this.editor.getJSON()));
+    },
+
+    handleSave() {
+      this.handleContentUpdate();
+
+      const result = {
+        name: this.storyName,
+        text: this.text,
+        track: this.track,
+      };
+      const string = JSON.stringify(result);
+      this.$buefy.modal.open({
+        component: CsStoryJson,
+        parent: this,
+        customClass: 'modal-result',
+        props: {
+          content: string,
+        },
+      });
+    },
+
     /*
      * Scrolls to the highlighted feature mark or bbox.
      */
@@ -101,10 +137,7 @@ export default {
           }),
           new Image(),
         ],
-        content: this.$store.state.story.text || this.contentPlaceholder,
-        onUpdate: (payload) => {
-          this.$store.commit(UPDATE_STORY_TEXT, payload);
-        },
+        content: this.content,
       });
     },
   },
@@ -125,8 +158,12 @@ export default {
       </form>
       <h1 class="story-title-input has-mt-1" v-if="!editable">{{ storyName }}</h1>
 
-      <menu-bar :editor="editor" v-if="editable" />
-      <menu-bubble :editor="editor" v-if="editable" />
+      <menu-bar
+        @[SAVE_EVENT]="handleSave"
+        :editor="editor" v-if="editable" />
+      <menu-bubble
+        @changed="handleContentUpdate"
+        @click.native="handleContentUpdate" :editor="editor" v-if="editable" />
 
       <editor-content :class="{'editable': this.editable}" style="flex: 1; overflow: auto;" class="editor" :editor="editor" />
 

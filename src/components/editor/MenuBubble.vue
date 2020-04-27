@@ -29,6 +29,7 @@ export default {
         this.bboxAddedCallback(bbox.bounds);
         this.bboxAddedCallback = undefined;
         this.$store.commit(UPDATE_BBOX_BEING_ADDED, { active: false, position: undefined });
+        this.$emit('changed');
       }
     },
     featureBeingAdded(feature) {
@@ -36,6 +37,7 @@ export default {
         this.featureMarkAddedCallback(feature.position);
         this.featureMarkAddedCallback = undefined;
         this.$store.commit(UPDATE_FEATURE_BEING_ADDED, { active: false, position: undefined });
+        this.$emit('changed');
       }
     },
   },
@@ -54,18 +56,18 @@ export default {
       return attrs && attrs[STORY_LINK_BBOX_ATTR];
     },
 
-    handleAddFeatureMarkClick(fn) {
-      this.featureMarkAddedCallback = fn;
+    handleAddFeatureMarkClick(tiptapCommand) {
+      this.featureMarkAddedCallback = tiptapCommand;
       this.$store.commit(UPDATE_FEATURE_BEING_ADDED, { active: true, position: undefined });
     },
 
-    handleRemoveFeatureMarkClick(fn) {
+    handleRemoveFeatureMarkClick(tiptapCommand) {
       this.$store.commit(UPDATE_HIGHLIGHTED_LAT_LNG, undefined);
-      fn();
+      tiptapCommand();
     },
 
-    handleAddBoundingBoxClick(fn) {
-      this.bboxAddedCallback = fn;
+    handleAddBoundingBoxClick(tiptapCommand) {
+      this.bboxAddedCallback = tiptapCommand;
       this.$store.commit(UPDATE_BBOX_BEING_ADDED, { active: true, bounds: undefined });
     },
   },

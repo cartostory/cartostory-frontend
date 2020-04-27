@@ -1,8 +1,7 @@
 <script>
 import { EditorMenuBar } from 'tiptap';
-import { mapState } from 'vuex';
 
-import CsStoryJson from '@/components/CsStoryJson.vue';
+import { SAVE_EVENT } from '@/config/config';
 
 export default {
   name: 'MenuBar',
@@ -10,16 +9,6 @@ export default {
     EditorMenuBar,
   },
   props: ['editor'],
-  computed: {
-    ...mapState({
-      name: state => state.story.name,
-      text: state => state.story.text,
-      track: state => state.story.track,
-    }),
-    isDisabled() {
-      return !(this.name && this.text && this.track);
-    },
-  },
   methods: {
     /*
      * Lets user paste image url and inserts the image into the story.
@@ -34,20 +23,7 @@ export default {
     },
 
     handleSave() {
-      const result = {
-        name: this.name,
-        text: this.text.getJSON(),
-        track: this.track,
-      };
-      const string = JSON.stringify(result);
-      this.$buefy.modal.open({
-        component: CsStoryJson,
-        parent: this,
-        customClass: 'modal-result',
-        props: {
-          content: string,
-        },
-      });
+      this.$emit(SAVE_EVENT);
     },
   },
 };
@@ -97,9 +73,7 @@ export default {
       </b-button>
 
       <b-button
-        :disabled="isDisabled"
         style="margin-left: auto;"
-        :title="isDisabled ? 'Příběh zatím nelze uložit. Nahrajte prosím trasu, příběh pojmenujte a přidejte popis.' : 'Uložit příběh'"
         size="is-small"
         class="menubar__button"
         type="is-primary"
