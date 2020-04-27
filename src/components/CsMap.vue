@@ -35,7 +35,12 @@ export default {
   computed: {
     mapBounds() {
       const bbox = this.highlightedBbox;
-      return this.recenterMap && bbox && window.L.latLngBounds(bbox);
+
+      if (this.recenterMap && bbox) {
+        return window.L.latLngBounds(bbox);
+      }
+
+      return undefined;
     },
     mapCenter() {
       const bboxCenter = this.mapBounds && this.mapBounds.getCenter();
