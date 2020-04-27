@@ -13,7 +13,7 @@ describe('CsMap', () => {
         $store: {
           getters: {
             bboxes: [],
-            featuresWithoutHighlighted: [],
+            features: [],
           },
           state: {
             map: {},
@@ -36,7 +36,7 @@ describe('CsMap', () => {
         $store: {
           getters: {
             bboxes: [],
-            featuresWithoutHighlighted: [],
+            features: [],
           },
           state: {
             featureBeingAdded: {
@@ -63,5 +63,48 @@ describe('CsMap', () => {
     wrapper.vm.handleMapClick({ lat: 0, lng: 10 });
     expect(wrapper.vm.$store.commit).toHaveBeenCalledTimes(1);
     expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(UPDATE_FEATURE_BEING_ADDED, result);
+  });
+
+  test('renders map center', () => {
+    const bounds = [
+      { lat: 10, lng: 10 },
+      { lat: 0, lng: 0 },
+    ];
+    const highlightedBbox = {
+      $refs: {},
+      $store: {
+        state: {},
+      },
+      recenterMap: true,
+      mapBounds: window.L.latLngBounds(bounds),
+      highlightedBbox: bounds,
+    };
+
+    const highlightedFeature = {
+      $refs: {},
+      $store: {
+        state: {},
+      },
+      highlightedLatLng: { lat: 50, lng: 50 },
+      recenterMap: true,
+    };
+
+    const nothingHighlighted = {
+      $refs: {
+        csmap: {
+          mapObject: {
+            getCenter: jest.fn().mockReturnValue({ lat: 10, lng: 10 }),
+          },
+        },
+      },
+      $store: {
+        state: {},
+      },
+      recenterMap: true,
+    };
+
+    expect(CsMap.computed.mapCenter.call(highlightedBbox)).toEqual({ lat: 5, lng: 5 });
+    expect(CsMap.computed.mapCenter.call(highlightedFeature)).toEqual({ lat: 50, lng: 50 });
+    expect(CsMap.computed.mapCenter.call(nothingHighlighted)).toEqual({ lat: 10, lng: 10 });
   });
 });

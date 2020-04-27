@@ -56,12 +56,14 @@ describeHelper(
 );
 
 describeHelper(
-  'it sets bbox mark callback',
+  'it sets highlighted bbox',
   UPDATE_HIGHLIGHTED_BBOX,
   ['highlightedBbox'],
   [[1, 2], [3, 4]],
   [{ lat: 1, lng: 2 }, { lat: 3, lng: 4 }],
 );
+describeHelper('it unsets highlighted bbox', UPDATE_HIGHLIGHTED_BBOX, ['highlightedBbox'], undefined);
+
 describeHelper('it sets map center', UPDATE_MAP_CENTER, ['map', 'center'], { lat: 0, lng: 0 });
 describeHelper('it sets whether text should scroll or not', UPDATE_SHOULD_TEXT_SCROLL, ['shouldTextScroll'], false);
 describeHelper('it sets story', UPDATE_STORY, ['story'], { name: 'name', story: 'story', track: 'track' });

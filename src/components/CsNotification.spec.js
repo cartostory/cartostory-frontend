@@ -7,7 +7,7 @@ const localVue = createLocalVue();
 localVue.use(Buefy);
 
 describe('CsNotification.vue', () => {
-  test.only('renders errors', () => {
+  test('renders errors', () => {
     localVue.prototype.$buefy = {
       snackbar: {
         open: jest.fn(),

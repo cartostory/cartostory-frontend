@@ -1,4 +1,5 @@
 <script>
+import cloneDeep from 'lodash.clonedeep';
 import { Editor, EditorContent } from 'tiptap';
 import { Heading, Image } from 'tiptap-extensions';
 import { mapState } from 'vuex';
@@ -7,8 +8,10 @@ import BboxMark from '@/components/editor/BboxMark';
 import FeatureMark from '@/components/editor/FeatureMark';
 import MenuBar from '@/components/editor/MenuBar.vue';
 import MenuBubble from '@/components/editor/MenuBubble.vue';
-import { STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
+import CsStoryJson from '@/components/CsStoryJson.vue';
+import { SAVE_EVENT } from '@/config/config';
 import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
+import { getBboxSelector, getLatLngSelector } from '@/utils/utils';
 
 export default {
   name: 'CsEditor',
@@ -19,16 +22,17 @@ export default {
   },
   data() {
     return {
-      contentPlaceholder: 'Můžete začít psát...',
+      content: 'Můžete začít psát...',
       editor: undefined,
       keepInBounds: true,
+      SAVE_EVENT,
     };
   },
   computed: {
+    ...mapState(['editable', 'highlightedBbox', 'highlightedLatLng', 'shouldTextScroll']),
     ...mapState({
-      editable: state => state.editable,
-      highlightedLatLng: state => state.highlightedLatLng,
-      shouldTextScroll: state => state.shouldTextScroll,
+      text: state => state.story.text,
+      track: state => state.story.track,
     }),
     storyName: {
       get() {
@@ -40,29 +44,96 @@ export default {
     },
   },
   watch: {
-    highlightedLatLng() {
-      this.scrollToHighlightedLatLng();
-    },
-  },
-  mounted() {
-    this.editor = this.$createEditor();
-  },
-  methods: {
-    /*
-     * Scrolls to the highlighted feature mark.
-     */
-    scrollToHighlightedLatLng() {
-      if (!this.highlightedLatLng || !this.shouldTextScroll) {
+    highlightedLatLng(latLng) {
+      if (!latLng) {
         return;
       }
 
-      const { lat, lng } = this.highlightedLatLng;
-      const textMark = document.querySelector(`[${STORY_LINK_LAT_ATTR}='${lat}'], [${STORY_LINK_LNG_ATTR}='${lng}']`);
+      this.scrollToHighlighted();
+    },
+    highlightedBbox(bbox) {
+      if (!bbox) {
+        return;
+      }
 
-      this.$scrollTo(textMark, undefined, {
+      this.scrollToHighlighted();
+    },
+  },
+  beforeMount() {
+    document.documentElement.classList.add('is-clipped');
+  },
+  beforeDestroy() {
+    document.documentElement.classList.remove('is-clipped');
+  },
+  mounted() {
+    this.editor = this.$createEditor();
+
+    if (this.text) { // when reading the story, load text from store
+      this.editor.setContent(this.text);
+    }
+  },
+  methods: {
+    /*
+     * Sends content to store only when needed:
+     * - when feature mark or bbox is added
+     * - when story is to be saved
+     */
+    handleContentUpdate() {
+      this.$store.commit(UPDATE_STORY_TEXT, cloneDeep(this.editor.getJSON()));
+    },
+
+    handleSave() {
+      this.handleContentUpdate();
+
+      const result = {
+        name: this.storyName,
+        text: this.text,
+        track: this.track,
+      };
+      const string = JSON.stringify(result);
+      this.$buefy.modal.open({
+        component: CsStoryJson,
+        parent: this,
+        customClass: 'modal-result',
+        props: {
+          content: string,
+        },
+      });
+    },
+
+    /*
+     * Scrolls to the highlighted feature mark or bbox.
+     */
+    scrollToHighlighted() {
+      const highlighted = this.$getHighlightedNode();
+
+      if (!highlighted) {
+        return;
+      }
+
+      this.$scrollTo(highlighted, undefined, {
         container: document.querySelector('.editor'),
         offset: -50,
       });
+    },
+
+    $getHighlightedNode() {
+      let querySelector;
+
+      if (!this.shouldTextScroll) {
+        return;
+      }
+
+      if (this.highlightedLatLng) {
+        querySelector = getLatLngSelector(this.highlightedLatLng);
+      }
+
+      if (this.highlightedBbox) {
+        querySelector = getBboxSelector(this.highlightedBbox);
+      }
+
+      // eslint-disable-next-line consistent-return
+      return document.querySelector(querySelector);
     },
 
     $createEditor() {
@@ -76,10 +147,7 @@ export default {
           }),
           new Image(),
         ],
-        content: this.$store.state.story.text || this.contentPlaceholder,
-        onUpdate: (payload) => {
-          this.$store.commit(UPDATE_STORY_TEXT, payload);
-        },
+        content: this.content,
       });
     },
   },
@@ -100,19 +168,36 @@ export default {
       </form>
       <h1 class="story-title-input has-mt-1" v-if="!editable">{{ storyName }}</h1>
 
-      <menu-bar :editor="editor" v-if="editable" />
-      <menu-bubble :editor="editor" v-if="editable" />
+      <menu-bar
+        @[SAVE_EVENT]="handleSave"
+        :editor="editor" v-if="editable" />
+      <menu-bubble
+        @changed="handleContentUpdate"
+        @click.native="handleContentUpdate" :editor="editor" v-if="editable" />
 
-      <editor-content :class="{'editable': this.editable}" style="flex: 1; overflow: auto;" class="editor" :editor="editor" />
+      <editor-content :class="{'editable': this.editable}" style="flex: 1; overflow: auto;" class="editor has-mt-1 has-mb-1" :editor="editor" />
 
     </div>
 
   </div>
 </template>
 
+<!-- can't be scoped or title styles would not work -->
 <style lang="scss">
-@import "../assets/scss/variables.scss";
 @import "../../node_modules/bulma/bulma.sass";
+
+a[data-cs-lat],
+a[data-cs-bbox] {
+  color: $primary;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+a[data-cs-bbox] {
+  border: 1px dashed $bbox-mark-border-color;
+  padding: 1px;
+  text-decoration: none;
+}
 
 .editor {
   h2, h3, h4 {
