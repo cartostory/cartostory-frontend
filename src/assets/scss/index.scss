@@ -1,13 +1,11 @@
-@import "./variables.scss";
 @import "./helpers.scss";
-@import "../../../node_modules/bulma/bulma.sass";
 @import "../../../node_modules/buefy/src/scss/buefy.scss";
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap");
 
 html,
 body,
 #js-app {
     height: 100%;
-    overflow-y: hidden;
     margin: 0;
     padding: 0;
 }
@@ -24,4 +22,25 @@ a[data-cs-lng] {
 
 .snackbar {
     line-height: 1.5;
+}
+
+.background {
+  position: relative;
+}
+
+.background::after {
+  background-attachment: fixed;
+  background-image: url('../img/mountains_flipped.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: calc(100vh - #{$navbar-height});
+  content: "";
+  opacity: 0.9;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
 }

@@ -3,6 +3,7 @@ import Router from 'vue-router';
 
 import { UPDATE_EDITABLE, UPDATE_LOADING } from '@/store/mutations';
 import store from '@/store/newStore';
+import Login from '@/views/Login.vue';
 import Landing from '@/views/Landing.vue';
 import StoryScreen from '@/views/StoryScreen.vue';
 import LoadStoryForm from './views/LoadStoryForm.vue';
@@ -13,6 +14,10 @@ export const routes = [
   {
     path: '/',
     component: Landing,
+  },
+  {
+    path: '/login',
+    component: Login,
   },
   {
     path: '/story/read/:title',

@@ -5,66 +5,35 @@ export default {
 </script>
 
 <template>
-<section class="hero is-fullheight">
-  <div class="hero-body">
-    <div class="container">
-      <div class="columns">
-        <div class="column is-6 is-offset-3">
+  <div class="columns background has-no-margin">
+    <div class="column is-half">
+      <h1 class="claim has-pl-1">Cartostory je plné příběhů</h1>
+    </div>
+    <div class="column is-half">
+      <div class="box has-padding-2">
+        <h1 class="title is-1 has-text-centered">Každý příběh je plný dobrodružství&hellip;</h1>
+        <p>Určitě už jste zažili v přírodě dobrodružství, které se vám vrylo hluboko do paměti.
+        Zachytili jste ho na fotkách, možná i na videu, pomocí chytrých hodinek nebo mobilu jste
+        měřili rychlost, tep, spálené kalorie. Děláme to tak všichni, ne?</p>
 
-          <div class="columns">
-            <div class="column">
-              <h1 class="title is-1 has-text-weight-normal has-text-centered has-mb-1">Cartostory</h1>
-            </div>
-          </div>
-
-          <div class="columns">
-
-            <div class="column is-6 section-left has-pb-0">
-              <h2 class="title is-2 has-text-weight-normal has-text-centered has-mb-2">Napsat příběh</h2>
-              <p>Chcete napsat svůj vlastní příběh? Z&nbsp;prázdnin, dovolené nebo jen zajímavého sobotního
-                výletu?</p>
-              <b-button @click="$router.push('/story/create')">Chci psát</b-button>
-            </div>
-
-            <div class="column is-6 section-right has-pb-0">
-              <h2 class="title is-2 has-text-weight-normal has-text-centered has-mb-2">Číst příběh</h2>
-              <p>Váš kamarád nebo příbuzný napsal příběh a poslal vám jeho adresu? Můžete si ho přečíst.</p>
-              <b-button @click="$router.push('/story/load')">Chci číst</b-button>
-            </div>
-
-          </div>
-        </div>
+        <p>Možná za dobrodružstvím ale nevyrážíte jen kvůli grafu tepové frekvence.
+        Možná, stejně jako my, vyrážíte i pro ten pocit, že se něco děje, pro radost z pohybu, za
+        novými objevy.</p>
       </div>
     </div>
   </div>
-</section>
-
 </template>
 
 <style lang="scss" scoped>
-p {
-  flex: 1;
-  margin-bottom: 1rem;
+.claim {
+  color: white;
+  font-family: 'Dancing Script';
+  font-size: 8rem;
+  line-height: 10rem;
 }
 
-.section-left,
-.section-right {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.section-left {
-  border-right: 1px solid #F56C6C;
-  padding-right: 1rem;
-}
-
-.section-right {
-  padding-left: 1rem;
-}
-
-.section-right p {
-  flex: 1 0 auto;
+.columns {
+  align-items: center;
+  min-height: calc(100vh - #{$navbar-height});
 }
 </style>
