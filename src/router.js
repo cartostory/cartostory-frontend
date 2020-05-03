@@ -4,6 +4,7 @@ import Router from 'vue-router';
 import { UPDATE_EDITABLE, UPDATE_LOADING } from '@/store/mutations';
 import store from '@/store/newStore';
 import Login from '@/views/Login.vue';
+import LoginCallback from '@/views/LoginCallback.vue';
 import Landing from '@/views/Landing.vue';
 import StoryScreen from '@/views/StoryScreen.vue';
 import LoadStoryForm from './views/LoadStoryForm.vue';
@@ -18,6 +19,10 @@ export const routes = [
   {
     path: '/login',
     component: Login,
+  },
+  {
+    path: '/login-callback',
+    component: LoginCallback,
   },
   {
     path: '/story/read/:title',

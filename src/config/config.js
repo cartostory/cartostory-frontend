@@ -1,3 +1,5 @@
+export const BASE_API_URL = 'https://lih247zg28.execute-api.eu-west-1.amazonaws.com/Test';
+
 export const SCROLL_CONTAINER_ID = 'story-scrolling-container';
 export const STORY_LINK_BBOX_ATTR = 'data-cs-bbox';
 export const STORY_LINK_BBOX_ATTR_CAMEL = toCamelCase(STORY_LINK_BBOX_ATTR);

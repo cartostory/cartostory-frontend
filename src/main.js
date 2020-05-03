@@ -6,7 +6,7 @@ import VueScrollTo from 'vue-scrollto';
 import 'normalize.css';
 
 import './assets/scss/index.scss';
-import { domain, clientId } from '../auth_config.json';
+import { audience, domain, clientId } from '../auth_config.json';
 import { Auth0Plugin } from './auth';
 import App from './App.vue';
 import router from './router';
@@ -20,6 +20,7 @@ Vue.use(VueLogger);
 Vue.use(VueScrollTo);
 Vue.use(Vuex);
 Vue.use(Auth0Plugin, {
+  audience,
   domain,
   clientId,
   onRedirectCallback: (appState) => {

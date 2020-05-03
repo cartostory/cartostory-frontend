@@ -12,12 +12,10 @@ export const getInstance = () => instance;
 /** Creates an instance of the Auth0 SDK. If one has already been created, it returns that instance */
 export const useAuth0 = ({
   onRedirectCallback = DEFAULT_REDIRECT_CALLBACK,
-  redirectUri = window.location.origin,
+  redirectUri = `${window.location.origin}/login-callback`,
   ...options
 }) => {
-  if (instance) {
-    return instance;
-  }
+  if (instance) return instance;
 
   // The 'instance' is simply a Vue object
   instance = new Vue({
@@ -26,9 +24,9 @@ export const useAuth0 = ({
         loading: true,
         isAuthenticated: false,
         user: {},
-        auth0Client: undefined,
+        auth0Client: null,
         popupOpen: false,
-        error: undefined,
+        error: null,
       };
     },
     methods: {
@@ -74,6 +72,7 @@ export const useAuth0 = ({
         return this.auth0Client.getTokenSilently(o);
       },
       /** Gets the access token using a popup window */
+
       getTokenWithPopup(o) {
         return this.auth0Client.getTokenWithPopup(o);
       },
@@ -95,8 +94,7 @@ export const useAuth0 = ({
       try {
         // If the user is returning to the app after authentication..
         if (
-          window.location.search.includes('code=')
-          && window.location.search.includes('state=')
+          window.location.search.includes('code=') && window.location.search.includes('state=')
         ) {
           // handle the redirect and retrieve tokens
           const { appState } = await this.auth0Client.handleRedirectCallback();
