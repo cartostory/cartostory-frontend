@@ -64,6 +64,7 @@ export default {
   },
   beforeDestroy() {
     document.documentElement.classList.remove('is-clipped');
+    this.editor.destroy();
   },
   mounted() {
     this.editor = this.$createEditor();
@@ -151,15 +152,11 @@ export default {
       });
     },
   },
-
-  beforeDestroy() {
-    this.editor.destroy();
-  },
 };
 </script>
 
 <template>
-  <div class="column is-12 has-padding-0 story-text">
+  <div style="display: flex;" class="column is-12 has-padding-0 story-text">
     <div class="story-text__content">
       <form v-if="editable" class="has-mt-1">
         <b-field>
