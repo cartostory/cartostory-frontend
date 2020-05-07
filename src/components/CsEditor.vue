@@ -8,7 +8,6 @@ import BboxMark from '@/components/editor/BboxMark';
 import FeatureMark from '@/components/editor/FeatureMark';
 import MenuBar from '@/components/editor/MenuBar.vue';
 import MenuBubble from '@/components/editor/MenuBubble.vue';
-import CsStoryJson from '@/components/CsStoryJson.vue';
 import { SAVE_EVENT } from '@/config/config';
 import { UPDATE_ERRORS, UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
 import { getBboxSelector, getLatLngSelector } from '@/utils/utils';
@@ -25,6 +24,7 @@ export default {
     return {
       content: 'Můžete začít psát...',
       editor: undefined,
+      storyId: undefined,
       keepInBounds: true,
       SAVE_EVENT,
     };
@@ -87,14 +87,20 @@ export default {
     async handleSave() {
       this.handleContentUpdate();
 
-      const result = {
+      const payload = {
         name: this.storyName,
         text: this.text,
         track: this.track,
       };
 
+      if (this.storyId) {
+        payload.id = this.storyId;
+      }
+
+      const token = await this.$auth.getTokenSilently();
+
       try {
-        await storyService.save(this.$auth.user.email, result);
+        this.storyId = await storyService.save(payload, token);
       } catch (e) {
         this.$store.commit(UPDATE_ERRORS, {
           title: e.name,
