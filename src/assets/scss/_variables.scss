@@ -7,9 +7,22 @@ $size-2: 1.7rem;
 $size-3: 1.3rem;
 $text: #606266;
 
+/* box */
+$box-background-color: rgba(white, .2) !important;
+$box-radius: 0;
+$box-color: #1a1919;
+
 /* snackbar */
 $snackbar-background-color: white;
 $snackbar-color: $text;
 
 /* modal */
 $modal-z: 1000;
+
+/* navbar */
+$navbar-item-hover-color: $primary;
+$navbar-box-shadow-size: 0px 2px 3px 0px;
+$navbar-box-shadow-color: rgba(black, 0.2);
+$navbar-z: 3000;
+
+@import "../../../node_modules/bulma/bulma.sass";

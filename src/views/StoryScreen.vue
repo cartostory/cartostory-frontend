@@ -25,7 +25,7 @@ export default {
 </script>
 <template>
   <div class="container-fluid story-form">
-    <div style="height: 100vh;" class="columns has-margin-0">
+    <div class="wrapper columns has-margin-0">
       <cs-map></cs-map>
 
       <div style="display:flex; flex-direction: column; width: 100%;">
@@ -36,4 +36,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+.wrapper {
+  height: calc(100vh - #{$navbar-height});
+}
 </style>
