@@ -10,8 +10,9 @@ import MenuBar from '@/components/editor/MenuBar.vue';
 import MenuBubble from '@/components/editor/MenuBubble.vue';
 import CsStoryJson from '@/components/CsStoryJson.vue';
 import { SAVE_EVENT } from '@/config/config';
-import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
+import { UPDATE_ERRORS, UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
 import { getBboxSelector, getLatLngSelector } from '@/utils/utils';
+import * as storyService from '@/services/story';
 
 export default {
   name: 'CsEditor',
@@ -83,7 +84,7 @@ export default {
       this.$store.commit(UPDATE_STORY_TEXT, cloneDeep(this.editor.getJSON()));
     },
 
-    handleSave() {
+    async handleSave() {
       this.handleContentUpdate();
 
       const result = {
@@ -91,15 +92,15 @@ export default {
         text: this.text,
         track: this.track,
       };
-      const string = JSON.stringify(result);
-      this.$buefy.modal.open({
-        component: CsStoryJson,
-        parent: this,
-        customClass: 'modal-result',
-        props: {
-          content: string,
-        },
-      });
+
+      try {
+        await storyService.save(this.$auth.user.email, result);
+      } catch (e) {
+        this.$store.commit(UPDATE_ERRORS, {
+          title: e.name,
+          message: e.message,
+        });
+      }
     },
 
     /*
