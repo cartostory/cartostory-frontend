@@ -57,9 +57,7 @@ const state = {
 
 export const mutations = {
   // eslint-disable-next-line no-shadow
-  [UPDATE_TOKEN](state, token) {
-    state.auth.token = token;
-  },
+  [UPDATE_TOKEN]: setPath(['auth', 'token']),
   /* eslint-disable-next-line no-shadow */
   [REMOVE_ERROR](state, error) {
     const idx = state.errors.findIndex(e => e.title === error.title && e.message === error.message);

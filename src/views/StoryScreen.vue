@@ -1,6 +1,7 @@
 <script>
 import CsEditor from '@/components/CsEditor.vue';
 import CsMap from '@/components/CsMap.vue';
+import { UPDATE_LOADING } from '@/store/mutations';
 
 export default {
   name: 'story-screen',
@@ -10,7 +11,6 @@ export default {
   },
   data() {
     return {
-      loading: true,
       storyId: undefined,
     };
   },
@@ -21,33 +21,38 @@ export default {
     token() {
       return this.$store.state.auth.token;
     },
+    loading() {
+      return this.$store.state.loading;
+    },
   },
   watch: {
     async token(value) {
-      if (value && this.loading) {
+      if (value) {
         await this.$store.dispatch('loadStory', { storyUrl: this.storyId, token: value });
-        this.loading = !this.loading;
+        this.$store.commit(UPDATE_LOADING, false);
       }
     },
   },
   async created() {
     this.storyId = this.$route.params && this.$route.params.id;
-  },
-  mounted() {
-    this.loading = this.$router.currentRoute.path !== '/story/create';
+
+    if (this.storyId) {
+      this.$store.commit(UPDATE_LOADING, true);
+    }
   },
 };
 </script>
+
 <template>
-  <div class="container-fluid story-form">
+  <div v-if="!loading" class="container-fluid story-form">
     <div class="wrapper columns has-margin-0">
       <cs-map></cs-map>
 
       <div style="display:flex; flex-direction: column; width: 100%;">
-        <cs-editor v-if="$store.state.story.text || !loading"></cs-editor>
-      </div>
+        <cs-editor></cs-editor>
       </div>
     </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
