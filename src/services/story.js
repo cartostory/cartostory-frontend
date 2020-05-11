@@ -22,6 +22,19 @@ export const save = async (story, token) => {
   return result;
 };
 
+export const load = async (id, token) => {
+  const result = await axiosInstance.get(
+    `/story/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return result;
+};
+
 async function create(story, token) {
   const result = await axiosInstance.post(
     '/story',

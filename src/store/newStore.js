@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import axios from 'axios';
 import chunk from 'lodash.chunk';
 import mapDeep from 'deepdash-es/mapDeep';
 import pickDeep from 'deepdash-es/pickDeep';
 
+import { load } from '@/services/story';
 import { STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import {
   REMOVE_ERROR,
@@ -21,6 +21,7 @@ import {
   UPDATE_STORY_NAME,
   UPDATE_STORY_TEXT,
   UPDATE_STORY_URL,
+  UPDATE_TOKEN,
   UPDATE_TRACK,
 } from '@/store/mutations';
 import { set, setPath } from './store.helpers';
@@ -28,6 +29,9 @@ import { set, setPath } from './store.helpers';
 Vue.use(Vuex);
 
 const state = {
+  auth: {
+    token: undefined,
+  },
   editable: false,
   errors: [],
   bboxBeingAdded: {
@@ -52,6 +56,10 @@ const state = {
 };
 
 export const mutations = {
+  // eslint-disable-next-line no-shadow
+  [UPDATE_TOKEN](state, token) {
+    state.auth.token = token;
+  },
   /* eslint-disable-next-line no-shadow */
   [REMOVE_ERROR](state, error) {
     const idx = state.errors.findIndex(e => e.title === error.title && e.message === error.message);
@@ -114,10 +122,11 @@ const actions = {
     commit(UPDATE_STORY_TEXT, payload);
   },
   /* eslint-disable-next-line no-shadow */
-  async loadStory({ commit, state }) {
+  async loadStory({ commit }, payload) {
     commit(UPDATE_LOADING, true);
-    const result = await axios.get(state.storyUrl);
-    commit(UPDATE_STORY, result.data);
+    const result = (await load(payload.storyUrl, payload.token)).data.story.story;
+    commit(UPDATE_STORY, result);
+    commit(UPDATE_LOADING, false);
   },
 };
 

@@ -29,11 +29,7 @@ export const routes = [
     component: StoryScreen,
     beforeEnter(to, from, next) {
       store.commit(UPDATE_EDITABLE, false);
-      if (store.state.storyUrl) {
-        next();
-      } else {
-        next('/story/load');
-      }
+      next();
     },
   },
   {

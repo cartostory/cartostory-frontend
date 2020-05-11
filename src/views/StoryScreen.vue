@@ -10,16 +10,31 @@ export default {
   },
   data() {
     return {
-      ready: false,
+      loading: true,
+      storyId: undefined,
     };
   },
   computed: {
     editable() {
       return this.$store.state.editable;
     },
+    token() {
+      return this.$store.state.auth.token;
+    },
+  },
+  watch: {
+    async token(value) {
+      if (value && this.loading) {
+        await this.$store.dispatch('loadStory', { storyUrl: this.storyId, token: value });
+        this.loading = !this.loading;
+      }
+    },
+  },
+  async created() {
+    this.storyId = this.$route.params && this.$route.params.id;
   },
   mounted() {
-    this.ready = this.$router.currentRoute.path === '/story/create';
+    this.loading = this.$router.currentRoute.path !== '/story/create';
   },
 };
 </script>
@@ -29,7 +44,7 @@ export default {
       <cs-map></cs-map>
 
       <div style="display:flex; flex-direction: column; width: 100%;">
-        <cs-editor v-if="$store.state.story.text || ready"></cs-editor>
+        <cs-editor v-if="$store.state.story.text || !loading"></cs-editor>
       </div>
       </div>
     </div>

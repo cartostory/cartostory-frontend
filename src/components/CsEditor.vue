@@ -84,6 +84,9 @@ export default {
       this.$store.commit(UPDATE_STORY_TEXT, cloneDeep(this.editor.getJSON()));
     },
 
+    /*
+     * Creates new story or updates an existing one.
+     */
     async handleSave() {
       this.handleContentUpdate();
 
