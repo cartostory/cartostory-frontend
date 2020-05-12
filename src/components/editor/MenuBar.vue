@@ -1,14 +1,12 @@
 <script>
 import { EditorMenuBar } from 'tiptap';
 
-import { SAVE_EVENT } from '@/config/config';
-
 export default {
   name: 'MenuBar',
   components: {
     EditorMenuBar,
   },
-  props: ['editor'],
+  props: ['editor', 'saving'],
   methods: {
     /*
      * Lets user paste image url and inserts the image into the story.
@@ -20,10 +18,6 @@ export default {
       if (src) {
         command({ src });
       }
-    },
-
-    handleSave() {
-      this.$emit(SAVE_EVENT);
     },
   },
 };
@@ -72,13 +66,8 @@ export default {
         <b-icon size="is-small" icon="image-filter-hdr" custom-class="image-icon"></b-icon>
       </b-button>
 
-      <b-button
-        style="margin-left: auto;"
-        size="is-small"
-        class="menubar__button"
-        type="is-primary"
-        @click="handleSave">Uložit
-      </b-button>
+      <slot name="cancel-button"></slot>
+      <slot name="submit-button"></slot>
     </div>
   </editor-menu-bar>
 </template>

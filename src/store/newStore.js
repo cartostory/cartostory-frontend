@@ -18,6 +18,7 @@ import {
   UPDATE_MAP_CENTER,
   UPDATE_SHOULD_TEXT_SCROLL,
   UPDATE_STORY,
+  UPDATE_STORY_AUTHOR,
   UPDATE_STORY_NAME,
   UPDATE_STORY_TEXT,
   UPDATE_STORY_URL,
@@ -45,6 +46,7 @@ const state = {
   loading: false,
   storyUrl: undefined,
   story: {
+    author: undefined,
     name: undefined,
     text: undefined,
     track: undefined,
@@ -106,6 +108,7 @@ export const mutations = {
   [UPDATE_MAP_CENTER]: setPath(['map', 'center']),
   [UPDATE_SHOULD_TEXT_SCROLL]: set('shouldTextScroll'),
   [UPDATE_STORY]: set('story'),
+  [UPDATE_STORY_AUTHOR]: setPath(['story', 'author']),
   [UPDATE_STORY_NAME]: setPath(['story', 'name']),
   [UPDATE_STORY_TEXT]: setPath(['story', 'text']),
   [UPDATE_STORY_URL]: set('storyUrl'),
@@ -122,8 +125,9 @@ const actions = {
   /* eslint-disable-next-line no-shadow */
   async loadStory({ commit }, payload) {
     commit(UPDATE_LOADING, true);
-    const result = (await load(payload.storyUrl, payload.token)).data.story.story;
-    commit(UPDATE_STORY, result);
+    const result = (await load(payload.storyUrl, payload.token)).data.story;
+    commit(UPDATE_STORY, result.story);
+    commit(UPDATE_STORY_AUTHOR, result.email);
     commit(UPDATE_LOADING, false);
   },
 };
