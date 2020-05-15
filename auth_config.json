@@ -1,0 +1,5 @@
+{
+  "audience": "https://auth0-jwt-authorizer",
+  "domain": "carto-story.eu.auth0.com",
+  "clientId": "1Zc7PhZxhB8MDtkYxdPTjvc3Q63ssSnk"
+}

@@ -8,10 +8,9 @@ import BboxMark from '@/components/editor/BboxMark';
 import FeatureMark from '@/components/editor/FeatureMark';
 import MenuBar from '@/components/editor/MenuBar.vue';
 import MenuBubble from '@/components/editor/MenuBubble.vue';
-import CsStoryJson from '@/components/CsStoryJson.vue';
-import { SAVE_EVENT } from '@/config/config';
-import { UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
+import { UPDATE_EDITABLE, UPDATE_ERRORS, UPDATE_STORY_NAME, UPDATE_STORY_TEXT } from '@/store/mutations';
 import { getBboxSelector, getLatLngSelector } from '@/utils/utils';
+import * as storyService from '@/services/story';
 
 export default {
   name: 'CsEditor',
@@ -24,16 +23,23 @@ export default {
     return {
       content: 'Můžete začít psát...',
       editor: undefined,
+      previousContent: undefined, // placeholder for old content to go to when user cancels edits
+      saving: false,
+      storyId: undefined,
       keepInBounds: true,
-      SAVE_EVENT,
     };
   },
   computed: {
     ...mapState(['editable', 'highlightedBbox', 'highlightedLatLng', 'shouldTextScroll']),
     ...mapState({
+      author: state => state.story.author,
       text: state => state.story.text,
+      token: state => state.auth.token,
       track: state => state.story.track,
     }),
+    showEditButton() {
+      return this.author === this.$auth.user.email;
+    },
     storyName: {
       get() {
         return this.$store.state.story.name;
@@ -60,10 +66,14 @@ export default {
     },
   },
   beforeMount() {
-    document.documentElement.classList.add('is-clipped');
+    this.$hideScrollbar();
   },
   beforeDestroy() {
     document.documentElement.classList.remove('is-clipped');
+    this.editor.destroy();
+  },
+  created() {
+    this.storyId = this.$route.params && this.$route.params.id;
   },
   mounted() {
     this.editor = this.$createEditor();
@@ -74,7 +84,27 @@ export default {
   },
   methods: {
     /*
-     * Sends content to store only when needed:
+     * Revert changes when user cancels editing.
+     * @TODO body doesn't get `.is-clipped` class again, because it's being reset in
+     * https://github.com/buefy/buefy/blob/dev/src/components/modal/Modal.vue#L160.
+     */
+    handleCancelEditing() {
+      this.$buefy.dialog.confirm({
+        message: 'Opravdu chcete zahodit změny?',
+        cancelText: 'Ne',
+        confirmText: 'Ano',
+        onCancel: () => this.$hideScrollbar(),
+        onConfirm: () => {
+          this.$store.commit(UPDATE_EDITABLE, false);
+          this.editor.setOptions({ editable: false });
+          this.editor.setContent(this.previousContent);
+          this.$hideScrollbar();
+        },
+      });
+    },
+
+    /*
+     * Send the content to store only when needed:
      * - when feature mark or bbox is added
      * - when story is to be saved
      */
@@ -82,27 +112,43 @@ export default {
       this.$store.commit(UPDATE_STORY_TEXT, cloneDeep(this.editor.getJSON()));
     },
 
-    handleSave() {
+    handleStartEditing() {
+      this.$store.commit(UPDATE_EDITABLE, true);
+      this.editor.setOptions({ editable: true });
+      this.previousContent = cloneDeep(this.editor.getJSON());
+    },
+
+    /*
+     * Create new story or updates an existing one.
+     */
+    async handleSave() {
       this.handleContentUpdate();
 
-      const result = {
+      const payload = {
         name: this.storyName,
         text: this.text,
         track: this.track,
       };
-      const string = JSON.stringify(result);
-      this.$buefy.modal.open({
-        component: CsStoryJson,
-        parent: this,
-        customClass: 'modal-result',
-        props: {
-          content: string,
-        },
-      });
+
+      if (this.storyId) {
+        payload.id = this.storyId;
+      }
+
+      try {
+        this.saving = true;
+        this.storyId = await storyService.save(payload, this.token);
+      } catch (e) {
+        this.$store.commit(UPDATE_ERRORS, {
+          title: e.name,
+          message: e.message,
+        });
+      } finally {
+        this.saving = false;
+      }
     },
 
     /*
-     * Scrolls to the highlighted feature mark or bbox.
+     * Scroll to the highlighted feature mark or bbox.
      */
     scrollToHighlighted() {
       const highlighted = this.$getHighlightedNode();
@@ -150,27 +196,48 @@ export default {
         content: this.content,
       });
     },
-  },
 
-  beforeDestroy() {
-    this.editor.destroy();
+    $hideScrollbar() {
+      document.documentElement.classList.add('is-clipped');
+    },
   },
 };
 </script>
 
 <template>
-  <div class="column is-12 has-padding-0 story-text">
+  <div style="display: flex;" class="column is-12 has-padding-0 story-text">
     <div class="story-text__content">
       <form v-if="editable" class="has-mt-1">
         <b-field>
           <b-input custom-class="story-title-input" v-model="storyName" placeholder="Název příběhu" size="is-large"></b-input>
         </b-field>
       </form>
-      <h1 class="story-title-input has-mt-1" v-if="!editable">{{ storyName }}</h1>
+      <div v-if="!editable" style="display: flex; align-items: center; justify-content: space-evenly;">
+        <h1 style="flex: 1;" class="story-title-input has-mt-1">{{ storyName }}</h1>
+        <b-button @click="handleStartEditing" v-if="showEditButton" size="is-small" icon-left="pencil">Upravit</b-button>
+      </div>
 
       <menu-bar
-        @[SAVE_EVENT]="handleSave"
-        :editor="editor" v-if="editable" />
+        :saving="saving"
+        :editor="editor" v-if="editable">
+        <template v-slot:cancel-button>
+          <b-button
+            style="margin-left: auto;"
+            size="is-small"
+            class="menubar__button"
+            @click="handleCancelEditing">Zrušit
+          </b-button>
+        </template>
+        <template v-slot:submit-button>
+          <b-button
+            :loading="saving"
+            size="is-small"
+            class="menubar__button"
+            type="is-primary"
+            @click="handleSave">Uložit
+          </b-button>
+        </template>
+      </menu-bar>
       <menu-bubble
         @changed="handleContentUpdate"
         @click.native="handleContentUpdate" :editor="editor" v-if="editable" />

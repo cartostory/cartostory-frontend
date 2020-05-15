@@ -11,6 +11,7 @@ import {
   UPDATE_STORY_NAME,
   UPDATE_STORY_TEXT,
   UPDATE_STORY_URL,
+  UPDATE_TOKEN,
   UPDATE_TRACK,
 } from '@/store/mutations';
 import { getPath } from '@/store/store.helpers';
@@ -70,6 +71,7 @@ describeHelper('it sets story', UPDATE_STORY, ['story'], { name: 'name', story: 
 describeHelper('it sets story name', UPDATE_STORY_NAME, ['story', 'name'], 'story name');
 describeHelper('it sets story text', UPDATE_STORY_TEXT, ['story', 'text'], 'story text');
 describeHelper('it sets story url', UPDATE_STORY_URL, ['storyUrl'], 'url');
+describeHelper('it sets auth token', UPDATE_TOKEN, ['auth', 'token'], 'token');
 describeHelper('it sets story track', UPDATE_TRACK, ['story', 'track'], 'track');
 describeHelper(
   'it sets highlightedLatLng',

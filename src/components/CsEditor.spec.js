@@ -12,6 +12,7 @@ describe('CsEditor.vue', () => {
     const wrapper = shallowMount(CsEditor, {
       stubs: ['b-input', 'b-field'],
       mocks: {
+        $route: {},
         $store: {
           state: {
             editable: true,
@@ -32,10 +33,14 @@ describe('CsEditor.vue', () => {
     expect(editorMenuBubble.is(MenuBubble)).toBe(true);
   });
 
-  test('should have only editor', () => {
+  test('should have only the editor', () => {
     const wrapper = shallowMount(CsEditor, {
-      stubs: ['b-input', 'b-field'],
+      stubs: ['b-button', 'b-input', 'b-field'],
       mocks: {
+        $auth: {
+          user: {},
+        },
+        $route: {},
         $store: {
           state: {
             editable: false,
