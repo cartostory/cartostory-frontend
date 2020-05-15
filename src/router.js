@@ -47,7 +47,6 @@ export const routes = [
 ];
 
 const router = new Router({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes,
 });
