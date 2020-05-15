@@ -25,15 +25,11 @@ export const routes = [
     component: LoginCallback,
   },
   {
-    path: '/story/read/:title',
+    path: '/story/read/:id',
     component: StoryScreen,
     beforeEnter(to, from, next) {
       store.commit(UPDATE_EDITABLE, false);
-      if (store.state.storyUrl) {
-        next();
-      } else {
-        next('/story/load');
-      }
+      next();
     },
   },
   {

@@ -1,8 +1,5 @@
 <script>
 export default {
-  mounted() {
-    console.log(this.$auth);
-  },
   methods: {
     logout() {
       this.$auth.logout({
@@ -20,6 +17,7 @@ export default {
     </template>
     <template slot="start">
       <b-navbar-item tag="router-link" :to="{ path: '/about' }">O projektu</b-navbar-item>
+      <b-navbar-item v-if="$auth.isAuthenticated" tag="router-link" :to="{ path: '/stories' }">Moje příběhy</b-navbar-item>
       <b-navbar-item v-if="$auth.isAuthenticated" tag="router-link" :to="{ path: '/story/create' }">Napsat příběh</b-navbar-item>
     </template>
 
