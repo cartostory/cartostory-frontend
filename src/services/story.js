@@ -24,7 +24,7 @@ export const save = async (story, token) => {
 
 export const load = async (id, token) => {
   const result = await axiosInstance.get(
-    `/story/${id}`,
+    `/api/story/${id}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -35,9 +35,22 @@ export const load = async (id, token) => {
   return result;
 };
 
+export const loadMany = async (token) => {
+  const result = await axiosInstance.get(
+    '/api/stories',
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return result.data;
+};
+
 async function create(story, token) {
   const result = await axiosInstance.post(
-    '/story',
+    '/api/story',
     { story },
     {
       headers: {
@@ -51,7 +64,7 @@ async function create(story, token) {
 
 async function update(id, story, token) {
   const result = await axiosInstance.put(
-    `/story/${id}`,
+    `/api/story/${id}`,
     { story },
     {
       headers: {

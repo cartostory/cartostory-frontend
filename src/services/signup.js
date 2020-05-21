@@ -7,7 +7,7 @@ import axiosInstance from '@/services/axios';
  */
 export const signup = async (email) => {
   await axiosInstance.post(
-    '/auth/signup',
+    '/api/auth/signup',
     { email },
   );
 };
