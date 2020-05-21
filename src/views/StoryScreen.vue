@@ -1,4 +1,6 @@
 <script>
+import { mapState } from 'vuex';
+
 import CsEditor from '@/components/CsEditor.vue';
 import CsMap from '@/components/CsMap.vue';
 import { UPDATE_LOADING } from '@/store/mutations';

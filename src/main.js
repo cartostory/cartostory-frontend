@@ -6,9 +6,8 @@ import VueScrollTo from 'vue-scrollto';
 import 'normalize.css';
 
 import './assets/scss/index.scss';
-import { UPDATE_TOKEN } from '@/store/mutations';
 import { audience, domain, clientId } from '../auth_config.json';
-import { Auth0Plugin, getInstance } from './auth';
+import { Auth0Plugin } from './auth';
 import App from './App.vue';
 import router from './router';
 import store from './store/newStore';
@@ -38,12 +37,3 @@ new Vue({
   router,
   render: h => h(App),
 }).$mount('#js-cartostory');
-
-const auth0Instance = getInstance();
-
-auth0Instance.$watch('loading', async (loading) => {
-  if (!loading && auth0Instance.isAuthenticated) {
-    const token = await auth0Instance.getTokenSilently();
-    store.commit(UPDATE_TOKEN, token);
-  }
-});

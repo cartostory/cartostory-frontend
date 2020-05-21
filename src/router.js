@@ -6,6 +6,7 @@ import store from '@/store/newStore';
 import Login from '@/views/Login.vue';
 import LoginCallback from '@/views/LoginCallback.vue';
 import Landing from '@/views/Landing.vue';
+import StoryList from '@/views/StoryList.vue';
 import StoryScreen from '@/views/StoryScreen.vue';
 import LoadStoryForm from './views/LoadStoryForm.vue';
 
@@ -23,6 +24,10 @@ export const routes = [
   {
     path: '/login-callback',
     component: LoginCallback,
+  },
+  {
+    path: '/stories',
+    component: StoryList,
   },
   {
     path: '/story/read/:id',
@@ -52,12 +57,12 @@ const router = new Router({
   routes,
 });
 
-router.beforeEach((to, from, next) =>  {
+router.beforeEach((to, from, next) => {
   store.commit(UPDATE_LOADING, true);
   next();
 });
 
-router.afterEach(() =>  {
+router.afterEach(() => {
   store.commit(UPDATE_LOADING, false);
 });
 
