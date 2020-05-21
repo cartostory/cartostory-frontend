@@ -24,7 +24,7 @@ export default {
     <template slot="end">
       <b-navbar-item tag="div">
         <div class="buttons">
-          <b-button v-if="!$auth.isAuthenticated" type="is-primary" tag="router-link" to="/login" outlined>Přihlásit</b-button>
+          <b-button v-if="!$auth.isAuthenticated && !$auth.loading" type="is-primary" tag="router-link" to="/login" outlined>Přihlásit</b-button>
         </div>
       </b-navbar-item>
 
