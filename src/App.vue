@@ -1,9 +1,6 @@
 <script>
 import CsMenu from '@/components/CsMenu.vue';
 import CsNotification from '@/components/CsNotification.vue';
-import { UPDATE_TOKEN } from '@/store/mutations';
-
-import { getInstance } from './auth';
 
 export default {
   name: 'app',
@@ -11,28 +8,9 @@ export default {
     CsMenu,
     CsNotification,
   },
-  created() {
-    console.log('root created');
-    this.init(this.loadTokenIntoStore);
-  },
   computed: {
     loading() {
       return this.$store.state.loading;
-    },
-  },
-  methods: {
-    init(done) {
-      const instance = getInstance();
-      instance.$watch('loading', async (loading) => {
-        if (!loading && instance.isAuthenticated) {
-          done(instance);
-        }
-      });
-    },
-    async loadTokenIntoStore(auth0Instance) {
-      const token = await auth0Instance.getTokenSilently();
-      this.$store.commit(UPDATE_TOKEN, token);
-      console.log('token definitely ready');
     },
   },
 };
