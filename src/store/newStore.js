@@ -4,6 +4,7 @@ import chunk from 'lodash.chunk';
 import mapDeep from 'deepdash-es/mapDeep';
 import pickDeep from 'deepdash-es/pickDeep';
 
+import { getInstance } from '@/auth/index';
 import { load } from '@/services/story';
 import { STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import {
@@ -129,6 +130,17 @@ const actions = {
     commit(UPDATE_STORY, result.story);
     commit(UPDATE_STORY_AUTHOR, result.email);
     commit(UPDATE_LOADING, false);
+  },
+  async retrieveToken({ commit, state }) {
+    console.log('vuex retrieveToken');
+    if (state.auth.token) {
+      return state.auth.token;
+    }
+    const instance = getInstance();
+    const token = await instance.getTokenSilently();
+    console.log('token', token);
+    commit(UPDATE_TOKEN, token);
+    return token;
   },
 };
 

@@ -1,9 +1,9 @@
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import CsEditor from '@/components/CsEditor.vue';
 import CsMap from '@/components/CsMap.vue';
-import { UPDATE_LOADING } from '@/store/mutations';
+import { UPDATE_LOADING, UPDATE_TOKEN } from '@/store/mutations';
 
 export default {
   name: 'story-screen',
@@ -11,28 +11,32 @@ export default {
     CsEditor,
     CsMap,
   },
+  props: {
+    editorKey: {
+      type: Number,
+      required: true,
+    },
+  },
   data() {
     return {
       storyId: undefined,
     };
   },
   computed: {
-    editable() {
-      return this.$store.state.editable;
-    },
-    token() {
-      return this.$store.state.auth.token;
-    },
-    loading() {
-      return this.$store.state.loading;
-    },
+    ...mapState({
+      editable: state => state.editable,
+      loading: state => state.loading,
+      token: state => state.auth.token,
+    }),
   },
-  watch: {
-    async token(value) {
-      if (value) {
-        await this.$store.dispatch('loadStory', { storyUrl: this.storyId, token: value });
-        this.$store.commit(UPDATE_LOADING, false);
-      }
+  methods: {
+    ...mapActions([
+      'retrieveToken',
+      'loadStory',
+    ]),
+    async getStory() {
+      const token = await this.retrieveToken();
+      await this.loadStory({ storyUrl: this.storyId, token });
     },
   },
   async created() {
@@ -40,6 +44,7 @@ export default {
 
     if (this.storyId) {
       this.$store.commit(UPDATE_LOADING, true);
+      this.getStory();
     }
   },
 };
@@ -51,7 +56,7 @@ export default {
       <cs-map></cs-map>
 
       <div style="display:flex; flex-direction: column; width: 100%;">
-        <cs-editor></cs-editor>
+        <cs-editor :key="editorKey"></cs-editor>
       </div>
     </div>
   </div>
