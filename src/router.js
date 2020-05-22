@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import { UPDATE_EDITABLE, UPDATE_LOADING } from '@/store/mutations';
+import { UPDATE_EDITABLE, UPDATE_LOADING, UPDATE_STORY_NAME, UPDATE_STORY_TEXT, UPDATE_TRACK } from '@/store/mutations';
+import authGuard from '@/auth/authGuard';
 import store from '@/store/newStore';
 import Login from '@/views/Login.vue';
 import LoginCallback from '@/views/LoginCallback.vue';
@@ -11,6 +12,8 @@ import StoryScreen from '@/views/StoryScreen.vue';
 import LoadStoryForm from './views/LoadStoryForm.vue';
 
 Vue.use(Router);
+
+let editorKey = 0; // force editor rerendering
 
 export const routes = [
   {
@@ -28,13 +31,17 @@ export const routes = [
   {
     path: '/stories',
     component: StoryList,
+    beforeEnter: authGuard,
   },
   {
     path: '/story/read/:id',
     component: StoryScreen,
+    props: {
+      editorKey: editorKey += 1,
+    },
     beforeEnter(to, from, next) {
+      authGuard(to, from, next);
       store.commit(UPDATE_EDITABLE, false);
-      next();
     },
   },
   {
@@ -44,9 +51,15 @@ export const routes = [
   {
     path: '/story/create',
     component: StoryScreen,
+    props: {
+      editorKey: editorKey += 1,
+    },
     beforeEnter(to, from, next) {
+      authGuard(to, from, next);
       store.commit(UPDATE_EDITABLE, true);
-      next();
+      store.commit(UPDATE_STORY_NAME, undefined);
+      store.commit(UPDATE_STORY_TEXT, undefined);
+      store.commit(UPDATE_TRACK, undefined);
     },
   },
 ];
