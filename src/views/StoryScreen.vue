@@ -3,7 +3,7 @@ import { mapActions, mapState } from 'vuex';
 
 import CsEditor from '@/components/CsEditor.vue';
 import CsMap from '@/components/CsMap.vue';
-import { UPDATE_LOADING, UPDATE_TOKEN } from '@/store/mutations';
+import { UPDATE_LOADING } from '@/store/mutations';
 
 export default {
   name: 'story-screen',
@@ -24,9 +24,7 @@ export default {
   },
   computed: {
     ...mapState({
-      editable: state => state.editable,
       loading: state => state.loading,
-      token: state => state.auth.token,
     }),
   },
   methods: {
@@ -35,15 +33,14 @@ export default {
       'loadStory',
     ]),
     async getStory() {
-      const token = await this.retrieveToken();
-      await this.loadStory({ storyUrl: this.storyId, token });
+      await this.retrieveToken();
+      await this.loadStory(this.storyId);
     },
   },
   async created() {
     this.storyId = this.$route.params && this.$route.params.id;
 
     if (this.storyId) {
-      this.$store.commit(UPDATE_LOADING, true);
       this.getStory();
     }
   },

@@ -222,7 +222,7 @@ export default {
         :editor="editor" v-if="editable">
         <template v-slot:cancel-button>
           <b-button
-            style="margin-left: auto;"
+            v-if="storyId"
             size="is-small"
             class="menubar__button"
             @click="handleCancelEditing">Zrušit
