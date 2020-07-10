@@ -1,33 +1,29 @@
 <script>
+import { mapActions, mapState } from 'vuex';
+
 import { loadMany } from '@/services/story';
+import { UPDATE_LOADING } from '@/store/mutations';
 
 export default {
   name: 'StoryList',
   data() {
     return {
-      stories: undefined,
+      stories: [],
     };
   },
   async created() {
-    if (this.token) {
-      this.stories = await this.getStories();
-    }
+    this.$store.commit(UPDATE_LOADING, true);
+    this.stories = await this.getStories();
+    this.$store.commit(UPDATE_LOADING, false);
   },
   computed: {
-    token() {
-      return this.$store.state.auth.token;
-    },
-  },
-  watch: {
-    async token(value) {
-      if (value) {
-        this.stories = await this.getStories();
-      }
-    },
+    ...mapState(['loading']),
   },
   methods: {
+    ...mapActions(['retrieveToken']),
     async getStories() {
-      const result = await loadMany(this.token);
+      await this.retrieveToken();
+      const result = await loadMany();
       return result;
     },
   },
@@ -36,7 +32,10 @@ export default {
 
 <template>
   <div class="background">
-    <div class="container has-padding-2">
+    <div v-if="!loading" class="container has-padding-2">
+      <div v-if="stories.length === 0">
+        <h1 class="title is-size-1 has-text-centered">Zatím jste nenapsali žádný příběh.</h1>
+      </div>
       <div class="tile is-ancestor">
         <div :key="story.id" v-for="story in stories" class="tile is-vertical is-parent">
           <div class="tile is-child box">

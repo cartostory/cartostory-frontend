@@ -66,6 +66,7 @@ export default {
         <b-icon size="is-small" icon="image-filter-hdr" custom-class="image-icon"></b-icon>
       </b-button>
 
+      <div style="margin-left: auto;"></div>
       <slot name="cancel-button"></slot>
       <slot name="submit-button"></slot>
     </div>

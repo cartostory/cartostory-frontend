@@ -22,28 +22,13 @@ export const save = async (story, token) => {
   return result;
 };
 
-export const load = async (id, token) => {
-  const result = await axiosInstance.get(
-    `/api/story/${id}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
-
+export const load = async (id) => {
+  const result = await axiosInstance.get(`/api/story/${id}`);
   return result;
 };
 
-export const loadMany = async (token) => {
-  const result = await axiosInstance.get(
-    '/api/stories',
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
-  );
+export const loadMany = async () => {
+  const result = await axiosInstance.get('/api/stories');
 
   return result.data;
 };

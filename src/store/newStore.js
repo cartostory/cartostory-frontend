@@ -6,6 +6,7 @@ import pickDeep from 'deepdash-es/pickDeep';
 
 import { getInstance } from '@/auth/index';
 import { load } from '@/services/story';
+import axiosInstance from '@/services/axios';
 import { STORY_LINK_BBOX_ATTR, STORY_LINK_LAT_ATTR, STORY_LINK_LNG_ATTR } from '@/config/config';
 import {
   REMOVE_ERROR,
@@ -124,23 +125,23 @@ const actions = {
     commit(UPDATE_STORY_TEXT, payload);
   },
   /* eslint-disable-next-line no-shadow */
-  async loadStory({ commit }, payload) {
+  async loadStory({ commit }, storyId) {
     commit(UPDATE_LOADING, true);
-    const result = (await load(payload.storyUrl, payload.token)).data.story;
+    const result = (await load(storyId)).data.story;
     commit(UPDATE_STORY, result.story);
-    commit(UPDATE_STORY_AUTHOR, result.email);
+    commit(UPDATE_STORY_AUTHOR, result.author);
     commit(UPDATE_LOADING, false);
   },
+  // eslint-disable-next-line no-shadow
   async retrieveToken({ commit, state }) {
-    console.log('vuex retrieveToken');
-    if (state.auth.token) {
-      return state.auth.token;
+    if (!state.auth.token) {
+      const instance = getInstance();
+      const token = await instance.getTokenSilently();
+      commit(UPDATE_TOKEN, `Bearer ${token}`);
     }
-    const instance = getInstance();
-    const token = await instance.getTokenSilently();
-    console.log('token', token);
-    commit(UPDATE_TOKEN, token);
-    return token;
+
+    axiosInstance.defaults.headers.common.Authorization = state.auth.token;
+    return state.auth.token;
   },
 };
 
