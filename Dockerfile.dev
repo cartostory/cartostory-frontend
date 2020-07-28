@@ -1,0 +1,20 @@
+FROM node:11 AS node_base
+
+FROM node_base AS deps
+RUN mkdir /opt/app
+WORKDIR /opt/app
+RUN chown -R node:node /opt/app
+USER node
+COPY package.json /opt/app/package.json
+COPY --chown=node:node package-lock.json /opt/app/package-lock.json
+RUN npm install
+
+FROM node_base AS dev
+RUN mkdir /opt/app
+WORKDIR /opt/app
+RUN chown -R node:node /opt/app
+USER node
+COPY --from=deps --chown=node:node /opt/app/node_modules /opt/app/node_modules
+ENTRYPOINT ["yarn"]
+EXPOSE 8080
+
