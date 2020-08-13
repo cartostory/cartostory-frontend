@@ -14,8 +14,8 @@ jobs:
 
       - name: Install and Build 🔧
         run: |
-          yarn install
-          yarn run build
+          npm install
+          npm run build
 
       - name: Install SSH Client 🔑
         uses: webfactory/ssh-agent@v0.2.0

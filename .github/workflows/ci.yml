@@ -16,7 +16,7 @@ jobs:
 
     # Runs a set of commands using the runners shell
     - name: Install dependencies
-      run: yarn install
-    
+      run: npm install
+
     - name: Run tests
-      run: yarn test:unit
+      run: npm test:unit
