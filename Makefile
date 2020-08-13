@@ -1,6 +1,5 @@
 # https://medium.com/@slightlytyler/https-medium-com-slightlytyler-containerizing-modern-front-end-applications-part-2-5be2fde0be9f
 ARGS?=
-PORT=8080
 TAG=cartostory-frontend-build
 TAG_DEV=cartostory-frontend-build
 
@@ -13,7 +12,7 @@ VOLUME_SRC=-v $(PWD)/src:/opt/app/src
 VOLUME_VUE_CONFIG=-v $(PWD)/vue.config.js:/opt/app/vue.config.js
 VOLUME_PACKAGE_LOCK=-v $(PWD)/package-lock.json:/opt/app/package-lock.json
 
-VOLUME_MOUNTS=$(VOLUME_SRC) $(VOLUME_PACKAGE_JSON) $(VOLUME_ESLINTRC) $(VOLUME_VUE_CONFIG) $(VOLUME_PUBLIC) $(VOLUME_AUTH_CONFIG) $(VOLUME_BABEL)
+VOLUME_MOUNTS=$(VOLUME_SRC) $(VOLUME_PACKAGE_JSON) $(VOLUME_ESLINTRC) $(VOLUME_HUSKY) $(VOLUME_VUE_CONFIG) $(VOLUME_PUBLIC) $(VOLUME_AUTH_CONFIG) $(VOLUME_BABEL)
 VOLUME_MOUNTS_WITH_DEP_STUFF=$(VOLUME_MOUNTS) $(VOLUME_PACKAGE_LOCK)
 
 build:
