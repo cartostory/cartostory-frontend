@@ -39,7 +39,7 @@ async function create(story, token) {
     { story },
     {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     },
   );
@@ -53,7 +53,7 @@ async function update(id, story, token) {
     { story },
     {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: token,
       },
     },
   );
