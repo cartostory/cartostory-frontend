@@ -15,11 +15,11 @@ VOLUME_PACKAGE_LOCK=-v $(PWD)/package-lock.json:/opt/app/package-lock.json
 VOLUME_MOUNTS=$(VOLUME_SRC) $(VOLUME_PACKAGE_JSON) $(VOLUME_ESLINTRC) $(VOLUME_HUSKY) $(VOLUME_VUE_CONFIG) $(VOLUME_PUBLIC) $(VOLUME_AUTH_CONFIG) $(VOLUME_BABEL)
 VOLUME_MOUNTS_WITH_DEP_STUFF=$(VOLUME_MOUNTS) $(VOLUME_PACKAGE_LOCK)
 
-build:
-	docker build -f Dockerfile -t $(TAG):latest .
+build-prod:
+	docker-compose -f docker-compose.yml build --force-rm
 
 build-dev:
-	docker build -f Dockerfile.dev -t $(TAG_DEV):latest .
+	docker-compose -f docker-compose.dev.yml build --force-rm
 
 run-dev:
 	docker-compose -f docker-compose.dev.yml up
