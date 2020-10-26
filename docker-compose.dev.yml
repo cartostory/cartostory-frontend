@@ -16,13 +16,17 @@ services:
             dockerfile: Dockerfile.dev
         command: run serve
         volumes:
-            - ./src:/opt/app/src
-            - ./auth_config.json:/opt/app/auth_config.json
-            - ./package.json:/opt/app/package.json
+            - ./__mocks__:/opt/app/__mocks__
+            - ./.env:/opt/app/.env
             - ./.eslintrc.js:/opt/app/.eslintrc.js
+            - ./auth_config.json:/opt/app/auth_config.json
             - ./babel.config.js:/opt/app/babel.config.js
-            - ./vue.config.js:/opt/app/vue.config.js
+            - ./jest.config.js:/opt/app/jest.config.js
+            - ./package.json:/opt/app/package.json
             - ./public:/opt/app/public
+            - ./src:/opt/app/src
+            - ./tests:/opt/app/tests
+            - ./vue.config.js:/opt/app/vue.config.js
 networks:
     default:
         name: cartostory-net

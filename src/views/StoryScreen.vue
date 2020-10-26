@@ -33,12 +33,12 @@ export default {
       'loadStory',
     ]),
     async getStory() {
-      await this.retrieveToken();
       await this.loadStory(this.storyId);
     },
   },
   async created() {
     this.storyId = this.$route.params && this.$route.params.id;
+    await this.retrieveToken();
 
     if (this.storyId) {
       this.getStory();
