@@ -6,13 +6,16 @@ TAG_DEV=cartostory-frontend-build
 VOLUME_AUTH_CONFIG=-v $(PWD)/auth_config.json:/opt/app/auth_config.json
 VOLUME_BABEL=-v $(PWD)/babel.config.js:/opt/app/babel.config.js
 VOLUME_ESLINTRC=-v $(PWD)/.eslintrc.js:/opt/app/.eslintrc.js
+VOLUME_JEST_CONFIG=-v $(PWD)/jest.config.js:/opt/app/jest.config.js
+VOLUME_MOCKS=-v $(PWD)/__mocks__:/opt/app/__mocks__
 VOLUME_PACKAGE_JSON=-v $(PWD)/package.json:/opt/app/package.json
 VOLUME_PUBLIC=-v $(PWD)/public:/opt/app/public
 VOLUME_SRC=-v $(PWD)/src:/opt/app/src
+VOLUME_TESTS=-v $(PWD)/tests:/opt/app/tests
 VOLUME_VUE_CONFIG=-v $(PWD)/vue.config.js:/opt/app/vue.config.js
 VOLUME_PACKAGE_LOCK=-v $(PWD)/package-lock.json:/opt/app/package-lock.json
 
-VOLUME_MOUNTS=$(VOLUME_SRC) $(VOLUME_PACKAGE_JSON) $(VOLUME_ESLINTRC) $(VOLUME_HUSKY) $(VOLUME_VUE_CONFIG) $(VOLUME_PUBLIC) $(VOLUME_AUTH_CONFIG) $(VOLUME_BABEL)
+VOLUME_MOUNTS=$(VOLUME_SRC) $(VOLUME_PACKAGE_JSON) $(VOLUME_ESLINTRC) $(VOLUME_JEST_CONFIG) $(VOLUME_MOCKS) $(VOLUME_HUSKY) $(VOLUME_VUE_CONFIG) $(VOLUME_PUBLIC) $(VOLUME_AUTH_CONFIG) $(VOLUME_BABEL) $(VOLUME_TESTS)
 VOLUME_MOUNTS_WITH_DEP_STUFF=$(VOLUME_MOUNTS) $(VOLUME_PACKAGE_LOCK)
 
 build-prod:
@@ -21,13 +24,16 @@ build-prod:
 build-dev:
 	docker-compose -f docker-compose.dev.yml build --force-rm
 
+build-docker-dev:
+	docker build --network host -f Dockerfile.dev -t $(TAG_DEV):latest .
+
 run-dev:
-	docker-compose -f docker-compose.dev.yml up
+	docker-compose -f docker-compose.dev.yml up --build
 
 #make run-npm ARGS="add package/name"
 run-npm:
 	docker run -it --rm $(VOLUME_MOUNTS_WITH_DEP_STUFF) $(TAG_DEV) $(ARGS)
 
 .PHONY:
-	build-dev run-dev
+	build-dev run-dev run-test
 
