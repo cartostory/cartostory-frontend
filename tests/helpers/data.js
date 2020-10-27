@@ -13,23 +13,23 @@ export const defaultText = {
           "type": "featureMark",
           "attrs": {
             "data-cs-lat": 0,
-            "data-cs-lng": 10
-          }
+            "data-cs-lng": 10,
+          },
         }],
-        "text": "testds fasdfa f"
-      }]
+        "text": "testds fasdfa f",
+      }],
     }, {
       "type": "paragraph",
       "content": [{
         "type": "text",
-        "text": "adf"
-      }]
+        "text": "adf",
+      }],
     }, {
       "type": "paragraph",
       "content": [{
         "type": "text",
-        "text": "asdf"
-      }]
+        "text": "asdf",
+      }],
     }, {
       "type": "paragraph",
       "content": [{
@@ -37,18 +37,18 @@ export const defaultText = {
         "marks": [{
           "type": "bboxMark",
           "attrs": {
-            "data-cs-bbox": "[[1, 2],[3, 4]]"
-          }
+            "data-cs-bbox": "[[1, 2],[3, 4]]",
+          },
         }],
-        "text": "as df"
-      }]
+        "text": "as df",
+      }],
     }, {
       "type": "paragraph",
       "content": [{
         "type": "text",
-        "text": "asd f"
-      }]
-    }]
+        "text": "asd f",
+      }],
+    }],
   },
   "track": {
     "type": "FeatureCollection",
@@ -56,8 +56,8 @@ export const defaultText = {
     "crs": {
       "type": "name",
       "properties": {
-        "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
-      }
+        "name": "urn:ogc:def:crs:OGC:1.3:CRS84",
+      },
     },
     "features": [{
       "type": "Feature",
@@ -4156,10 +4156,10 @@ export const defaultText = {
             [15.271706, 47.618084, 942.5],
             [15.271652, 47.618038, 941.3],
             [15.271564, 47.618043, 941.3],
-            [15.271505, 47.618068, 941.3]
-          ]
-        ]
-      }
-    }]
-  }
+            [15.271505, 47.618068, 941.3],
+          ],
+        ],
+      },
+    }],
+  },
 };

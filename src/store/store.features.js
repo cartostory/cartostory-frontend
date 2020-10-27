@@ -22,7 +22,7 @@ const actions = {
 };
 
 const getters = {
-  getFeatureById: (state) => (id) => {
+  getFeatureById: state => (id) => {
     if (!state.data.features) {
       return undefined;
     }

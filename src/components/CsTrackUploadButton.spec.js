@@ -10,19 +10,19 @@ const localVue = createLocalVue();
 localVue.use(Buefy);
 
 describe('CsTrackUploadButton.vue', () => {
-  test('emits upload event when json file parsed', async() => {
+  test('emits upload event when json file parsed', async () => {
     const wrapper = mount(CsTrackUploadButton, {
       localVue,
     });
 
-    wrapper.find(FileReader).vm.$emit('reader-load',{ data: '{"data": true}'});
-    expect(wrapper.emitted()[TRACK_FILE_UPLOAD_EVENT]).toEqual([[{data: true}]]);
+    wrapper.find(FileReader).vm.$emit('reader-load', { data: '{"data": true}' });
+    expect(wrapper.emitted()[TRACK_FILE_UPLOAD_EVENT]).toEqual([[{ data: true }]]);
   });
 
-  test('emits upload event when json file is invalid', async() => {
+  test('emits upload event when json file is invalid', async () => {
     const msg = {
-      'message': 'Trasu se nepodařilo nahrát. Soubor pravděpodobně není validní.',
-      'title': 'Selhalo nahrání trasy'
+      message: 'Trasu se nepodařilo nahrát. Soubor pravděpodobně není validní.',
+      title: 'Selhalo nahrání trasy',
     };
     const wrapper = mount(CsTrackUploadButton, {
       mocks: {
@@ -34,10 +34,8 @@ describe('CsTrackUploadButton.vue', () => {
       localVue,
     });
 
-    wrapper.find(FileReader).vm.$emit('reader-load',{ data: "invalid json"});
+    wrapper.find(FileReader).vm.$emit('reader-load', { data: 'invalid json' });
     expect(wrapper.emitted()[TRACK_FILE_UPLOAD_EVENT]).toBeUndefined();
     expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(UPDATE_ERRORS, msg);
-
   });
 });
-

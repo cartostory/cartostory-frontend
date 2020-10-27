@@ -44,12 +44,10 @@ export default class FeatureMark extends Mark {
   }
 
   commands({ type }) {
-    return (attrs) => {
-      return toggleMark(type, {
-        [STORY_LINK_LAT_ATTR]: attrs && attrs[STORY_LINK_LAT_ATTR],
-        [STORY_LINK_LNG_ATTR]: attrs && attrs[STORY_LINK_LNG_ATTR],
-      });
-    };
+    return attrs => toggleMark(type, {
+      [STORY_LINK_LAT_ATTR]: attrs && attrs[STORY_LINK_LAT_ATTR],
+      [STORY_LINK_LNG_ATTR]: attrs && attrs[STORY_LINK_LNG_ATTR],
+    });
   }
 
   get view() {
