@@ -1,4 +1,4 @@
-import Buefy from 'buefy'
+import Buefy from 'buefy';
 import { mount, createLocalVue } from '@vue/test-utils';
 
 import CsNotification from '@/components/CsNotification.vue';

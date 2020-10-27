@@ -1,0 +1,6 @@
+pre-commit:
+    commands:
+        eslint:
+            root: "opt/app"
+            glob: "*.{js,vue}"
+            run: docker run --rm -v ${PWD}:/opt/app cartostory-frontend-build "run lint --fix {files}" && git add {files}

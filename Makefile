@@ -25,12 +25,13 @@ build-dev:
 	docker build --network host -f Dockerfile.dev -t $(TAG_DEV):latest .
 
 run-dev:
-	docker run -it --rm -p 8080:8080 $(VOLUME_MOUNTS) $(TAG_DEV) \
+	docker run -it --rm -p 8080:8080 -v $(PWD):/opt/app $(TAG_DEV) \
 		run serve --env.host=0.0.0.0
 
 #make run-npm ARGS="add package/name"
 run-npm:
-	docker run -it --rm $(VOLUME_MOUNTS_WITH_DEP_STUFF) $(TAG_DEV) $(ARGS)
+	docker run -it --rm -v $(PWD):/opt/app $(TAG_DEV) $(ARGS)
+	#docker run -it --rm $(VOLUME_MOUNTS_WITH_DEP_STUFF) $(TAG_DEV) $(ARGS)
 
 .PHONY:
 	build-dev run-dev run-test

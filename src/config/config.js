@@ -15,6 +15,6 @@ export const TRACK_FILE_UPLOAD_EVENT = 'track-file-upload';
 function toCamelCase(str) {
   return str
     .split('-')
-    .map((item, idx) => idx > 0 ? item.slice(0,1).toUpperCase() + item.slice(1) : item)
+    .map((item, idx) => (idx > 0 ? item.slice(0, 1).toUpperCase() + item.slice(1) : item))
     .join('');
 }

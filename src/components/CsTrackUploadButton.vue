@@ -13,7 +13,7 @@ export default {
     handleFileUpload(fileObj) {
       try {
         this.$emit(TRACK_FILE_UPLOAD_EVENT, fileObj && JSON.parse(fileObj.data));
-      } catch(e) {
+      } catch (e) {
         this.$store.commit(UPDATE_ERRORS, {
           title: 'Selhalo nahrání trasy',
           message: 'Trasu se nepodařilo nahrát. Soubor pravděpodobně není validní.',
@@ -21,7 +21,7 @@ export default {
       }
     },
   },
-}
+};
 </script>
 
 <template>
