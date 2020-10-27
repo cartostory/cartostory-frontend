@@ -15,7 +15,7 @@ RUN mkdir /opt/app
 WORKDIR /opt/app
 RUN chown -R node:node /opt/app
 USER node
-COPY --from=deps /opt/app/node_modules /opt/app/node_modules
+COPY --from=deps --chown=node:node /opt/app/node_modules /opt/app/node_modules
 ENTRYPOINT ["npm"]
 EXPOSE 8080
 
