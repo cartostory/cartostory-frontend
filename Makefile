@@ -22,13 +22,11 @@ build-prod:
 	docker-compose -f docker-compose.yml build --force-rm
 
 build-dev:
-	docker-compose -f docker-compose.dev.yml build --force-rm
-
-build-docker-dev:
 	docker build --network host -f Dockerfile.dev -t $(TAG_DEV):latest .
 
 run-dev:
-	docker-compose -f docker-compose.dev.yml up --build
+	docker run -it --rm -p 8080:8080 $(VOLUME_MOUNTS) $(TAG_DEV) \
+		run serve --env.host=0.0.0.0
 
 #make run-npm ARGS="add package/name"
 run-npm:
