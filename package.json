@@ -36,6 +36,7 @@
     "vuex-persist": "^2.2.0"
   },
   "devDependencies": {
+    "@arkweid/lefthook": "^0.7.2",
     "@babel/core": "^7.9.0",
     "@vue/cli-plugin-babel": "^3.4.0",
     "@vue/cli-plugin-eslint": "^3.4.0",

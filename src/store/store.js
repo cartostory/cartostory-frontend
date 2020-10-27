@@ -27,22 +27,22 @@ const vuexLocal = new VuexPersistence({
   key: LOCALE_STORAGE_KEY,
   storage: window.localStorage,
   strictMode: true,
-  reducer: (state) =>  ({
+  reducer: state => ({
     storyName: state.story.data.name,
     storyUrl: state.story.data.url,
     featuresUrl: state.features.data.url,
     trackUrl: state.track.data.url,
   }),
   saveState: (key, state, storage) => {
-    const {storyName, storyUrl, featuresUrl, trackUrl} = state;
+    const { storyName, storyUrl, featuresUrl, trackUrl } = state;
     const currentStorage = JSON.parse(storage.getItem(key)) || [];
 
     if (!storyName || !storyUrl || !featuresUrl || !trackUrl) {
       return;
     }
 
-    if (currentStorage.find(item => item.storyName === storyName &&  item.storyUrl === storyUrl &&
-      item.featuresUrl === featuresUrl && item.trackUrl === trackUrl)) {
+    if (currentStorage.find(item => item.storyName === storyName && item.storyUrl === storyUrl
+      && item.featuresUrl === featuresUrl && item.trackUrl === trackUrl)) {
     } else {
       currentStorage.push(state);
       storage.setItem(key, JSON.stringify(currentStorage));

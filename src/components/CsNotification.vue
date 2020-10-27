@@ -5,7 +5,7 @@ export default {
   name: 'CsNotification',
   computed: {
     errors() {
-      this.$store.state.errors.forEach(e => {
+      this.$store.state.errors.forEach((e) => {
         this.$buefy.snackbar.open({
           indefinite: true,
           position: 'is-top-right',
@@ -31,4 +31,3 @@ export default {
 <template>
 
 </template>
-

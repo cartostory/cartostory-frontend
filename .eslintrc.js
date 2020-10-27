@@ -14,7 +14,7 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'object-curly-newline': ['error', {
-        "ImportDeclaration": { "minProperties": 30, "consistent": false, "multiline": true },
+      ImportDeclaration: { minProperties: 30, consistent: false, multiline: true },
     }],
   },
 
@@ -30,8 +30,8 @@ module.exports = {
         '**/src/**/*.spec.[jt]s?(x)',
       ],
       env: {
-        jest: true
-      }
-    }
-  ]
+        jest: true,
+      },
+    },
+  ],
 };

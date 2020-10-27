@@ -48,7 +48,7 @@ const trackModule = {
         return null;
       }
 
-      const features = rootState.features.data.features;
+      const { features } = rootState.features.data;
       const fc = turf.featureCollection(features);
       const pointsInsideBbox = turf.pointsWithinPolygon(fc, getters.bboxGeoJson);
 
@@ -87,7 +87,7 @@ const trackModule = {
       });
       return turf.featureCollection(parts);
     },
-  }
+  },
 };
 
 export default trackModule;

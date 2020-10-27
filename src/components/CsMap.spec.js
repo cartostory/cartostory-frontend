@@ -25,9 +25,9 @@ describe('CsMap', () => {
       localVue,
     });
 
-    wrapper.vm.handleFileUpload({file: 'data'});
+    wrapper.vm.handleFileUpload({ file: 'data' });
     expect(wrapper.vm.$store.commit).toHaveBeenCalledTimes(1);
-    expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(UPDATE_TRACK, {file: 'data'});
+    expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(UPDATE_TRACK, { file: 'data' });
   });
 
   test('adds feature on map click', () => {
