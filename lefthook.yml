@@ -2,4 +2,20 @@ pre-commit:
     commands:
         lint:
             glob: "*.{js,vue}"
-            run: docker run --rm -v ${PWD}:/opt/app cartostory-frontend-build run lint {staged_files} && git add {staged_files}
+            run: docker run \
+              --rm \
+              -it \
+              -v ${PWD}/.git:/opt/app/.git \
+              -v ${PWD}/auth_config.json:/opt/app/auth_config.json \
+              -v ${PWD}/babel.config.js:/opt/app/babel.config.js \
+              -v ${PWD}/.eslintrc.js:/opt/app/.eslintrc.js \
+              -v ${PWD}/jest.config.js:/opt/app/jest.config.js \
+              -v ${PWD}/lefthook.yml:/opt/app/lefthook.yml \
+              -v ${PWD}/package.json:/opt/app/package.json \
+              -v ${PWD}/__mocks__:/opt/app/__mocks__ \
+              -v ${PWD}/public:/opt/app/public \
+              -v ${PWD}/src:/opt/app/src \
+              -v ${PWD}/tests:/opt/app/tests \
+              -v ${PWD}/vue.config.js:/opt/app/vue.config.js \
+              -v ${PWD}/package-lock.json:/opt/app/package-lock.json \
+              cartostory-frontend-build run lint {staged_files} && git add {staged_files}
