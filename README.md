@@ -1,8 +1,5 @@
 # cartostory-frontend
 
-##
-# cartostory-frontend
-
 ## Requirements
 * Docker
 * make
