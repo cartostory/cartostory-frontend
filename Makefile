@@ -5,18 +5,19 @@ TAG_DEV=cartostory-frontend-build
 
 VOLUME_AUTH_CONFIG=-v $(PWD)/auth_config.json:/opt/app/auth_config.json
 VOLUME_BABEL=-v $(PWD)/babel.config.js:/opt/app/babel.config.js
+VOLUME_ENV=-v $(PWD)/.env:/opt/app/.env
 VOLUME_ESLINTRC=-v $(PWD)/.eslintrc.js:/opt/app/.eslintrc.js
 VOLUME_JEST_CONFIG=-v $(PWD)/jest.config.js:/opt/app/jest.config.js
 VOLUME_LEFTHOOK=-v $(PWD)/lefthook.yml:/opt/app/lefthook.yml
 VOLUME_MOCKS=-v $(PWD)/__mocks__:/opt/app/__mocks__
 VOLUME_PACKAGE_JSON=-v $(PWD)/package.json:/opt/app/package.json
+VOLUME_PACKAGE_LOCK=-v $(PWD)/package-lock.json:/opt/app/package-lock.json
 VOLUME_PUBLIC=-v $(PWD)/public:/opt/app/public
 VOLUME_SRC=-v $(PWD)/src:/opt/app/src
 VOLUME_TESTS=-v $(PWD)/tests:/opt/app/tests
 VOLUME_VUE_CONFIG=-v $(PWD)/vue.config.js:/opt/app/vue.config.js
-VOLUME_PACKAGE_LOCK=-v $(PWD)/package-lock.json:/opt/app/package-lock.json
 
-VOLUME_MOUNTS=$(VOLUME_SRC) $(VOLUME_PACKAGE_JSON) $(VOLUME_ESLINTRC) $(VOLUME_JEST_CONFIG) $(VOLUME_LEFTHOOK) $(VOLUME_MOCKS) $(VOLUME_HUSKY) $(VOLUME_VUE_CONFIG) $(VOLUME_PUBLIC) $(VOLUME_AUTH_CONFIG) $(VOLUME_BABEL) $(VOLUME_TESTS)
+VOLUME_MOUNTS=$(VOLUME_SRC) $(VOLUME_PACKAGE_JSON) $(VOLUME_ENV) $(VOLUME_ESLINTRC) $(VOLUME_JEST_CONFIG) $(VOLUME_LEFTHOOK) $(VOLUME_MOCKS) $(VOLUME_HUSKY) $(VOLUME_VUE_CONFIG) $(VOLUME_PUBLIC) $(VOLUME_AUTH_CONFIG) $(VOLUME_BABEL) $(VOLUME_TESTS)
 VOLUME_MOUNTS_WITH_DEP_STUFF=$(VOLUME_MOUNTS) $(VOLUME_PACKAGE_LOCK)
 
 build-prod:
