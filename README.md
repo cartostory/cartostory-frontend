@@ -8,6 +8,9 @@
 * make
 * npm (used solely to run lefthook based git hooks)
 
+## Setup
+Copy `.env.example` to `.env` and change values if needed.
+
 ## Development
 
 ### Build
