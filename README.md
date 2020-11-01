@@ -1,36 +1,32 @@
 # cartostory-frontend
 
-## Project setup
+##
+# cartostory-frontend
+
+## Requirements
+* Docker
+* make
+* npm (used solely to run lefthook based git hooks)
+
+## Development
+
+### Build
+Run this whenever you update your dependencies (see NPM section below)
 ```
-npm install
+make build-dev
 ```
 
-### Compiles and hot-reloads for development
+### Run with hot reload
 ```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
+make run-dev
 ```
 
-### Run your tests
+### NPM
+Any npm related tasks should be run with the following command:
 ```
-npm run test
+make run-npm ARGS="YOUR_NPM_ARGS"
 ```
+`YOUR_NPM_ARGS` can be anything listed in `npm --help`.
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-![CI](https://github.com/cartostory/cartostory-frontend/workflows/CI/badge.svg)
+### Troubleshooting
+* lefthook says it's not found in the PATH: run `npm run install:lefthook` on the host
