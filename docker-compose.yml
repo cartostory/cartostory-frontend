@@ -20,4 +20,4 @@ volumes:
     client-volume:
 networks:
     default:
-        name: cartostory-prod-net
+        name: cartostory-net
