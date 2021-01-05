@@ -13,7 +13,7 @@
     "@auth0/auth0-spa-js": "^1.13.0",
     "@turf/points-within-polygon": "^5.1.5",
     "@turf/turf": "^5.1.6",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "buefy": "^0.8.15",
     "deepdash-es": "^5.3.2",
     "leaflet": "^1.7.1",
