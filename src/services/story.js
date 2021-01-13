@@ -7,16 +7,16 @@ import axiosInstance from '@/services/axios';
  * @param {object} story
  * @return {string} story id
  */
-export const save = async (story, token) => {
+export const save = async (story) => {
   const { id, ...rest } = story;
   let result;
 
   if (id) {
     // eslint-disable-next-line no-use-before-define
-    result = await update(id, rest, token);
+    result = await update(id, rest);
   } else {
     // eslint-disable-next-line no-use-before-define
-    result = await create(rest, token);
+    result = await create(rest);
   }
 
   return result;
@@ -33,29 +33,19 @@ export const loadMany = async () => {
   return result.data;
 };
 
-async function create(story, token) {
+async function create(story) {
   const result = await axiosInstance.post(
     '/api/story',
     { story },
-    {
-      headers: {
-        Authorization: token,
-      },
-    },
   );
 
   return result.data.id;
 }
 
-async function update(id, story, token) {
+async function update(id, story) {
   const result = await axiosInstance.put(
     `/api/story/${id}`,
     { story },
-    {
-      headers: {
-        Authorization: token,
-      },
-    },
   );
 
   return result.data.id;

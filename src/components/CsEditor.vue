@@ -34,7 +34,6 @@ export default {
     ...mapState({
       author: state => state.story.author,
       text: state => state.story.text,
-      token: state => state.auth.token,
       track: state => state.story.track,
     }),
     showEditButton() {
@@ -136,7 +135,7 @@ export default {
 
       try {
         this.saving = true;
-        this.storyId = await storyService.save(payload, this.token);
+        this.storyId = await storyService.save(payload);
       } catch (e) {
         this.$store.commit(UPDATE_ERRORS, {
           title: e.name,

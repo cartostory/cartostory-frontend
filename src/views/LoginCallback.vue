@@ -1,5 +1,5 @@
 <script>
-import axiosInstance from '@/services/axios';
+import { mapActions } from 'vuex';
 import { signup as authSignup } from '@/services/signup';
 import { UPDATE_ERRORS } from '@/store/mutations';
 
@@ -29,20 +29,22 @@ export default {
     },
   },
   methods: {
+    ...mapActions(['retrieveToken']),
     /*
      * If user logs in for the first time, signs him up. Redirects to landing page otherwise.
      */
     async signup() {
-      if (!this.$auth.user['https://cartostory.com/is_new']) {
+      await this.retrieveToken();
+      const existingUser = !this.$auth.user['https://cartostory.com/is_new'];
+
+      if (existingUser) {
         this.$router.push('/');
         return;
       }
 
-      this.loadingSignup = true;
-      const token = await this.$auth.getTokenSilently();
-      this.$setAuthorizationHeader(`Bearer ${token}`);
 
       try {
+        this.loadingSignup = true;
         await authSignup(this.$auth.user.email);
       } catch (e) {
         this.$handleSignupError(e);
@@ -59,10 +61,6 @@ export default {
           message: 'Pokus o založení uživatelského účtu selhal.' || e.response.data.message,
         });
       }
-    },
-
-    $setAuthorizationHeader(token) {
-      axiosInstance.defaults.headers.common.Authorization = token;
     },
   },
 };

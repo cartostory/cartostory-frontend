@@ -1,5 +1,5 @@
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapState } from 'vuex';
 
 import { loadMany } from '@/services/story';
 import { UPDATE_LOADING } from '@/store/mutations';
@@ -20,9 +20,7 @@ export default {
     ...mapState(['loading']),
   },
   methods: {
-    ...mapActions(['retrieveToken']),
     async getStories() {
-      await this.retrieveToken();
       const result = await loadMany();
       return result;
     },

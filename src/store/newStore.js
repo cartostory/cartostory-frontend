@@ -33,7 +33,7 @@ Vue.use(Vuex);
 
 const state = {
   auth: {
-    token: undefined,
+    token: window.localStorage.getItem('access_token'),
   },
   editable: false,
   errors: [],
@@ -137,10 +137,10 @@ const actions = {
     if (!state.auth.token) {
       const instance = getInstance();
       const token = await instance.getTokenSilently();
-      commit(UPDATE_TOKEN, `Bearer ${token}`);
+      commit(UPDATE_TOKEN, token);
     }
 
-    axiosInstance.defaults.headers.common.Authorization = state.auth.token;
+    axiosInstance.defaults.headers.common.Authorization = `Bearer ${state.auth.token}`;
     return state.auth.token;
   },
 };

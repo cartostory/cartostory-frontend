@@ -3,7 +3,6 @@ import { mapActions, mapState } from 'vuex';
 
 import CsEditor from '@/components/CsEditor.vue';
 import CsMap from '@/components/CsMap.vue';
-import { UPDATE_LOADING } from '@/store/mutations';
 
 export default {
   name: 'story-screen',
@@ -29,7 +28,6 @@ export default {
   },
   methods: {
     ...mapActions([
-      'retrieveToken',
       'loadStory',
     ]),
     async getStory() {
@@ -38,7 +36,6 @@ export default {
   },
   async created() {
     this.storyId = this.$route.params && this.$route.params.id;
-    await this.retrieveToken();
 
     if (this.storyId) {
       this.getStory();
